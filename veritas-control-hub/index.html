@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veritas Control Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --fse-green: #3B8634;
+      --fse-green-dark: #2C6527;
+      --fse-green-light: #5FAE52;
+      --fse-green-soft: #EEF6E7;
+      --fse-blue: #1770A8;
+      --fse-blue-dark: #125A84;
+      --fse-blue-light: #4B96C4;
+      --fse-red: #E98F3F;
+      --fse-red-dark: #C96F24;
+      --fse-cream: #F7FAF8;
+      --fse-ice: #EEF6F4;
+      --fse-card: #FFFFFF;
+      --fse-text: #42504D;
+      --fse-muted: #6F7C79;
+      --fse-title: #2C6527;
+      --radius-xl: 22px;
+      --radius-md: 14px;
+      --shadow-soft: 0 14px 38px rgba(23,112,168,.10);
+      --shadow-card: 0 10px 28px rgba(23,112,168,.08);
+      --font-title: "Montserrat", system-ui, sans-serif;
+      --font-body: "Inter", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    .icon-svg { width: 1em; height: 1em; display: inline-block; vertical-align: -0.125em; flex-shrink: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { min-height: 100vh; font-family: var(--font-body); color: var(--fse-text); background: #fff; line-height: 1.55; padding-top: 88px !important; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; overscroll-behavior-y: none; }
+    #main-wrapper { min-height: 100vh; width: 100%; overflow-x: hidden; background: #fff; -webkit-overflow-scrolling: touch; }
+    .main-header { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; z-index: 5000 !important; background: rgba(255, 255, 255, 0.98) !important; backdrop-filter: blur(0px) saturate(100%) !important; -webkit-backdrop-filter: blur(0px) saturate(100%) !important; border-bottom: 1px solid rgba(59, 134, 52, 0.10) !important; box-shadow: 0 4px 18px rgba(23, 112, 168, 0.06) !important; transition: background 0.28s ease, backdrop-filter 0.28s ease, -webkit-backdrop-filter 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease !important; transform: translateZ(0) !important; -webkit-transform: translateZ(0) !important; backface-visibility: hidden !important; -webkit-backface-visibility: hidden !important; }
+    .main-header.is-scrolled { background: rgba(255, 255, 255, 0.78) !important; backdrop-filter: blur(18px) saturate(145%) !important; -webkit-backdrop-filter: blur(18px) saturate(145%) !important; border-bottom: 1px solid rgba(59, 134, 52, 0.16) !important; box-shadow: 0 14px 36px rgba(23, 112, 168, 0.12) !important; }
+    .header-content { max-width: 1240px; margin: 0 auto; min-height: 88px; padding: 0 24px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; }
+    .header-left, .header-right { display: flex; align-items: center; }
+    .header-left { justify-content: flex-start; }
+    .header-right { justify-content: flex-end; }
+    .btn-with-label { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .hamburger-btn, .user-btn { appearance: none; background: transparent; border: 0; color: var(--fse-green); font-size: 1.9rem; cursor: pointer; line-height: 1; padding: 8px; transition: transform .25s ease, color .25s ease; }
+    .hamburger-btn:hover, .user-btn:hover { transform: translateY(-2px); color: var(--fse-red); }
+    .btn-label { font-family: var(--font-title); font-size: .66rem; line-height: 1; font-weight: 600; color: var(--fse-green-dark); letter-spacing: .08em; text-transform: uppercase; }
+    .logo-area { display: flex; align-items: center; gap: 16px; }
+    .brand-mark { width: 74px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, rgba(59,134,52,.12), rgba(255,255,255,.9)); border: 1px solid rgba(59,134,52,.14); display: grid; place-items: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.8); overflow: hidden; }
+    .brand-mark span { font-family: var(--font-title); font-weight: 800; font-size: 15px; color: var(--fse-green-dark); letter-spacing: -.02em; }
+    .brand-text h1 { font-family: var(--font-title); font-size: clamp(1.1rem, 2vw, 1.62rem); color: var(--fse-green-dark); font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+    .brand-text span { display: block; margin-top: 1px; color: var(--fse-muted); font-size: .74rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+    .menu-overlay { position: fixed; inset: 0; z-index: 5900 !important; display: none; background: rgba(0,0,0,.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transform: translateZ(0) !important; -webkit-transform: translateZ(0) !important; }
+    .menu-overlay.active { display: block; }
+    .main-nav { position: fixed; left: 0; top: 0; z-index: 6000 !important; width: 320px; height: 100vh; padding: 34px 0; background: linear-gradient(180deg, var(--fse-green-dark), var(--fse-green)); display: flex; flex-direction: column; box-shadow: 16px 0 46px rgba(0,0,0,.25); transform: translate3d(-340px, 0, 0); -webkit-transform: translate3d(-340px, 0, 0); transition: transform .32s cubic-bezier(.4,0,.2,1); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .main-nav.active { transform: translate3d(0, 0, 0); -webkit-transform: translate3d(0, 0, 0); }
+    .main-nav__head { padding: 0 28px 24px; color: #fff; border-bottom: 1px solid rgba(255,255,255,.18); margin-bottom: 16px; }
+    .main-nav__head strong { display: block; font-family: var(--font-title); font-size: 1.15rem; margin-bottom: 3px; }
+    .main-nav__head small { opacity: .72; font-weight: 600; letter-spacing: .04em; }
+    .main-nav a { position: relative; display: block; padding: 17px 32px 17px 42px; color: rgba(255,255,255,.92); text-decoration: none; font-family: var(--font-title); font-size: 1rem; font-weight: 700; transition: background .25s ease, color .25s ease; }
+    .main-nav a::before { content: ""; position: absolute; left: 22px; top: 50%; transform: translateY(-50%); width: 4px; height: 0; border-radius: 99px; background: var(--fse-red); transition: height .25s ease; }
+    .main-nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .main-nav a:hover::before { height: 58%; }
+    .hero-section { position: relative; overflow: visible; min-height: 520px !important; padding: 120px 24px !important; text-align: center; isolation: isolate; background: linear-gradient(135deg,#125A84,#3B8634) center/cover no-repeat !important; z-index: 20; display: flex !important; align-items: center !important; justify-content: center !important; }
+    .hero-section::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(23,112,168,.62), rgba(23,112,168,.55)); opacity: 0.70 !important; }
+    .hero-waves { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+    .hero-waves svg { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; }
+    .hero-section::after { content: ""; position: absolute; left: 50%; bottom: -80px; z-index: -1; width: 780px; height: 220px; transform: translateX(-50%); background: radial-gradient(ellipse, rgba(59,134,52,.17), transparent 70%); filter: blur(6px); }
+    .hero-content { max-width: 940px; margin: 0 auto; position: relative; z-index: 10; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; padding: 8px 13px; border-radius: 999px; background: rgba(255,255,255,.72); color: var(--fse-green-dark); border: 1px solid rgba(59,134,52,.13); box-shadow: 0 6px 20px rgba(23,112,168,.06); font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 18px; }
+    .hero-eyebrow i { color: var(--fse-red); }
+    .hero-content h2 { font-family: var(--font-title); color: #fff; font-weight: 500; font-size: clamp(2.25rem, 5vw, 4rem); letter-spacing: -.055em; line-height: 1.02; margin-bottom: 19px; }
+    .hero-content p { color: #e9f3f1; font-size: clamp(1rem, 1.8vw, 1.18rem); font-weight: 700; margin-bottom: 28px; }
+    .cta-buttons { display: flex !important; justify-content: center !important; align-items: flex-start !important; gap: 14px !important; position: relative !important; z-index: 1000 !important; }
+    .dropdown-container { position: relative; z-index: 1001 !important; min-width: 220px !important; max-width: 320px !important; }
+    .btn { border: 0; cursor: pointer; border-radius: 8px; min-height: 50px; padding: 0 26px; font-family: var(--font-title); font-weight: 800; font-size: .92rem; letter-spacing: -.01em; transition: transform .22s ease, box-shadow .22s ease, background .22s ease; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { width: 100% !important; background: linear-gradient(135deg, var(--fse-red), var(--fse-red-dark)) !important; color: #ffffff !important; box-shadow: 0 10px 24px rgba(233, 143, 63, 0.24) !important; border: none !important; }
+    #sede-btn { width: 100% !important; }
+    .btn-primary[disabled] { opacity: .45 !important; cursor: not-allowed !important; box-shadow: none !important; }
+    .dropdown-menu { position: absolute !important; top: calc(100% + 12px); left: 0; right: auto; z-index: 4000 !important; display: none; overflow-y: auto; max-height: 360px; min-width: 430px; text-align: left; background: rgba(255,255,255,.98); border: 1px solid rgba(59,134,52,.12); border-radius: 14px; box-shadow: 0 24px 60px rgba(23,112,168,.22); backdrop-filter: blur(14px); transform: translateZ(0) !important; -webkit-transform: translateZ(0) !important; backface-visibility: hidden !important; -webkit-backface-visibility: hidden !important; }
+    .dropdown-menu.active { display: block; animation: dropdownFade .22s ease; }
+    @keyframes dropdownFade { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .dropdown-menu a { display: block; padding: 13px 16px; color: var(--fse-green-dark); font-size: .9rem; font-weight: 700; text-decoration: none; border-bottom: 1px solid rgba(59,134,52,.08); transition: background .2s ease, color .2s ease, padding .2s ease; white-space: normal; line-height: 1.35; }
+    .dropdown-menu a:last-child { border-bottom: none; }
+    .dropdown-menu a:hover { background: var(--fse-green-soft); color: var(--fse-red); padding-left: 21px; }
+    #sede-dropdown, #area-dropdown { min-width: 280px; }
+    section { scroll-margin-top: 92px; }
+    .services-section { padding: 70px 24px 78px; background: #fff; }
+    .info-section { padding: 70px 24px 76px; background: linear-gradient(180deg, #F6FAF9 0%, #EEF6F4 100%); box-shadow: inset 0 18px 32px rgba(23,112,168,.035); }
+    .section-container { max-width: 1240px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 46px; }
+    .section-header h2 { font-family: var(--font-title); color: #1A1D1F; font-size: clamp(2.1rem, 4vw, 3.25rem); line-height: 1.05; font-weight: 400; letter-spacing: -.055em; margin-bottom: 12px; }
+    .section-header p { color: var(--fse-muted); font-size: 1.02rem; font-weight: 800; }
+    .fse-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .fse-card { position: relative !important; overflow: hidden !important; border-radius: 22px !important; isolation: isolate !important; background: #fff; box-shadow: var(--shadow-card); cursor: pointer; transition: transform .22s ease, box-shadow .22s ease; border: 1px solid rgba(59,134,52,.08); transform: translateZ(0) !important; backface-visibility: hidden !important; -webkit-backface-visibility: hidden !important; }
+    .fse-card:hover { transform: translateY(-6px) translateZ(0) !important; box-shadow: 0 18px 44px rgba(23,112,168,.14); }
+    .fse-card__media { position: relative !important; height: 220px; overflow: hidden !important; border-radius: 22px 22px 0 0 !important; z-index: 1 !important; }
+    .fse-card__media.overview { background: linear-gradient(135deg, #125A84, #1770A8); }
+    .fse-card__media.secondary { background: linear-gradient(135deg, #2C6527, #3B8634); }
+    .fse-card__media.extra { background: linear-gradient(135deg, #C96F24, #E98F3F); }
+    .fse-card__media.overview::after { background: linear-gradient(135deg, rgba(18, 90, 132, 0.5), rgba(23, 112, 168, 0.5)) !important; }
+    .fse-card__media.secondary::after { background: linear-gradient(135deg, rgba(44, 101, 39, 0.5), rgba(59, 134, 52, 0.5)) !important; }
+    .fse-card__media.extra::after { background: linear-gradient(135deg, rgba(201, 111, 36, 0.5), rgba(233, 143, 63, 0.5)) !important; }
+    .fse-card__media::after { content: "" !important; position: absolute !important; inset: 0 !important; border-radius: 22px 22px 0 0 !important; z-index: 2 !important; pointer-events: none !important; }
+    .fse-card__body { position: relative !important; z-index: 3 !important; min-height: 254px; background: linear-gradient(180deg, var(--fse-ice) 0%, #FFFFFF 100%); padding: 28px 28px 32px; }
+    .fse-card__keyline { width: 58px; height: 4px; border-radius: 999px; background: var(--fse-red); margin-bottom: 18px; }
+    .fse-card__title { font-family: var(--font-title); color: #1A1D1F; font-size: clamp(1.65rem, 2.6vw, 2rem); line-height: 1.05; font-weight: 800; letter-spacing: -.055em; margin-bottom: 15px; }
+    .fse-card__text { color: var(--fse-text); font-size: .94rem; line-height: 1.58; font-weight: 650; }
+    .monthly-wrap { display: flex; justify-content: center; margin-top: 42px; }
+    .monthly-btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 54px; padding: 0 34px; border: 0; border-radius: 10px; color: #fff; cursor: pointer; font-family: var(--font-title); font-size: 1rem; font-weight: 800; background: linear-gradient(135deg, var(--fse-green), var(--fse-green-light)); box-shadow: 0 14px 28px rgba(59,134,52,.23); transition: transform .22s ease, box-shadow .22s ease; }
+    .monthly-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 36px rgba(59,134,52,.30); }
+    .info-cards-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; max-width: 1240px; margin: 0 auto; }
+    .info-card { min-height: 378px; display: flex; flex-direction: column; padding: 30px 22px 24px; border-radius: 16px; background: rgba(255,255,255,.68); border: 1px solid rgba(59,134,52,.08); box-shadow: 0 8px 26px rgba(23,112,168,.07); transition: transform .22s ease, box-shadow .22s ease, background .22s ease; }
+    .info-card:hover { transform: translateY(-5px); background: #fff; box-shadow: 0 16px 38px rgba(23,112,168,.12); }
+    .info-card__icon { width: 56px; height: 56px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 15px; color: var(--fse-green-dark); background: rgba(59,134,52,.08); font-size: 1.45rem; }
+    .info-card__title { min-height: 64px; font-family: var(--font-title); color: #1A1D1F; font-size: 1.35rem; line-height: 1.06; font-weight: 800; letter-spacing: -.04em; margin-bottom: 18px; }
+    .info-card__list { list-style: none; flex: 1; margin-bottom: 22px; }
+    .info-card__list li { position: relative; padding-left: 16px; margin-bottom: 11px; color: var(--fse-text); font-size: .8rem; line-height: 1.42; font-weight: 600; }
+    .info-card__list li::before { content: "•"; position: absolute; left: 0; top: 0; color: var(--fse-red); font-weight: 800; }
+    .info-card__btn { min-height: 38px; border: 0; border-radius: 7px; color: #fff; cursor: pointer; font-family: var(--font-title); font-weight: 800; font-size: .82rem; background: linear-gradient(135deg, var(--fse-red), var(--fse-red-dark)); transition: transform .2s ease, box-shadow .2s ease; }
+    .info-card__btn:hover { transform: translateY(-2px); box-shadow: 0 12px 20px rgba(233,143,63,.22); }
+    .main-footer { padding: 46px 24px 18px; background: #fff; border-top: 1px solid rgba(59,134,52,.10); }
+    .footer-content { max-width: 1240px; margin: 0 auto 34px; display: grid; grid-template-columns: 1.35fr 1fr 1fr 1fr; gap: 40px; }
+    .footer-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .footer-logo { width: 58px; height: 44px; border-radius: 12px; background: var(--fse-green-soft); display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(59,134,52,.09); }
+    .footer-logo span { font-family: var(--font-title); font-weight: 800; font-size: 12px; color: var(--fse-green-dark); }
+    .footer-section h3 { font-family: var(--font-title); color: var(--fse-green-dark); font-size: 1rem; font-weight: 800; margin-bottom: 14px; }
+    .footer-section p, .footer-section a { display: block; color: var(--fse-muted); font-size: .86rem; line-height: 1.5; text-decoration: none; margin-bottom: 9px; font-weight: 600; }
+    .footer-section a:hover { color: var(--fse-red); }
+    .footer-bottom { max-width: 1240px; margin: 0 auto; padding-top: 22px; border-top: 1px solid rgba(59,134,52,.10); text-align: center; color: #89938F; font-size: .78rem; font-weight: 650; }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 18px; background: rgba(0,0,0,.68); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: fadeIn .24s ease; transform: translateZ(0) !important; -webkit-transform: translateZ(0) !important; }
+    .modal-panel { width: min(1120px, 96vw); max-height: 90vh; overflow: auto; border-radius: 22px; background: linear-gradient(180deg, var(--fse-ice), #ffffff 24%); box-shadow: 0 28px 80px rgba(0,0,0,.32); position: relative; animation: slideUp .24s ease; transform: translateZ(0) !important; -webkit-transform: translateZ(0) !important; backface-visibility: hidden !important; -webkit-backface-visibility: hidden !important; -webkit-overflow-scrolling: touch !important; overscroll-behavior: contain !important; }
+    .modal-panel--small { width: min(500px, 94vw); }
+    .modal-close { position: sticky; top: 18px; float: right; z-index: 2; width: 42px; height: 42px; display: grid; place-items: center; margin: 18px 18px -60px auto; border-radius: 50%; border: 0; cursor: pointer; background: #fff; color: var(--fse-muted); box-shadow: 0 8px 20px rgba(23,112,168,.13); transition: transform .2s ease, color .2s ease; }
+    .modal-close:hover { transform: scale(1.06); color: var(--fse-red); }
+    .modal-content { padding: 44px; clear: both; }
+    .modal-title { font-family: var(--font-title); color: var(--fse-green); font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.03; letter-spacing: -.06em; margin-bottom: 12px; font-weight: 800; }
+    .modal-subtitle { color: var(--fse-text); max-width: 860px; font-weight: 650; font-size: 1.02rem; margin-bottom: 28px; }
+    .field-label { display: block; margin-bottom: 9px; color: var(--fse-green-dark); font-family: var(--font-title); font-weight: 800; font-size: .94rem; }
+    .select-wrap { position: relative !important; margin-bottom: 26px; }
+    .select-wrap select { width: 100% !important; min-height: 58px !important; padding: 0 56px 0 20px !important; border: 2px solid rgba(59, 134, 52, 0.48) !important; border-radius: 12px !important; background-color: #ffffff !important; color: var(--fse-green-dark) !important; font-family: var(--font-body) !important; font-size: 17px !important; font-weight: 800 !important; line-height: 1.25 !important; box-shadow: none !important; outline: none !important; cursor: pointer !important; appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important; background-image: none !important; }
+    .form-input { width: 100%; min-height: 54px; border: 2px solid rgba(59,134,52,.55); border-radius: 11px; background: #fff; color: var(--fse-green-dark); padding: 0 16px 0 46px; font: 700 1rem var(--font-body); outline: none; transition: box-shadow .2s ease, border-color .2s ease; }
+    .select-wrap select:focus, .form-input:focus { border-color: var(--fse-red); box-shadow: 0 0 0 4px rgba(233,143,63,.09); }
+    .select-wrap .icon-svg { position: absolute !important; right: 20px !important; top: 50% !important; bottom: auto !important; transform: translateY(-50%) !important; color: var(--fse-green) !important; pointer-events: none !important; width: 18px !important; height: 18px !important; z-index: 2 !important; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+    .kpi-card { background: #fff; border-left: 5px solid var(--accent, var(--fse-green)); border-radius: 14px; padding: 22px; box-shadow: 0 10px 26px rgba(23,112,168,.08); }
+    .kpi-label { color: var(--fse-muted); font-weight: 800; font-size: .86rem; margin-bottom: 7px; }
+    .kpi-value { font-family: var(--font-title); color: var(--accent, var(--fse-green)); font-size: 2.75rem; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
+    .kpi-note { margin-top: 9px; color: var(--fse-muted); font-size: .8rem; font-weight: 650; }
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 22px; }
+    .chart-box, .table-box { background: #fff; border-radius: 15px; padding: 24px; box-shadow: 0 10px 26px rgba(23,112,168,.08); border: 1px solid rgba(59,134,52,.06); }
+    .chart-box h3, .table-box h3 { color: var(--fse-green-dark); font-family: var(--font-title); font-size: 1.08rem; font-weight: 800; margin-bottom: 18px; }
+    canvas { max-height: 250px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .calendar-day { min-height: 40px; border-radius: 8px; display: grid; place-items: center; font-weight: 800; font-size: .78rem; color: var(--fse-muted); background: var(--fse-ice); }
+    .calendar-day.active { background: rgba(59,134,52,.12); color: var(--fse-green-dark); border: 1px solid rgba(59,134,52,.18); }
+    .calendar-day.red { background: rgba(233,143,63,.12); color: var(--fse-red); border: 1px solid rgba(233,143,63,.18); }
+    .summary-table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 12px; font-size: .91rem; }
+    .summary-table th, .summary-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(59,134,52,.09); }
+    .summary-table th { background: var(--fse-green); color: #fff; font-family: var(--font-title); font-weight: 800; }
+    .summary-table tr:last-child td { border-bottom: 0; }
+    .summary-table td:last-child { color: var(--fse-green-dark); font-weight: 800; }
+    .login-field { position: relative; margin-bottom: 16px; }
+    .login-field i { position: absolute; left: 17px; top: 50%; transform: translateY(-50%); color: var(--fse-muted); }
+    .toast { position: fixed; right: 24px; top: 104px; z-index: 7000; display: flex; align-items: center; gap: 13px; padding: 17px 20px; border-radius: 14px; color: #fff; background: linear-gradient(135deg, var(--fse-green), var(--fse-green-light)); box-shadow: 0 18px 38px rgba(59,134,52,.24); animation: slideInRight .28s ease; font-weight: 750; }
+    .detail-list { display: grid; gap: 12px; margin-top: 20px; }
+    .detail-list div { display: flex; gap: 11px; padding: 14px 16px; border-radius: 12px; background: #fff; border: 1px solid rgba(59,134,52,.07); box-shadow: 0 8px 20px rgba(23,112,168,.05); color: var(--fse-text); font-weight: 650; }
+    .detail-list i { color: #1770A8; margin-top: 3px; }
+    .quality-tabs { display: grid !important; grid-template-columns: repeat(5, 1fr) !important; gap: 12px !important; margin: 28px 0 28px !important; }
+    .quality-tab { min-height: 86px !important; padding: 16px 14px !important; border-radius: 14px !important; border: 1px solid rgba(59, 134, 52, 0.10) !important; background: #ffffff !important; color: var(--fse-green-dark) !important; font-family: var(--font-title) !important; font-size: 14px !important; font-weight: 800 !important; line-height: 1.15 !important; cursor: pointer !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 10px !important; box-shadow: 0 8px 20px rgba(23, 112, 168, 0.05) !important; transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease !important; transform: translateZ(0) !important; -webkit-transform: translateZ(0) !important; }
+    .quality-tab i, .quality-tab .icon-svg { font-size: 24px !important; line-height: 1 !important; color: var(--fse-green) !important; margin-bottom: 2px !important; transition: color 0.22s ease, transform 0.22s ease !important; }
+    .quality-tab:hover { transform: translateY(-2px) !important; border-color: rgba(23, 112, 168, 0.35) !important; box-shadow: 0 12px 26px rgba(23, 112, 168, 0.09) !important; }
+    .quality-tab:hover i, .quality-tab:hover .icon-svg { color: var(--fse-red) !important; transform: scale(1.06) !important; }
+    .quality-tab.active { background: linear-gradient(135deg, var(--fse-red), var(--fse-red-dark)) !important; color: #ffffff !important; border-color: var(--fse-red) !important; box-shadow: 0 14px 30px rgba(233, 143, 63, 0.22) !important; transform: translateY(-2px) !important; }
+    .quality-tab.active i, .quality-tab.active .icon-svg { color: #ffffff !important; transform: scale(1.08) !important; }
+    .quality-tab.active span { color: #ffffff !important; }
+    .quality-detail-panel { animation: fadeIn .24s ease; }
+    .quality-detail-card { background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 10px 28px rgba(23,112,168,.08); border: 1px solid rgba(59,134,52,.08); }
+    .quality-detail-header { margin-bottom: 24px; }
+    .quality-detail-header h3 { font-family: var(--font-title); color: var(--fse-green-dark); font-size: 1.65rem; font-weight: 800; line-height: 1.08; letter-spacing: -.04em; margin-bottom: 10px; }
+    .quality-detail-header p { color: var(--fse-text); font-weight: 650; font-size: .96rem; line-height: 1.5; }
+    .quality-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .quality-kpi { background: #fff; border-left: 4px solid var(--accent, var(--fse-green)); border-radius: 12px; padding: 18px; box-shadow: 0 8px 20px rgba(23,112,168,.06); }
+    .quality-kpi-label { color: var(--fse-muted); font-weight: 800; font-size: .78rem; margin-bottom: 6px; letter-spacing: .04em; }
+    .quality-kpi-value { font-family: var(--font-title); color: var(--accent, var(--fse-green)); font-size: 2.2rem; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
+    .quality-chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 22px; }
+    .quality-chart-box { background: #fff; border-radius: 14px; padding: 22px; box-shadow: 0 8px 20px rgba(23,112,168,.06); border: 1px solid rgba(59,134,52,.06); }
+    .quality-chart-box h4 { color: var(--fse-green-dark); font-family: var(--font-title); font-size: .98rem; font-weight: 800; margin-bottom: 16px; }
+    .quality-chart-box canvas { max-height: 240px; }
+    .quality-status-list { background: var(--fse-ice); border-radius: 12px; padding: 18px; margin-bottom: 22px; border: 1px solid rgba(59,134,52,.08); }
+    .quality-status-list h4 { font-family: var(--font-title); color: var(--fse-green-dark); font-size: .92rem; font-weight: 800; margin-bottom: 12px; }
+    .quality-status-list ul { list-style: none; }
+    .quality-status-list li { position: relative; padding-left: 16px; margin-bottom: 8px; color: var(--fse-text); font-weight: 650; font-size: .85rem; }
+    .quality-status-list li::before { content: "•"; position: absolute; left: 0; color: var(--fse-red); font-weight: 800; }
+    .quality-download-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 24px; border: 0; border-radius: 10px; cursor: pointer; font-family: var(--font-title); font-weight: 800; font-size: .85rem; color: #fff; background: linear-gradient(135deg, var(--fse-red), var(--fse-red-dark)); box-shadow: 0 10px 24px rgba(233,143,63,.16); transition: transform .2s ease, box-shadow .2s ease; }
+    .quality-download-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(233,143,63,.22); }
+    .quality-actions { display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(26px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    /* Chatbot Widget Styles */
+    .chatbot-launcher { position: fixed !important; right: 24px !important; bottom: 24px !important; left: auto !important; top: auto !important; z-index: 8000 !important; display: flex !important; flex-direction: column !important; align-items: flex-end !important; justify-content: flex-end !important; pointer-events: none !important; }
+    .chatbot-launcher > * { pointer-events: auto !important; }
+    .chatbot-fab { position: relative !important; width: 64px !important; height: 64px !important; border-radius: 50% !important; border: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; background: linear-gradient(135deg, var(--fse-green), var(--fse-green-light)) !important; color: #ffffff !important; box-shadow: 0 18px 34px rgba(59, 134, 52, 0.24) !important; cursor: pointer !important; transition: transform 0.22s ease, box-shadow 0.22s ease !important; font-size: 28px !important; }
+    .chatbot-fab:hover { transform: translateY(-2px) !important; box-shadow: 0 22px 38px rgba(59, 134, 52, 0.28) !important; }
+    .chatbot-badge { position: absolute !important; top: -2px !important; right: -2px !important; min-width: 24px !important; height: 24px !important; padding: 0 6px !important; border-radius: 999px !important; display: flex !important; align-items: center !important; justify-content: center !important; background: var(--fse-red) !important; color: #ffffff !important; font-size: 11px !important; font-weight: 800 !important; font-family: var(--font-title) !important; box-shadow: 0 8px 18px rgba(233, 143, 63, 0.24) !important; }
+    .chatbot-window { position: absolute !important; right: 0 !important; bottom: 82px !important; width: 390px !important; max-width: calc(100vw - 32px) !important; height: 560px !important; display: flex !important; flex-direction: column !important; border-radius: 22px !important; overflow: hidden !important; background: #ffffff !important; box-shadow: 0 26px 60px rgba(0, 0, 0, 0.18) !important; border: 1px solid rgba(59, 134, 52, 0.10) !important; opacity: 0 !important; visibility: hidden !important; transform: translateY(14px) scale(0.98) !important; transform-origin: bottom right !important; transition: opacity 0.24s ease, visibility 0.24s ease, transform 0.24s ease !important; z-index: 8001 !important; }
+    .chatbot-window.open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) scale(1) !important; pointer-events: auto !important; }
+    .chatbot-window.minimized { max-height: 56px !important; }
+    .chatbot-header { background: linear-gradient(135deg, var(--fse-green), var(--fse-green-light)) !important; color: #ffffff !important; padding: 16px 18px !important; display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 14px !important; border-radius: 22px 22px 0 0 !important; flex-shrink: 0 !important; }
+    .chatbot-header__identity { display: flex !important; align-items: center !important; gap: 12px !important; min-width: 0 !important; }
+    .chatbot-header__avatar { width: 44px !important; height: 44px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; background: rgba(255, 255, 255, 0.22) !important; color: #ffffff !important; font-size: 20px !important; flex: 0 0 44px !important; }
+    .chatbot-header__meta { display: flex !important; flex-direction: column !important; gap: 3px !important; min-width: 0 !important; }
+    .chatbot-header__title { font-family: var(--font-title) !important; font-size: 16px !important; font-weight: 800 !important; line-height: 1.1 !important; color: #ffffff !important; margin: 0 !important; }
+    .chatbot-header__subtitle { font-family: var(--font-body) !important; font-size: 12px !important; font-weight: 600 !important; line-height: 1.3 !important; color: rgba(255, 255, 255, 0.9) !important; margin: 0 !important; }
+    .chatbot-header__actions { display: flex !important; align-items: center !important; gap: 8px !important; flex-shrink: 0 !important; }
+    .chatbot-minimize, .chatbot-close { width: 40px !important; height: 40px !important; border-radius: 50% !important; border: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; background: rgba(255, 255, 255, 0.20) !important; color: #ffffff !important; cursor: pointer !important; font-size: 16px !important; transition: background 0.2s ease !important; }
+    .chatbot-minimize:hover, .chatbot-close:hover { background: rgba(255, 255, 255, 0.32) !important; }
+    .chatbot-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .chatbot-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; background: #f9fbfa; }
+    .chatbot-message { display: flex; gap: 8px; animation: fadeIn 0.24s ease; }
+    .chatbot-message--assistant { justify-content: flex-start; }
+    .chatbot-message--user { justify-content: flex-end; }
+    .chatbot-bubble { max-width: 75%; padding: 12px 16px; border-radius: 14px; font-size: 14px; font-weight: 600; line-height: 1.4; }
+    .chatbot-message--assistant .chatbot-bubble { background: #ffffff; color: var(--fse-text); border: 1px solid rgba(59, 134, 52, 0.08); box-shadow: 0 4px 12px rgba(23, 112, 168, 0.05); }
+    .chatbot-message--user .chatbot-bubble { background: linear-gradient(135deg, rgba(59, 134, 52, 0.88), rgba(124, 194, 79, 0.88)); color: #ffffff; }
+    .chatbot-typing { display: flex; gap: 4px; padding: 12px 16px; background: #ffffff; border: 1px solid rgba(59, 134, 52, 0.08); border-radius: 14px; width: fit-content; }
+    .chatbot-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--fse-green); animation: typingBounce 1.2s infinite; }
+    .chatbot-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chatbot-typing span:nth-child(3) { animation-delay: 0.4s; }
+    .chatbot-quick-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 14px 0; }
+    .chatbot-chip { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(59, 134, 52, 0.28); background: #ffffff; color: var(--fse-green-dark); cursor: pointer; font-size: 12px; font-weight: 700; font-family: var(--font-body); transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease; white-space: nowrap; }
+    .chatbot-chip:hover { background: rgba(59, 134, 52, 0.12); border-color: rgba(59, 134, 52, 0.48); }
+    .chatbot-input-area { display: flex; gap: 10px; padding: 14px; background: #ffffff; border-top: 1px solid rgba(59, 134, 52, 0.08); align-items: flex-end; border-radius: 0 0 18px 18px; flex-shrink: 0; }
+    .chatbot-input { flex: 1; min-height: 40px; border: 1px solid rgba(59, 134, 52, 0.18); border-radius: 10px; padding: 10px 14px; font-family: var(--font-body); font-size: 13px; color: var(--fse-text); background: #ffffff; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; resize: none; }
+    .chatbot-input:focus { border-color: var(--fse-green); box-shadow: 0 0 0 3px rgba(59, 134, 52, 0.12); }
+    .chatbot-send { width: 40px; height: 40px; border: 0; border-radius: 10px; background: linear-gradient(135deg, var(--fse-green), var(--fse-green-light)); color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .chatbot-send:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(59, 134, 52, 0.18); }
+    @keyframes typingBounce { 0%, 60%, 100% { opacity: 0.5; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-8px); } }
+    @media (max-width: 1100px) {
+      .quality-tabs { grid-template-columns: repeat(2, 1fr) !important; }
+      .quality-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .quality-chart-grid { grid-template-columns: 1fr; }
+      .hero-section { min-height: 460px !important; padding-top: 96px !important; padding-bottom: 96px !important; }
+      .fse-cards { grid-template-columns: 1fr; max-width: 720px; margin: 0 auto; }
+      .info-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .chart-grid, .kpi-grid { grid-template-columns: 1fr; }
+      .dropdown-menu { min-width: 100%; }
+    }
+    @media (max-width: 720px) {
+      body { padding-top: 76px !important; }
+      .header-content { min-height: 76px; padding: 0 14px; gap: 10px; }
+      .brand-mark { width: 58px; height: 44px; }
+      .brand-text h1 { font-size: .98rem; }
+      .brand-text span { display: none; }
+      .hero-section { min-height: 520px !important; padding-top: 76px !important; padding-bottom: 86px !important; }
+      .dropdown-container { width: 100% !important; min-width: 0 !important; max-width: 100% !important; }
+      #sede-dropdown, #area-dropdown { min-width: 100%; width: 100%; max-width: calc(100vw - 32px); }
+      .services-section, .info-section { padding-left: 16px; padding-right: 16px; }
+      .fse-card__body { min-height: auto; }
+      .info-cards-grid, .footer-content { grid-template-columns: 1fr; }
+      .info-card { min-height: auto; }
+      .modal-content { padding: 34px 20px 24px; }
+      .calendar-grid { grid-template-columns: repeat(4, 1fr); }
+      .quality-tabs { grid-template-columns: 1fr !important; }
+      .quality-tab { min-height: 72px !important; flex-direction: row !important; justify-content: flex-start !important; padding: 16px 18px !important; text-align: left !important; }
+      .quality-tab i { font-size: 22px !important; margin-bottom: 0 !important; }
+      .quality-kpi-grid { grid-template-columns: 1fr; }
+      .quality-download-btn { width: 100%; }
+      .quality-actions { flex-direction: column; }
+      .chatbot-launcher { right: 12px !important; bottom: 12px !important; }
+      .chatbot-fab { width: 58px !important; height: 58px !important; font-size: 24px !important; }
+      .chatbot-window { right: 0 !important; bottom: 74px !important; width: calc(100vw - 24px) !important; max-width: calc(100vw - 24px) !important; height: 70vh !important; border-radius: 18px !important; }
+    }
+  </style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+<symbol id="icon-circle-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19a6 6 0 0111 0"/></symbol>
+<symbol id="icon-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s7 8.5 7 13a7 7 0 01-14 0c0-4.5 7-13 7-13z"/></symbol>
+<symbol id="icon-table-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
+<symbol id="icon-shield-halved" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></symbol>
+<symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></symbol>
+<symbol id="icon-clipboard-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="18" rx="2"/><path d="M9 2h6a1 1 0 011 1v2H8V3a1 1 0 011-1z"/><path d="M9 13l2 2 4-4"/></symbol>
+<symbol id="icon-graduation-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></symbol>
+<symbol id="icon-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21c8 0 12-6 12-14V4h-3C7 4 6 12 6 20z"/><path d="M6 20L18 8"/></symbol>
+<symbol id="icon-robot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"/><circle cx="9" cy="14" r="1.5"/><circle cx="15" cy="14" r="1.5"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/></symbol>
+<symbol id="icon-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+<symbol id="icon-xmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+<symbol id="icon-paper-plane" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+<symbol id="icon-circle-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></symbol>
+<symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+<symbol id="icon-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="18" rx="2"/><path d="M9 2h6a1 1 0 011 1v2H8V3a1 1 0 011-1z"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="16" y2="15"/></symbol>
+<symbol id="icon-file-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></symbol>
+<symbol id="icon-file-pdf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="15" x2="16" y2="15"/></symbol>
+<symbol id="icon-file-excel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="18"/><line x1="15" y1="13" x2="9" y2="18"/></symbol>
+<symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></symbol>
+<symbol id="icon-magnifying-glass-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+<symbol id="icon-list-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 4.5 7.5 7 5"/><line x1="10" y1="6" x2="21" y2="6"/><polyline points="3 12 4.5 13.5 7 11"/><line x1="10" y1="12" x2="21" y2="12"/><polyline points="3 18 4.5 19.5 7 17"/><line x1="10" y1="18" x2="21" y2="18"/></symbol>
+<symbol id="icon-face-smile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+<symbol id="icon-triangle-exclamation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+<symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></symbol>
+<symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+</defs></svg>
+  <div id="main-wrapper">
+   <header class="main-header">
+    <div class="header-content">
+     <div class="header-left">
+      <div class="btn-with-label"><button class="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Apri menu"> <svg class="icon-svg" aria-hidden="true"><use href="#icon-bars"></use></svg> </button> <span class="btn-label">Menu</span>
+      </div>
+     </div>
+     <div class="header-center">
+      <div class="logo-area">
+       <div class="brand-mark"><span>VH</span></div>
+       <div class="brand-text">
+        <h1>Veritas Control Hub</h1><span>Dashboard di monitoraggio</span>
+       </div>
+      </div>
+     </div>
+     <div class="header-right">
+      <div class="btn-with-label"><button class="user-btn" onclick="showLoginModal()" aria-label="Area utente"> <svg class="icon-svg" aria-hidden="true"><use href="#icon-circle-user"></use></svg> </button> <span class="btn-label">Accedi</span>
+      </div>
+     </div>
+    </div>
+    <div class="menu-overlay" onclick="closeMenu()"></div>
+    <nav class="main-nav" id="mainNav">
+     <div class="main-nav__head"><strong>Veritas Control Hub</strong> <small>Servizio di Pulizia — Gruppo Veritas</small>
+     </div><a href="#home" onclick="closeMenu()">Home</a> <a href="#servizi" onclick="closeMenu()">Attività</a> <a href="#chi-siamo" onclick="closeMenu()">Altre Informazioni</a> <a href="#prospetto" onclick="closeMenu(); showMonthlySummaryModal();">Piano operativo degli interventi</a> <a href="https://pfespa.com" target="_blank" rel="noopener noreferrer">PFE</a> <a href="https://www.gruppoveritas.it" target="_blank" rel="noopener noreferrer">Gruppo Veritas</a> <a href="#contatti" onclick="closeMenu()">Contatti</a>
+    </nav>
+   </header>
+   <!--
+     IMMAGINE DI SFONDO HERO: aggiungi all'attributo style del tag <section> qui sotto
+     background-image:url('LA_TUA_IMMAGINE.jpg');
+     Esempio: <section class="hero-section" id="home" style="background-image:url('https://tuosito.it/foto.jpg')">
+   -->
+   <section class="hero-section" id="home" style="background-image:url('data:image/png;base64,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')">
+    <div class="hero-waves" aria-hidden="true">
+     <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,150 C240,210 480,90 720,140 C960,190 1200,110 1440,160 L1440,400 L0,400 Z" fill="#3B8634" opacity="0.20"/>
+      <path d="M0,230 C260,170 520,290 780,230 C1040,170 1300,250 1440,220 L1440,400 L0,400 Z" fill="#E98F3F" opacity="0.28"/>
+      <path d="M0,70 C300,25 600,110 900,55 C1100,20 1300,65 1440,45" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.40"/>
+      <path d="M0,290 C320,350 640,250 960,310 C1160,350 1300,285 1440,315" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.30"/>
+      <path d="M0,110 C280,60 560,150 840,95 C1080,55 1260,100 1440,80" fill="none" stroke="#5FAE52" stroke-width="1.5" opacity="0.35"/>
+     </svg>
+    </div>
+    <div class="hero-content">
+     <div class="hero-eyebrow"><svg class="icon-svg" aria-hidden="true"><use href="#icon-droplet"></use></svg> <span>VERITAS · MONITORAGGIO SERVIZIO PULIZIE</span>
+     </div>
+     <h2>Benvenuti in Veritas Control Hub</h2>
+     <p>Una piattaforma unica per monitorare qualità, KPI e conformità del servizio di pulizia erogato da PFE negli impianti e nelle sedi di Gruppo Veritas.</p>
+     <div class="cta-buttons">
+      <div class="dropdown-container"><button class="btn btn-primary" id="area-btn" onclick="toggleDropdown('area-dropdown')">Aree ▼</button>
+       <div id="area-dropdown" class="dropdown-menu"><a href="#" onclick="selectArea('Area 1'); return false;">Area 1</a> <a href="#" onclick="selectArea('Area 2'); return false;">Area 2</a> <a href="#" onclick="selectArea('Area 3'); return false;">Area 3</a> <a href="#" onclick="selectArea('Area 4'); return false;">Area 4</a> <a href="#" onclick="selectArea('Area 5'); return false;">Area 5</a> <a href="#" onclick="selectArea('Area 6'); return false;">Area 6</a>
+       </div>
+      </div>
+      <div class="dropdown-container"><button class="btn btn-primary" id="sede-btn" onclick="toggleDropdown('sede-dropdown')" disabled>Sede ▼</button>
+       <div id="sede-dropdown" class="dropdown-menu"></div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="services-section" id="servizi">
+    <div class="section-container">
+     <div class="section-header">
+      <h2>Le nostre Attività</h2>
+      <p>Il presidio quotidiano del servizio di pulizia per Gruppo Veritas, organizzato per tipologia di intervento.</p>
+     </div>
+     <div class="fse-cards">
+      <article class="fse-card" onclick="showServiceModal(1)">
+       <div class="fse-card__media overview"></div>
+       <div class="fse-card__body">
+        <div class="fse-card__keyline"></div>
+        <h3 class="fse-card__title">Attività Ordinarie</h3>
+        <p class="fse-card__text">Attività di pulizia e sanificazione da effettuare in maniera continuativa secondo il Piano di Lavoro concordato con Gruppo Veritas S.p.A.</p>
+       </div>
+      </article>
+      <article class="fse-card" onclick="showServiceModal(2)">
+       <div class="fse-card__media secondary"></div>
+       <div class="fse-card__body">
+        <div class="fse-card__keyline"></div>
+        <h3 class="fse-card__title">Attività Periodiche</h3>
+        <p class="fse-card__text">Attività di pulizia e sanificazione con frequenza uguale o superiore al mese da effettuare entro la 1° settimana del mese e la 1° settimana del trimestre.</p>
+       </div>
+      </article>
+      <article class="fse-card" onclick="showServiceModal(3)">
+       <div class="fse-card__media extra"></div>
+       <div class="fse-card__body">
+        <div class="fse-card__keyline"></div>
+        <h3 class="fse-card__title">Attività Straordinarie</h3>
+        <p class="fse-card__text">Esecuzione di attività a richiesta extra-canone fino all'esaurimento delle somme a disposizione.</p>
+       </div>
+      </article>
+     </div>
+     <div class="monthly-wrap" id="prospetto"><button class="monthly-btn" onclick="showMonthlySummaryModal()"> <svg class="icon-svg" aria-hidden="true"><use href="#icon-table-list"></use></svg> <span>Piano operativo degli interventi</span> </button>
+     </div>
+    </div>
+   </section>
+   <section class="info-section" id="chi-siamo">
+    <div class="section-container">
+     <div class="section-header">
+      <h2>Gestione Operativa</h2>
+      <p>Gli strumenti di presidio e controllo a supporto del servizio erogato a Gruppo Veritas.</p>
+     </div>
+     <div class="info-cards-grid">
+      <article class="info-card">
+       <div class="info-card__icon">
+        <svg class="icon-svg" aria-hidden="true"><use href="#icon-shield-halved"></use></svg>
+       </div>
+       <h3 class="info-card__title">Compliance Management</h3>
+       <ul class="info-card__list">
+        <li>KPI compliance</li>
+        <li>Obblighi e scadenze</li>
+        <li>Non Conformità</li>
+        <li>Penali e impatto</li>
+       </ul><button class="info-card__btn" onclick="showInfoModal(1)">Dettagli</button>
+      </article>
+      <article class="info-card">
+       <div class="info-card__icon">
+        <svg class="icon-svg" aria-hidden="true"><use href="#icon-users"></use></svg>
+       </div>
+       <h3 class="info-card__title">Personale</h3>
+       <ul class="info-card__list">
+        <li>Anagrafica operatori</li>
+        <li>Turni e copertura assenze</li>
+        <li>Dotazioni e DPI</li>
+       </ul><button class="info-card__btn" onclick="showInfoModal(2)">Dettagli</button>
+      </article>
+      <article class="info-card">
+       <div class="info-card__icon">
+        <svg class="icon-svg" aria-hidden="true"><use href="#icon-clipboard-check"></use></svg>
+       </div>
+       <h3 class="info-card__title">Piano della Qualità</h3>
+       <ul class="info-card__list">
+        <li>Controlli di processo</li>
+        <li>Controlli di risultato</li>
+        <li>Controlli sistematici/saltuari</li>
+        <li>Customer Satisfaction</li>
+        <li>Non Conformità e azioni correttive</li>
+       </ul><button class="info-card__btn" onclick="showInfoModal(3)">Dettagli</button>
+      </article>
+      <article class="info-card">
+       <div class="info-card__icon">
+        <svg class="icon-svg" aria-hidden="true"><use href="#icon-graduation-cap"></use></svg>
+       </div>
+       <h3 class="info-card__title">Formazione</h3>
+       <ul class="info-card__list">
+        <li>Corsi e moduli formativi</li>
+        <li>Test di valutazione</li>
+        <li>Report formazione</li>
+       </ul><button class="info-card__btn" onclick="showInfoModal(4)">Dettagli</button>
+      </article>
+      <article class="info-card">
+       <div class="info-card__icon">
+        <svg class="icon-svg" aria-hidden="true"><use href="#icon-leaf"></use></svg>
+       </div>
+       <h3 class="info-card__title">Sostenibilità</h3>
+       <ul class="info-card__list">
+        <li>Prodotti eco-compatibili</li>
+        <li>Riduzione impatto ambientale</li>
+        <li>Monitoraggio consumi</li>
+       </ul><button class="info-card__btn" onclick="showInfoModal(5)">Dettagli</button>
+      </article>
+     </div>
+    </div>
+   </section>
+   <footer class="main-footer" id="contatti">
+    <div class="footer-content">
+     <div class="footer-section">
+      <div class="footer-brand">
+       <div class="footer-logo"><span>VH</span></div>
+       <h3>Veritas Control Hub</h3>
+      </div>
+      <p>Piattaforma di monitoraggio del servizio di pulizia erogato da PFE per Gruppo Veritas.</p>
+     </div>
+     <div class="footer-section">
+      <h3>Attività</h3><a href="#servizi">Attività Ordinarie</a> <a href="#servizi">Attività Periodiche</a> <a href="#servizi">Attività Straordinarie</a>
+     </div>
+     <div class="footer-section">
+      <h3>Altre Informazioni</h3><a href="#chi-siamo">Compliance Management</a> <a href="#chi-siamo">Personale</a> <a href="#chi-siamo">Piano della Qualità</a> <a href="#chi-siamo">Formazione</a> <a href="#chi-siamo">Sostenibilità</a>
+     </div>
+     <div class="footer-section">
+      <h3>Supporto</h3><a href="#contatti">Contatti</a> <a href="#" onclick="return false;">FAQ</a> <a href="#" onclick="return false;">Documentazione</a> <a href="#" onclick="showLoginModal(); return false;">Area Clienti</a> <a href="#" onclick="return false;">Privacy Policy</a>
+     </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Veritas Control Hub — Servizio di monitoraggio pulizie erogato da PFE per Gruppo Veritas — Tutti i diritti riservati</span>
+    </div>
+   </footer>
+  </div>
+  <!-- Chatbot AI Assistant Widget -->
+  <div class="chatbot-launcher" id="chatbotLauncher"><button class="chatbot-fab" onclick="toggleChatbot()" aria-label="Apri Veritas AI Assistant"> <svg class="icon-svg" aria-hidden="true"><use href="#icon-robot"></use></svg> <span class="chatbot-badge">AI</span> </button>
+   <div class="chatbot-window" id="chatbotWindow">
+    <div class="chatbot-header">
+     <div class="chatbot-header__identity">
+      <div class="chatbot-header__avatar"><svg class="icon-svg" aria-hidden="true"><use href="#icon-robot"></use></svg>
+      </div>
+      <div class="chatbot-header__meta">
+       <div class="chatbot-header__title">
+        Veritas AI Assistant
+       </div>
+       <div class="chatbot-header__subtitle">
+        Assistente virtuale per supporto operativo
+       </div>
+      </div>
+     </div>
+     <div class="chatbot-header__actions">
+      <button class="chatbot-minimize" onclick="minimizeChatbot()" aria-label="Riduci chat"><svg class="icon-svg" aria-hidden="true"><use href="#icon-minus"></use></svg></button> <button class="chatbot-close" onclick="closeChatbot()" aria-label="Chiudi chat"><svg class="icon-svg" aria-hidden="true"><use href="#icon-xmark"></use></svg></button>
+     </div>
+    </div>
+    <div class="chatbot-body">
+     <div class="chatbot-messages" id="chatMessages"></div>
+     <div class="chatbot-quick-actions" id="quickActionsContainer"></div>
+     <div class="chatbot-input-area">
+      <input type="text" class="chatbot-input" id="chatInput" placeholder="Scrivi una richiesta…" aria-label="Campo messaggio chat"> <button class="chatbot-send" onclick="sendChatMessage()" aria-label="Invia messaggio"><svg class="icon-svg" aria-hidden="true"><use href="#icon-paper-plane"></use></svg></button>
+     </div>
+    </div>
+   </div>
+   <script>
+    let selectedSede = "Sede";
+    let selectedArea = "Area";
+    const sediGeneriche = ["Sede 1", "Sede 2", "Sede 3", "Sede 4"];
+    let chartInstances = [];
+    let qualityChartInstances = [];
+
+    const serviceContent = {
+      1: {
+        title: "Attività Ordinarie",
+        subtitle: "Attività di pulizia e sanificazione da effettuare in maniera continuativa secondo il Piano di Lavoro concordato con Gruppo Veritas S.p.A.",
+          areas: {
+          area1: { name: "Uffici", hours: 720, completion: 96.5, staff: 14, trend: "+3,2%", distribution: { "Pulizia uffici": 240, "Sanificazione postazioni": 174, "Svuotamento cestini": 146, "Rifornimento consumabili": 160 }, variance: { "Pulizia uffici": { planned: 236, executed: 240 }, "Sanificazione postazioni": { planned: 180, executed: 174 }, "Svuotamento cestini": { planned: 143, executed: 146 }, "Rifornimento consumabili": { planned: 163, executed: 160 } }, staffByWeek: [12, 14, 15, 14, 13, 14, 16, 14] },
+          area2: { name: "Sedi operative", hours: 620, completion: 95.8, staff: 12, trend: "+2,7%", distribution: { "Pulizia locali": 210, "Aree comuni": 180, "Rifornimento consumabili": 120, "Controlli giornalieri": 110 }, variance: { "Pulizia locali": { planned: 206, executed: 210 }, "Aree comuni": { planned: 186, executed: 180 }, "Rifornimento consumabili": { planned: 117, executed: 120 }, "Controlli giornalieri": { planned: 113, executed: 110 } }, staffByWeek: [10, 12, 13, 12, 11, 12, 14, 12] },
+          area3: { name: "Spogliatoi", hours: 628, completion: 97.8, staff: 10, trend: "+5,6%", distribution: { "Sanificazione bagni": 220, "Pulizia spogliatoi": 150, "Rifornimento consumabili": 136, "Disinfezione superfici": 122 }, variance: { "Sanificazione bagni": { planned: 216, executed: 220 }, "Pulizia spogliatoi": { planned: 156, executed: 150 }, "Rifornimento consumabili": { planned: 133, executed: 136 }, "Disinfezione superfici": { planned: 125, executed: 122 } }, staffByWeek: [8, 10, 11, 10, 9, 10, 12, 10] },
+          area4: { name: "Laboratori", hours: 470, completion: 94.2, staff: 8, trend: "+1,9%", distribution: { "Pulizia banchi": 160, "Sanificazione strumentazione": 140, "Smaltimento rifiuti speciali": 90, "Controlli qualità aria": 80 }, variance: { "Pulizia banchi": { planned: 156, executed: 160 }, "Sanificazione strumentazione": { planned: 146, executed: 140 }, "Smaltimento rifiuti speciali": { planned: 87, executed: 90 }, "Controlli qualità aria": { planned: 83, executed: 80 } }, staffByWeek: [6, 8, 9, 8, 7, 8, 10, 8] },
+          area5: { name: "Officine", hours: 580, completion: 93.5, staff: 11, trend: "+2,9%", distribution: { "Pulizia officine": 206, "Smaltimento oli esausti": 90, "Aree lavorazione": 174, "Rifornimento consumabili": 110 }, variance: { "Pulizia officine": { planned: 202, executed: 206 }, "Smaltimento oli esausti": { planned: 96, executed: 90 }, "Aree lavorazione": { planned: 171, executed: 174 }, "Rifornimento consumabili": { planned: 113, executed: 110 } }, staffByWeek: [9, 11, 12, 11, 10, 11, 13, 11] },
+          area6: { name: "Magazzini", hours: 498, completion: 92.6, staff: 9, trend: "+1,4%", distribution: { "Pulizia magazzini": 172, "Archivi": 90, "Aree coperte": 156, "Controlli periodici": 80 }, variance: { "Pulizia magazzini": { planned: 168, executed: 172 }, "Archivi": { planned: 96, executed: 90 }, "Aree coperte": { planned: 153, executed: 156 }, "Controlli periodici": { planned: 83, executed: 80 } }, staffByWeek: [7, 9, 10, 9, 8, 9, 11, 9] },
+          area7: { name: "Autorimesse", hours: 744, completion: 94.1, staff: 13, trend: "+3,4%", distribution: { "Pulizia piazzali": 214, "Lavaggio automezzi": 214, "Aree carico/scarico": 178, "Rifornimento carburanti": 138 }, variance: { "Pulizia piazzali": { planned: 210, executed: 214 }, "Lavaggio automezzi": { planned: 220, executed: 214 }, "Aree carico/scarico": { planned: 175, executed: 178 }, "Rifornimento carburanti": { planned: 141, executed: 138 } }, staffByWeek: [11, 13, 14, 13, 12, 13, 15, 13] },
+          area8: { name: "Centrali di sollevamento", hours: 390, completion: 91.7, staff: 6, trend: "+2,1%", distribution: { "Pulizia locali tecnici": 150, "Controlli sicurezza": 90, "Disinfezione": 80, "Verifiche periodiche": 70 }, variance: { "Pulizia locali tecnici": { planned: 146, executed: 150 }, "Controlli sicurezza": { planned: 96, executed: 90 }, "Disinfezione": { planned: 77, executed: 80 }, "Verifiche periodiche": { planned: 73, executed: 70 } }, staffByWeek: [4, 6, 7, 6, 5, 6, 8, 6] },
+          area9: { name: "Crematori", hours: 450, completion: 95.3, staff: 7, trend: "+2,5%", distribution: { "Pulizia e sanificazione": 180, "Disinfezione superfici": 110, "Controlli specifici": 90, "Smaltimento rifiuti": 70 }, variance: { "Pulizia e sanificazione": { planned: 176, executed: 180 }, "Disinfezione superfici": { planned: 116, executed: 110 }, "Controlli specifici": { planned: 87, executed: 90 }, "Smaltimento rifiuti": { planned: 73, executed: 70 } }, staffByWeek: [5, 7, 8, 7, 6, 7, 9, 7] },
+          area10: { name: "Superfici vetrate", hours: 470, completion: 93.9, staff: 8, trend: "+1,7%", distribution: { "Pulizia vetrate interne": 150, "Pulizia vetrate esterne": 170, "Infissi e serramenti": 90, "Controlli periodici": 60 }, variance: { "Pulizia vetrate interne": { planned: 146, executed: 150 }, "Pulizia vetrate esterne": { planned: 176, executed: 170 }, "Infissi e serramenti": { planned: 87, executed: 90 }, "Controlli periodici": { planned: 63, executed: 60 } }, staffByWeek: [6, 8, 9, 8, 7, 8, 10, 8] },
+          area11: { name: "Casi particolari", hours: 390, completion: 90.5, staff: 6, trend: "+3,8%", distribution: { "Interventi su richiesta": 140, "Pulizie straordinarie mirate": 120, "Sopralluoghi tecnici": 80, "Documentazione": 50 }, variance: { "Interventi su richiesta": { planned: 136, executed: 140 }, "Pulizie straordinarie mirate": { planned: 126, executed: 120 }, "Sopralluoghi tecnici": { planned: 77, executed: 80 }, "Documentazione": { planned: 53, executed: 50 } }, staffByWeek: [4, 6, 7, 6, 5, 6, 8, 6] }
+        }
+      },
+      2: {
+        title: "Attività Periodiche",
+        subtitle: "Attività di pulizia e sanificazione con frequenza uguale o superiore al mese, da effettuare entro la 1° settimana del mese e la 1° settimana del trimestre.",
+          areas: {
+          area1: { name: "Uffici", hours: 720, completion: 96.5, staff: 14, trend: "+3,2%", distribution: { "Pulizia uffici": 240, "Sanificazione postazioni": 174, "Svuotamento cestini": 146, "Rifornimento consumabili": 160 }, variance: { "Pulizia uffici": { planned: 236, executed: 240 }, "Sanificazione postazioni": { planned: 180, executed: 174 }, "Svuotamento cestini": { planned: 143, executed: 146 }, "Rifornimento consumabili": { planned: 163, executed: 160 } }, staffByWeek: [12, 14, 15, 14, 13, 14, 16, 14] },
+          area2: { name: "Sedi operative", hours: 620, completion: 95.8, staff: 12, trend: "+2,7%", distribution: { "Pulizia locali": 210, "Aree comuni": 180, "Rifornimento consumabili": 120, "Controlli giornalieri": 110 }, variance: { "Pulizia locali": { planned: 206, executed: 210 }, "Aree comuni": { planned: 186, executed: 180 }, "Rifornimento consumabili": { planned: 117, executed: 120 }, "Controlli giornalieri": { planned: 113, executed: 110 } }, staffByWeek: [10, 12, 13, 12, 11, 12, 14, 12] },
+          area3: { name: "Spogliatoi", hours: 628, completion: 97.8, staff: 10, trend: "+5,6%", distribution: { "Sanificazione bagni": 220, "Pulizia spogliatoi": 150, "Rifornimento consumabili": 136, "Disinfezione superfici": 122 }, variance: { "Sanificazione bagni": { planned: 216, executed: 220 }, "Pulizia spogliatoi": { planned: 156, executed: 150 }, "Rifornimento consumabili": { planned: 133, executed: 136 }, "Disinfezione superfici": { planned: 125, executed: 122 } }, staffByWeek: [8, 10, 11, 10, 9, 10, 12, 10] },
+          area4: { name: "Laboratori", hours: 470, completion: 94.2, staff: 8, trend: "+1,9%", distribution: { "Pulizia banchi": 160, "Sanificazione strumentazione": 140, "Smaltimento rifiuti speciali": 90, "Controlli qualità aria": 80 }, variance: { "Pulizia banchi": { planned: 156, executed: 160 }, "Sanificazione strumentazione": { planned: 146, executed: 140 }, "Smaltimento rifiuti speciali": { planned: 87, executed: 90 }, "Controlli qualità aria": { planned: 83, executed: 80 } }, staffByWeek: [6, 8, 9, 8, 7, 8, 10, 8] },
+          area5: { name: "Officine", hours: 580, completion: 93.5, staff: 11, trend: "+2,9%", distribution: { "Pulizia officine": 206, "Smaltimento oli esausti": 90, "Aree lavorazione": 174, "Rifornimento consumabili": 110 }, variance: { "Pulizia officine": { planned: 202, executed: 206 }, "Smaltimento oli esausti": { planned: 96, executed: 90 }, "Aree lavorazione": { planned: 171, executed: 174 }, "Rifornimento consumabili": { planned: 113, executed: 110 } }, staffByWeek: [9, 11, 12, 11, 10, 11, 13, 11] },
+          area6: { name: "Magazzini", hours: 498, completion: 92.6, staff: 9, trend: "+1,4%", distribution: { "Pulizia magazzini": 172, "Archivi": 90, "Aree coperte": 156, "Controlli periodici": 80 }, variance: { "Pulizia magazzini": { planned: 168, executed: 172 }, "Archivi": { planned: 96, executed: 90 }, "Aree coperte": { planned: 153, executed: 156 }, "Controlli periodici": { planned: 83, executed: 80 } }, staffByWeek: [7, 9, 10, 9, 8, 9, 11, 9] },
+          area7: { name: "Autorimesse", hours: 744, completion: 94.1, staff: 13, trend: "+3,4%", distribution: { "Pulizia piazzali": 214, "Lavaggio automezzi": 214, "Aree carico/scarico": 178, "Rifornimento carburanti": 138 }, variance: { "Pulizia piazzali": { planned: 210, executed: 214 }, "Lavaggio automezzi": { planned: 220, executed: 214 }, "Aree carico/scarico": { planned: 175, executed: 178 }, "Rifornimento carburanti": { planned: 141, executed: 138 } }, staffByWeek: [11, 13, 14, 13, 12, 13, 15, 13] },
+          area8: { name: "Centrali di sollevamento", hours: 390, completion: 91.7, staff: 6, trend: "+2,1%", distribution: { "Pulizia locali tecnici": 150, "Controlli sicurezza": 90, "Disinfezione": 80, "Verifiche periodiche": 70 }, variance: { "Pulizia locali tecnici": { planned: 146, executed: 150 }, "Controlli sicurezza": { planned: 96, executed: 90 }, "Disinfezione": { planned: 77, executed: 80 }, "Verifiche periodiche": { planned: 73, executed: 70 } }, staffByWeek: [4, 6, 7, 6, 5, 6, 8, 6] },
+          area9: { name: "Crematori", hours: 450, completion: 95.3, staff: 7, trend: "+2,5%", distribution: { "Pulizia e sanificazione": 180, "Disinfezione superfici": 110, "Controlli specifici": 90, "Smaltimento rifiuti": 70 }, variance: { "Pulizia e sanificazione": { planned: 176, executed: 180 }, "Disinfezione superfici": { planned: 116, executed: 110 }, "Controlli specifici": { planned: 87, executed: 90 }, "Smaltimento rifiuti": { planned: 73, executed: 70 } }, staffByWeek: [5, 7, 8, 7, 6, 7, 9, 7] },
+          area10: { name: "Superfici vetrate", hours: 470, completion: 93.9, staff: 8, trend: "+1,7%", distribution: { "Pulizia vetrate interne": 150, "Pulizia vetrate esterne": 170, "Infissi e serramenti": 90, "Controlli periodici": 60 }, variance: { "Pulizia vetrate interne": { planned: 146, executed: 150 }, "Pulizia vetrate esterne": { planned: 176, executed: 170 }, "Infissi e serramenti": { planned: 87, executed: 90 }, "Controlli periodici": { planned: 63, executed: 60 } }, staffByWeek: [6, 8, 9, 8, 7, 8, 10, 8] },
+          area11: { name: "Casi particolari", hours: 390, completion: 90.5, staff: 6, trend: "+3,8%", distribution: { "Interventi su richiesta": 140, "Pulizie straordinarie mirate": 120, "Sopralluoghi tecnici": 80, "Documentazione": 50 }, variance: { "Interventi su richiesta": { planned: 136, executed: 140 }, "Pulizie straordinarie mirate": { planned: 126, executed: 120 }, "Sopralluoghi tecnici": { planned: 77, executed: 80 }, "Documentazione": { planned: 53, executed: 50 } }, staffByWeek: [4, 6, 7, 6, 5, 6, 8, 6] }
+        }
+      },
+      3: {
+        title: "Attività Straordinarie",
+        subtitle: "Esecuzione di attività a richiesta extra-canone fino all'esaurimento delle somme a disposizione.",
+        areas: {
+          area1: { name: "Interventi accessori autorizzati", hours: 286, completion: 91.8, staff: 10, trend: "+6,2%", distribution: { "Ripristini extra": 76, "Pulizie profonde": 68, "Eventi e urgenze": 52, "Supporti accessori": 44, "Disinfestazioni extra": 46 }, variance: { "Ripristini": { planned: 72, executed: 76 }, "Pulizie profonde": { planned: 70, executed: 68 }, "Urgenze": { planned: 48, executed: 52 }, "Supporti": { planned: 46, executed: 44 }, "Extra": { planned: 42, executed: 46 } }, staffByWeek: [8, 10, 9, 11, 10, 9, 12, 10] },
+          area2: { name: "Servizi a chiamata / extra canone", hours: 244, completion: 89.7, staff: 8, trend: "+4,1%", distribution: { "Richieste extra": 62, "Sopralluoghi": 38, "Esecuzione": 84, "Chiusura interventi": 36, "Documentazione": 24 }, variance: { "Richieste": { planned: 60, executed: 62 }, "Sopralluoghi": { planned: 40, executed: 38 }, "Esecuzione": { planned: 80, executed: 84 }, "Chiusure": { planned: 38, executed: 36 }, "Documenti": { planned: 26, executed: 24 } }, staffByWeek: [7, 8, 8, 9, 8, 7, 9, 8] }
+        }
+      }
+    };
+
+    const infoContent = {
+      1: { title: "Compliance Management", subtitle: "Presidio strutturato di obblighi, KPI e scadenze contrattuali.", items: ["KPI compliance per area e periodo", "Scadenziario obblighi contrattuali", "Registro Non Conformità", "Tracciamento penali, cause e impatti economici"] },
+      2: { title: "Personale", subtitle: "Vista operativa su forza lavoro, turnazioni, copertura assenze, dotazioni.", items: ["Anagrafica operatori", "Turni, sostituzioni e copertura assenze", "Dotazioni e DPI", "Matrice competenze e abilitazioni"] },
+      3: { title: "Piano della Qualità", subtitle: "Cruscotto per controlli di processo, risultato e gestione del ciclo NC.", items: ["Controlli di processo", "Controlli di risultato", "Controlli sistematici/saltuari", "Customer Satisfaction", "Non Conformità e azioni correttive"] },
+      4: { title: "Formazione", subtitle: "Monitoraggio del piano formativo e stato completamento moduli.", items: ["Corsi e moduli formativi", "Test di valutazione", "Report formazione", "Scadenze aggiornamenti periodici"] },
+      5: { title: "Sostenibilità", subtitle: "Monitoraggio ambientale: prodotti eco-compatibili, consumi, riduzione impatto.", items: ["Prodotti eco-compatibili", "Riduzione impatto ambientale", "Monitoraggio consumi", "Indicatori ambientali di periodo"] }
+    };
+
+    function toggleMobileMenu() {
+      document.getElementById("mainNav").classList.toggle("active");
+      document.querySelector(".menu-overlay").classList.toggle("active");
+    }
+
+    function closeMenu() {
+      document.getElementById("mainNav").classList.remove("active");
+      document.querySelector(".menu-overlay").classList.remove("active");
+    }
+
+    function toggleDropdown(id) {
+      document.querySelectorAll(".dropdown-menu").forEach(menu => {
+        if (menu.id !== id) {
+          menu.classList.remove("active");
+        }
+      });
+      document.getElementById(id).classList.toggle("active");
+    }
+
+    function truncateLabel(v, max = 32) { return v.length > max ? v.substring(0, max) + "… ▼" : v + " ▼"; }
+
+    function selectArea(v) {
+      selectedArea = v;
+      document.getElementById("area-btn").textContent = truncateLabel(v);
+      document.getElementById("area-dropdown").classList.remove("active");
+      const sedeBtn = document.getElementById("sede-btn");
+      sedeBtn.disabled = false;
+      sedeBtn.textContent = "Sede ▼";
+      selectedSede = "Sede";
+      document.getElementById("sede-dropdown").innerHTML = sediGeneriche.map(s => `<a href="#" onclick="selectSede('${s}'); return false;">${s}</a>`).join(" ");
+      showToast("Area selezionata", v);
+    }
+
+    function selectSede(v) {
+      selectedSede = v;
+      document.getElementById("sede-btn").textContent = truncateLabel(v);
+      document.getElementById("sede-dropdown").classList.remove("active");
+      showToast("Sede selezionata", selectedArea + " — " + v);
+    }
+
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".dropdown-container")) {
+        document.querySelectorAll(".dropdown-menu").forEach(menu => menu.classList.remove("active"));
+      }
+    });
+
+    function showToast(title, message) {
+      const old = document.querySelector(".toast");
+      if (old) old.remove();
+      const t = document.createElement("div");
+      t.className = "toast";
+      t.innerHTML = `<svg class="icon-svg" aria-hidden="true"><use href="#icon-circle-check"></use></svg><div><div>${title}</div><small style="opacity:.82;font-weight:650;">${message}</small></div>`;
+      document.body.appendChild(t);
+      setTimeout(() => { t.style.animation = "fadeIn .24s ease reverse"; setTimeout(() => t.remove(), 240); }, 2800);
+    }
+
+    function destroyCharts() { chartInstances.forEach(c => c.destroy()); chartInstances = []; }
+    function destroyQualityCharts() { qualityChartInstances.forEach(c => c.destroy()); qualityChartInstances = []; }
+
+    function setActiveQualityTab(type) {
+      document.querySelectorAll(".quality-tab").forEach(tab => tab.classList.remove("active"));
+      const activeTab = document.querySelector(`.quality-tab[data-quality-tab="${type}"]`);
+      if (activeTab) activeTab.classList.add("active");
+    }
+
+    function closeModal() {
+      destroyCharts();
+      destroyQualityCharts();
+      const m = document.querySelector(".modal-backdrop");
+      if (m) m.remove();
+      document.body.style.overflow = "";
+    }
+
+    function modalShell(content, small = false) {
+      document.body.style.overflow = "hidden";
+      const m = document.createElement("div");
+      m.className = "modal-backdrop";
+      m.innerHTML = `<div class="modal-panel ${small ? "modal-panel--small" : ""}"><button class="modal-close" onclick="closeModal()" aria-label="Chiudi"><svg class="icon-svg" aria-hidden="true"><use href="#icon-xmark"></use></svg></button><div class="modal-content">${content}</div></div>`;
+      m.addEventListener("click", e => { if (e.target === m) closeModal(); });
+      document.body.appendChild(m);
+    }
+
+    function showServiceModal(id) {
+      const s = serviceContent[id];
+      const opts = Object.keys(s.areas).map(k => `<option value="${k}">${s.areas[k].name}</option>`).join("");
+      modalShell(`
+        <div class="fse-card__keyline"></div>
+        <h2 class="modal-title">${s.title}</h2>
+        <p class="modal-subtitle">${s.subtitle}</p>
+        <label class="field-label" for="area-select">Seleziona Area / Ambito operativo</label>
+        <div class="select-wrap"><select id="area-select" onchange="updateServiceCharts(${id})">${opts}</select><svg class="icon-svg" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></div>
+        <div class="kpi-grid">
+          <div class="kpi-card" style="--accent:var(--fse-green)"><div class="kpi-label">Ore Totali Lavorate</div><div id="kpi-hours" class="kpi-value">0h</div><div id="kpi-trend" class="kpi-note">Trend periodo</div></div>
+          <div class="kpi-card" style="--accent:var(--fse-red)"><div class="kpi-label">Attività Completate</div><div id="kpi-completion" class="kpi-value">0%</div><div class="kpi-note">Periodo mensile corrente</div></div>
+          <div class="kpi-card" style="--accent:var(--fse-green-light)"><div class="kpi-label">Addetti Impiegati</div><div id="kpi-staff" class="kpi-value">0</div><div class="kpi-note">Media nel periodo</div></div>
+        </div>
+        <div class="chart-grid"><div class="chart-box"><h3>Distribuzione ore per attività</h3><canvas id="distributionChart"></canvas></div><div class="chart-box"><h3>Scostamento pianificato / eseguito</h3><canvas id="varianceChart"></canvas></div></div>
+        <div class="chart-grid"><div class="chart-box"><h3>Numero addetti impiegati</h3><canvas id="staffChart"></canvas></div><div class="chart-box"><h3>Calendarizzazione attività periodiche</h3><div class="calendar-grid" id="calendarGrid"></div></div></div>
+      `);
+      setTimeout(() => updateServiceCharts(id), 60);
+    }
+
+    function updateServiceCharts(id) {
+      destroyCharts();
+      const key = document.getElementById("area-select").value;
+      const data = serviceContent[id].areas[key];
+      document.getElementById("kpi-hours").textContent = data.hours + "h";
+      document.getElementById("kpi-completion").textContent = data.completion + "%";
+      document.getElementById("kpi-staff").textContent = data.staff;
+      document.getElementById("kpi-trend").textContent = data.trend + " vs mese precedente";
+
+      const css = getComputedStyle(document.documentElement);
+      const green = css.getPropertyValue("--fse-green").trim();
+      const greenLight = css.getPropertyValue("--fse-green-light").trim();
+      const red = css.getPropertyValue("--fse-red").trim();
+      const blue = css.getPropertyValue("--fse-blue").trim();
+
+      chartInstances.push(new Chart(document.getElementById("distributionChart"), {
+        type: "doughnut", data: { labels: Object.keys(data.distribution), datasets: [{ data: Object.values(data.distribution), backgroundColor: [green, blue, red, greenLight, "#8FC9E0", "#F5D9B8"], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 11, weight: "700" } } } }, cutout: "62%" }
+      }));
+
+      const vLabels = Object.keys(data.variance);
+      chartInstances.push(new Chart(document.getElementById("varianceChart"), {
+        type: "bar", data: { labels: vLabels, datasets: [{ label: "Pianificato", data: vLabels.map(l => data.variance[l].planned), backgroundColor: "#8FC9E0", borderRadius: 8 }, { label: "Eseguito", data: vLabels.map(l => data.variance[l].executed), backgroundColor: green, borderRadius: 8 }] }, options: { responsive: true, plugins: { legend: { position: "bottom", labels: { font: { size: 11, weight: "700" } } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 10, weight: "700" } } }, y: { beginAtZero: true, grid: { color: "rgba(59,134,52,.08)" } } } }
+      }));
+
+      chartInstances.push(new Chart(document.getElementById("staffChart"), {
+        type: "line", data: { labels: ["Set. 1","Set. 2","Set. 3","Set. 4","Set. 5","Set. 6","Set. 7","Set. 8"], datasets: [{ label: "Addetti", data: data.staffByWeek, borderColor: red, backgroundColor: "rgba(233,143,63,.12)", fill: true, tension: .38, pointBackgroundColor: red, pointRadius: 4 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 10, weight: "700" } } }, y: { beginAtZero: false, grid: { color: "rgba(59,134,52,.08)" } } } }
+      }));
+
+      const cal = document.getElementById("calendarGrid");
+      cal.innerHTML = "";
+      for (let i = 1; i <= 31; i++) {
+        const d = document.createElement("div");
+        d.className = "calendar-day";
+        if ([1,3,5,8,10,12,15,17,19,22,24,26,29].includes(i)) d.classList.add("active");
+        if ([7,14,21,28].includes(i)) d.classList.add("red");
+        d.textContent = i;
+        cal.appendChild(d);
+      }
+    }
+
+    function showInfoModal(id) {
+      if (id === 3) { showQualityModal(); return; }
+      const item = infoContent[id];
+      modalShell(`<div class="fse-card__keyline"></div><h2 class="modal-title">${item.title}</h2><p class="modal-subtitle">${item.subtitle}</p><div class="detail-list">${item.items.map(e => `<div><svg class="icon-svg" aria-hidden="true"><use href="#icon-check"></use></svg><span>${e}</span></div>`).join("")}</div>`, true);
+    }
+
+    function showQualityModal() {
+      modalShell(`
+        <div class="fse-card__keyline"></div>
+        <h2 class="modal-title">Piano della Qualità</h2>
+        <p class="modal-subtitle">Cruscotto per controlli di processo, risultato e gestione del ciclo NC.</p>
+        <div class="quality-tabs">
+          <button type="button" class="quality-tab active" data-quality-tab="processo" onclick="showQualityDetail('processo')" aria-label="Controlli di Processo"><svg class="icon-svg" aria-hidden="true"><use href="#icon-clipboard-check"></use></svg><span>Controlli di Processo</span></button>
+          <button type="button" class="quality-tab" data-quality-tab="risultato" onclick="showQualityDetail('risultato')" aria-label="Controlli di Risultato"><svg class="icon-svg" aria-hidden="true"><use href="#icon-magnifying-glass-chart"></use></svg><span>Controlli di Risultato</span></button>
+          <button type="button" class="quality-tab" data-quality-tab="sistematici" onclick="showQualityDetail('sistematici')" aria-label="Controlli Sistematici/Saltuari"><svg class="icon-svg" aria-hidden="true"><use href="#icon-list-check"></use></svg><span>Sistematici/Saltuari</span></button>
+          <button type="button" class="quality-tab" data-quality-tab="customer" onclick="showQualityDetail('customer')" aria-label="Customer Satisfaction"><svg class="icon-svg" aria-hidden="true"><use href="#icon-face-smile"></use></svg><span>Customer Satisfaction</span></button>
+          <button type="button" class="quality-tab" data-quality-tab="nonconformita" onclick="showQualityDetail('nonconformita')" aria-label="Non Conformità"><svg class="icon-svg" aria-hidden="true"><use href="#icon-triangle-exclamation"></use></svg><span>Non Conformità</span></button>
+        </div>
+        <div id="quality-detail-panel"></div>
+      `, false);
+      setTimeout(() => showQualityDetail("processo"), 50);
+    }
+
+    function showQualityDetail(type) {
+      destroyQualityCharts();
+      setActiveQualityTab(type);
+      const panel = document.getElementById("quality-detail-panel");
+      const css = getComputedStyle(document.documentElement);
+      const green = css.getPropertyValue("--fse-green").trim() || "#3B8634";
+      const greenLight = css.getPropertyValue("--fse-green-light").trim() || "#5FAE52";
+      const red = css.getPropertyValue("--fse-red").trim() || "#E98F3F";
+      const blue = css.getPropertyValue("--fse-blue").trim() || "#1770A8";
+
+      if (type === "processo") {
+        panel.innerHTML = `
+          <div class="quality-detail-card">
+            <div class="quality-detail-header"><h3>Controlli di Processo</h3><p>Monitoraggio dei controlli eseguiti sulle modalità operative, sulla corretta applicazione delle procedure e sul rispetto del Piano Operativo.</p></div>
+            <div class="quality-kpi-grid">
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">Indice Qualità</div><div class="quality-kpi-value">0.95</div></div>
+              <div class="quality-kpi" style="--accent:${greenLight}"><div class="quality-kpi-label">LQA</div><div class="quality-kpi-value">0.90</div></div>
+              <div class="quality-kpi" style="--accent:${red}"><div class="quality-kpi-label">Controlli eseguiti</div><div class="quality-kpi-value">128</div></div>
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">NC rilevate</div><div class="quality-kpi-value">6</div></div>
+            </div>
+            <div class="quality-chart-grid"><div class="quality-chart-box"><h4>Esito controlli di processo</h4><canvas id="qualityProcessChart"></canvas></div><div class="quality-chart-box"><h4>Trend mensile</h4><canvas id="qualityProcessTrendChart"></canvas></div></div>
+            <div class="quality-actions"><button class="quality-download-btn" onclick="showToast('Download simulato','Checklist Controlli di Processo generata')"><svg class="icon-svg" aria-hidden="true"><use href="#icon-download"></use></svg> Download Checklist</button></div>
+          </div>`;
+        setTimeout(() => {
+          qualityChartInstances.push(new Chart(document.getElementById("qualityProcessChart"), { type: "doughnut", data: { labels: ["Conformi", "Non conformi"], datasets: [{ data: [95, 5], backgroundColor: [green, red], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 10, weight: "700" } } } }, cutout: "60%" } }));
+          qualityChartInstances.push(new Chart(document.getElementById("qualityProcessTrendChart"), { type: "line", data: { labels: ["Sett. 1", "Sett. 2", "Sett. 3", "Sett. 4"], datasets: [{ label: "Indice Qualità", data: [0.92, 0.93, 0.94, 0.95], borderColor: green, backgroundColor: `rgba(59,134,52,.12)`, fill: true, tension: 0.38, pointBackgroundColor: green, pointRadius: 4 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0.85, max: 1, grid: { color: "rgba(59,134,52,.08)" } } } } }));
+        }, 60);
+      } else if (type === "risultato") {
+        panel.innerHTML = `
+          <div class="quality-detail-card">
+            <div class="quality-detail-header"><h3>Controlli di Risultato</h3><p>Verifica del livello qualitativo percepibile e misurabile al termine dell'intervento, con analisi degli esiti per area e servizio.</p></div>
+            <div class="quality-kpi-grid">
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">Indice Qualità</div><div class="quality-kpi-value">0.95</div></div>
+              <div class="quality-kpi" style="--accent:${greenLight}"><div class="quality-kpi-label">LQA</div><div class="quality-kpi-value">0.90</div></div>
+              <div class="quality-kpi" style="--accent:${red}"><div class="quality-kpi-label">Controlli eseguiti</div><div class="quality-kpi-value">116</div></div>
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">NC rilevate</div><div class="quality-kpi-value">7</div></div>
+            </div>
+            <div class="quality-chart-grid"><div class="quality-chart-box"><h4>Esito controlli di risultato</h4><canvas id="qualityResultChart"></canvas></div><div class="quality-chart-box"><h4>Andamento mensile</h4><canvas id="qualityResultTrendChart"></canvas></div></div>
+            <div class="quality-actions"><button class="quality-download-btn" onclick="showToast('Download simulato','Checklist Controlli di Risultato generata')"><svg class="icon-svg" aria-hidden="true"><use href="#icon-download"></use></svg> Download Checklist</button></div>
+          </div>`;
+        setTimeout(() => {
+          qualityChartInstances.push(new Chart(document.getElementById("qualityResultChart"), { type: "doughnut", data: { labels: ["Conformi", "Non conformi"], datasets: [{ data: [94, 6], backgroundColor: [green, red], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 10, weight: "700" } } } }, cutout: "60%" } }));
+          qualityChartInstances.push(new Chart(document.getElementById("qualityResultTrendChart"), { type: "line", data: { labels: ["Sett. 1", "Sett. 2", "Sett. 3", "Sett. 4"], datasets: [{ label: "Indice Qualità", data: [0.91, 0.93, 0.94, 0.95], borderColor: green, backgroundColor: `rgba(59,134,52,.12)`, fill: true, tension: 0.38, pointBackgroundColor: green, pointRadius: 4 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0.85, max: 1, grid: { color: "rgba(59,134,52,.08)" } } } } }));
+        }, 60);
+      } else if (type === "sistematici") {
+        panel.innerHTML = `
+          <div class="quality-detail-card">
+            <div class="quality-detail-header"><h3>Controlli Sistematici / Saltuari</h3><p>Presidio delle verifiche programmate e delle ispezioni occasionali sui servizi erogati, con evidenza della copertura e delle criticità rilevate.</p></div>
+            <div class="quality-kpi-grid">
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">Controlli sistematici</div><div class="quality-kpi-value">72%</div></div>
+              <div class="quality-kpi" style="--accent:${greenLight}"><div class="quality-kpi-label">Controlli saltuari</div><div class="quality-kpi-value">28%</div></div>
+              <div class="quality-kpi" style="--accent:${red}"><div class="quality-kpi-label">Copertura servizi</div><div class="quality-kpi-value">91%</div></div>
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">Criticità aperte</div><div class="quality-kpi-value">4</div></div>
+            </div>
+            <div class="quality-chart-grid"><div class="quality-chart-box"><h4>Tipologia controlli</h4><canvas id="qualityTypeChart"></canvas></div><div class="quality-chart-box"><h4>Copertura per servizio</h4><canvas id="qualityCoverageChart"></canvas></div></div>
+            <div class="quality-actions"><button class="quality-download-btn" onclick="showToast('Download simulato','Checklist Controlli Sistematici/Saltuari generata')"><svg class="icon-svg" aria-hidden="true"><use href="#icon-download"></use></svg> Download Checklist</button></div>
+          </div>`;
+        setTimeout(() => {
+          qualityChartInstances.push(new Chart(document.getElementById("qualityTypeChart"), { type: "doughnut", data: { labels: ["Sistematici", "Saltuari"], datasets: [{ data: [72, 28], backgroundColor: [green, greenLight], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 10, weight: "700" } } } }, cutout: "60%" } }));
+          qualityChartInstances.push(new Chart(document.getElementById("qualityCoverageChart"), { type: "doughnut", data: { labels: ["Pulizia e sanificazione", "Disinfestazione", "Apertura/chiusura locali"], datasets: [{ data: [55, 25, 20], backgroundColor: [green, red, greenLight], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 10, weight: "700" } } } }, cutout: "60%" } }));
+        }, 60);
+      } else if (type === "customer") {
+        panel.innerHTML = `
+          <div class="quality-detail-card">
+            <div class="quality-detail-header"><h3>Customer Satisfaction</h3><p>Rilevazione del livello di soddisfazione degli stakeholder rispetto alla qualità percepita, alla tempestività e alla continuità del servizio.</p></div>
+            <div class="quality-kpi-grid">
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">Punteggio medio</div><div class="quality-kpi-value">4.5</div></div>
+              <div class="quality-kpi" style="--accent:${greenLight}"><div class="quality-kpi-label">Questionari</div><div class="quality-kpi-value">84</div></div>
+              <div class="quality-kpi" style="--accent:${red}"><div class="quality-kpi-label">Trend</div><div class="quality-kpi-value">+6%</div></div>
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">Segnalazioni</div><div class="quality-kpi-value">3</div></div>
+            </div>
+            <div class="quality-chart-grid"><div class="quality-chart-box"><h4>Qualità percepita</h4><canvas id="qualityAttributeChart"></canvas></div><div class="quality-chart-box"><h4>Esperienza del servizio</h4><canvas id="qualityExperienceChart"></canvas></div></div>
+            <div class="quality-actions"><button class="quality-download-btn" onclick="showToast('Questionario simulato','Modulo Customer Satisfaction aperto')"><svg class="icon-svg" aria-hidden="true"><use href="#icon-clipboard-list"></use></svg> Questionario</button></div>
+          </div>`;
+        setTimeout(() => {
+          qualityChartInstances.push(new Chart(document.getElementById("qualityAttributeChart"), { type: "bar", data: { labels: ["Pulizia ambienti", "Tempestività", "Disponibilità", "Completezza"], datasets: [{ label: "Punteggio", data: [4.6, 4.4, 4.7, 4.5], backgroundColor: green, borderRadius: 8 }] }, options: { indexAxis: "y", responsive: true, plugins: { legend: { display: false } }, scales: { x: { min: 0, max: 5, grid: { color: "rgba(59,134,52,.08)" } } } } }));
+          qualityChartInstances.push(new Chart(document.getElementById("qualityExperienceChart"), { type: "bar", data: { labels: ["Comunicazione", "Gestione segnalazioni", "Chiarezza report", "Affidabilità"], datasets: [{ label: "Punteggio", data: [4.3, 4.2, 4.5, 4.6], backgroundColor: greenLight, borderRadius: 8 }] }, options: { indexAxis: "y", responsive: true, plugins: { legend: { display: false } }, scales: { x: { min: 0, max: 5, grid: { color: "rgba(59,134,52,.08)" } } } } }));
+        }, 60);
+      } else if (type === "nonconformita") {
+        panel.innerHTML = `
+          <div class="quality-detail-card">
+            <div class="quality-detail-header"><h3>Non Conformità e Azioni Correttive</h3><p>Tracciamento del ciclo di gestione delle non conformità: apertura, classificazione, presa in carico, trattamento, chiusura e verifica di efficacia.</p></div>
+            <div class="quality-kpi-grid">
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">NC totali</div><div class="quality-kpi-value">26</div></div>
+              <div class="quality-kpi" style="--accent:${greenLight}"><div class="quality-kpi-label">NC chiuse</div><div class="quality-kpi-value">18</div></div>
+              <div class="quality-kpi" style="--accent:${red}"><div class="quality-kpi-label">Tempo medio chiusura</div><div class="quality-kpi-value">3.2gg</div></div>
+              <div class="quality-kpi" style="--accent:${green}"><div class="quality-kpi-label">Efficacia AC</div><div class="quality-kpi-value">92%</div></div>
+            </div>
+            <div class="quality-chart-grid"><div class="quality-chart-box"><h4>Stato Non Conformità</h4><canvas id="qualityStatusChart"></canvas></div><div class="quality-chart-box"><h4>NC per ambito</h4><canvas id="qualityAreaChart"></canvas></div></div>
+            <div class="quality-status-list"><h4>Azioni correttive prioritarie</h4><ul><li>Ripianificazione intervento entro 24h</li><li>Verifica fotografica post-ripristino</li><li>Validazione referente Veritas</li></ul></div>
+            <div class="quality-actions"><button class="quality-download-btn" onclick="showToast('Download simulato','Registro Non Conformità generato')"><svg class="icon-svg" aria-hidden="true"><use href="#icon-file-lines"></use></svg> Registro NC</button></div>
+          </div>`;
+        setTimeout(() => {
+          qualityChartInstances.push(new Chart(document.getElementById("qualityStatusChart"), { type: "doughnut", data: { labels: ["Chiuse", "In trattamento", "Aperte"], datasets: [{ data: [18, 5, 3], backgroundColor: [green, greenLight, red], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 10, weight: "700" } } } }, cutout: "60%" } }));
+          qualityChartInstances.push(new Chart(document.getElementById("qualityAreaChart"), { type: "bar", data: { labels: ["Pulizia", "Sanificazione", "Disinfestazione", "Sedi Veritas", "Reporting"], datasets: [{ label: "NC", data: [8, 5, 3, 6, 4], backgroundColor: red, borderRadius: 8 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: "rgba(59,134,52,.08)" } } } } }));
+        }, 60);
+      }
+    }
+
+    function showMonthlySummaryModal() {
+      modalShell(`
+        <div class="fse-card__keyline"></div>
+        <h2 class="modal-title">Piano operativo degli interventi</h2>
+        <p class="modal-subtitle">Pianificazione operativa degli interventi previsti dal Piano Operativo, con lettura per ambito, ore programmate, stato di avanzamento e stato documentale.</p>
+        <div class="chart-grid">
+          <div class="table-box"><h3>Piano operativo - mese corrente</h3><table class="summary-table"><thead><tr><th>Ambito</th><th>Ore programmate</th><th>Avanzamento</th><th>Stato</th></tr></thead><tbody><tr><td>Attività Ordinarie</td><td>3.910h</td><td>95,4%</td><td>Validato</td></tr><tr><td>Attività Periodiche</td><td>760h</td><td>98,2%</td><td>Validato</td></tr><tr><td>Attività Straordinarie</td><td>530h</td><td>90,8%</td><td>In verifica</td></tr><tr><td>Compliance Management</td><td>24 NC</td><td>87,5% chiuse</td><td>Monitorato</td></tr></tbody></table></div>
+          <div class="chart-box"><h3>Ripartizione mensile delle ore</h3><canvas id="monthlyChart"></canvas></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin-top:22px;">
+          <button class="monthly-btn" onclick="showToast('Download simulato','Piano PDF generato')"><svg class="icon-svg" aria-hidden="true"><use href="#icon-file-pdf"></use></svg> Esporta PDF</button>
+          <button class="monthly-btn" onclick="showToast('Download simulato','Piano XLS generato')"><svg class="icon-svg" aria-hidden="true"><use href="#icon-file-excel"></use></svg> Esporta XLS</button>
+        </div>
+      `);
+      setTimeout(() => {
+        const css = getComputedStyle(document.documentElement);
+        chartInstances.push(new Chart(document.getElementById("monthlyChart"), { type: "bar", data: { labels: ["Ordinarie","Secondarie","Straordinarie"], datasets: [{ data: [3910,760,530], backgroundColor: [css.getPropertyValue("--fse-green").trim(), css.getPropertyValue("--fse-green-light").trim(), css.getPropertyValue("--fse-red").trim()], borderRadius: 10 }] }, options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { weight: "800" } } }, y: { grid: { color: "rgba(59,134,52,.08)" } } } } }));
+      }, 50);
+    }
+
+    function showLoginModal() {
+      modalShell(`
+        <div style="text-align:center;">
+          <h2 class="modal-title" style="font-size:2.1rem;">Accesso Utente</h2>
+          <p class="modal-subtitle" style="margin-left:auto;margin-right:auto;">Inserisci le credenziali per accedere all'area riservata del Veritas Control Hub.</p>
+        </div>
+        <form onsubmit="handleLogin(event)">
+          <label class="field-label" for="username">Username</label>
+          <div class="login-field"><svg class="icon-svg" aria-hidden="true"><use href="#icon-user"></use></svg><input class="form-input" id="username" type="text" placeholder="Inserisci username" required></div>
+          <label class="field-label" for="password">Password</label>
+          <div class="login-field"><svg class="icon-svg" aria-hidden="true"><use href="#icon-lock"></use></svg><input class="form-input" id="password" type="password" placeholder="Inserisci password" required></div>
+          <div style="display:flex;justify-content:space-between;gap:16px;margin:18px 0 24px;color:var(--fse-muted);font-size:.88rem;font-weight:650;">
+            <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox"> Ricordami</label>
+            <a href="#" onclick="return false;" style="color:var(--fse-red);text-decoration:none;font-weight:800;">Password dimenticata?</a>
+          </div>
+          <button class="monthly-btn" type="submit" style="width:100%;justify-content:center;">Accedi</button>
+        </form>
+      `, true);
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById("username").value || "utente";
+      closeModal();
+      setTimeout(() => showToast("Accesso effettuato", "Benvenuto, " + u), 180);
+    }
+
+    window.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+    // Chatbot AI Assistant Widget
+    const chatMessages = [];
+    const quickActions = [
+      { label: "Stato Attività Ordinarie", prompt: "Mostrami lo stato delle attività ordinarie" },
+      { label: "Piano della Qualità", prompt: "Apri il piano della qualità" },
+      { label: "Piano operativo", prompt: "Mostrami il piano operativo degli interventi" },
+      { label: "Ultimi KPI", prompt: "Mostrami gli ultimi KPI" },
+      { label: "Supporto Accesso", prompt: "Ho bisogno di supporto per l'accesso" },
+      { label: "Segnalazione urgente", prompt: "Devo gestire una segnalazione urgente" }
+    ];
+
+    const botResponses = {
+      greetings: "Ciao, sono a disposizione. Posso aiutarti nella consultazione della dashboard, dei KPI, del Piano della Qualità e del Piano operativo degli interventi.",
+      initial: "Ciao, sono Veritas AI Assistant. Posso aiutarti a consultare rapidamente indicatori, informazioni operative, qualità del servizio, piano degli interventi e supporto generale alla dashboard del servizio di pulizia per Gruppo Veritas.",
+      secondMessage: "Puoi selezionare una richiesta rapida oppure scrivermi una domanda.",
+      ordinarie: "Le Attività Ordinarie riguardano le prestazioni di pulizia e sanificazione svolte in continuità secondo il Piano Operativo concordato con Gruppo Veritas. Puoi consultare il relativo pannello per ore lavorate, attività completate, addetti impiegati e distribuzione per area.",
+      secondarie: "Le Attività Periodiche riguardano gli interventi di pulizia e sanificazione con frequenza uguale o superiore al mese, da effettuare entro la 1° settimana del mese e la 1° settimana del trimestre. Il pannello dedicato consente di monitorare stato, copertura e avanzamento.",
+      straordinarie: "Le Attività Straordinarie comprendono interventi accessori o a chiamata, remunerati in funzione dell'Elenco prezzi. Posso supportarti nella consultazione del relativo scenario operativo o delle richieste urgenti.",
+      qualita: "Nel Piano della Qualità puoi consultare controlli di processo, controlli di risultato, controlli sistematici/saltuari, customer satisfaction e non conformità con azioni correttive. Ogni area dispone di schede dedicate con grafici e KPI.",
+      satisfaction: "La sezione Customer Satisfaction consente di analizzare il livello di soddisfazione degli stakeholder attraverso grafici dedicati e questionari. Posso aiutarti a individuare rapidamente le metriche principali.",
+      nonconformita: "La sezione Non Conformità e azioni correttive monitora apertura, trattamento, chiusura ed efficacia delle azioni correttive. I principali indicatori includono NC totali, NC chiuse, tempo medio di chiusura ed efficacia.",
+      piano: "Il Piano operativo degli interventi raccoglie la pianificazione operativa prevista, con dettaglio per ambito, ore programmate, stato di avanzamento e stato documentale.",
+      kpi: "La dashboard consente di consultare KPI operativi e qualitativi relativi al servizio di pulizia svolto per Gruppo Veritas. Posso aiutarti a orientarti verso il pannello più pertinente.",
+      accesso: "Per l'accesso alla dashboard è necessario utilizzare le credenziali riservate assegnate. Se hai bisogno, posso indirizzarti verso le funzionalità disponibili una volta effettuato il login.",
+      fallback: "Posso supportarti nella consultazione delle principali aree della dashboard: Attività Ordinarie, Attività Periodiche, Attività Straordinarie, Piano della Qualità, KPI e Piano operativo degli interventi. Prova a scrivere una richiesta più specifica."
+    };
+
+    function getSimulatedBotReply(message) {
+      const msg = message.toLowerCase();
+      if (msg.includes("ordinarie") || msg.includes("pulizia") || msg.includes("sanificazione")) return botResponses.ordinarie;
+      if (msg.includes("secondarie") || msg.includes("apertura") || msg.includes("chiusura")) return botResponses.secondarie;
+      if (msg.includes("straordinarie") || msg.includes("urgente") || msg.includes("chiamata")) return botResponses.straordinarie;
+      if (msg.includes("qualità") || msg.includes("qualita") || msg.includes("controlli")) return botResponses.qualita;
+      if (msg.includes("satisfaction") || msg.includes("soddisfazione") || msg.includes("questionario")) return botResponses.satisfaction;
+      if (msg.includes("conformità") || msg.includes("conformita") || msg.includes("azioni correttive") || msg.includes("nc ")) return botResponses.nonconformita;
+      if (msg.includes("piano") || msg.includes("interventi")) return botResponses.piano;
+      if (msg.includes("kpi") || msg.includes("indicatori") || msg.includes("metriche")) return botResponses.kpi;
+      if (msg.includes("accesso") || msg.includes("login") || msg.includes("credenziali")) return botResponses.accesso;
+      if (msg.includes("ciao") || msg.includes("salve") || msg.includes("buongiorno")) return botResponses.greetings;
+      return botResponses.fallback;
+    }
+
+    function initChatbot() {
+      const container = document.getElementById("chatMessages");
+      container.innerHTML = "";
+      chatMessages.length = 0;
+      addBotMessage(botResponses.initial);
+      setTimeout(() => { addBotMessage(botResponses.secondMessage); showQuickActions(); }, 600);
+    }
+
+    function addBotMessage(text) {
+      chatMessages.push({ role: "assistant", text });
+      const container = document.getElementById("chatMessages");
+      const msgEl = document.createElement("div");
+      msgEl.className = "chatbot-message chatbot-message--assistant";
+      msgEl.innerHTML = `<div class="chatbot-bubble">${text}</div>`;
+      container.appendChild(msgEl);
+      scrollChatToBottom();
+    }
+
+    function addUserMessage(text) {
+      chatMessages.push({ role: "user", text });
+      const container = document.getElementById("chatMessages");
+      const msgEl = document.createElement("div");
+      msgEl.className = "chatbot-message chatbot-message--user";
+      msgEl.innerHTML = `<div class="chatbot-bubble">${text}</div>`;
+      container.appendChild(msgEl);
+      scrollChatToBottom();
+    }
+
+    function showTypingIndicator() {
+      const container = document.getElementById("chatMessages");
+      const typingEl = document.createElement("div");
+      typingEl.className = "chatbot-message chatbot-message--assistant";
+      typingEl.id = "typingIndicator";
+      typingEl.innerHTML = `<div class="chatbot-typing"><span></span><span></span><span></span></div>`;
+      container.appendChild(typingEl);
+      scrollChatToBottom();
+    }
+
+    function removeTypingIndicator() {
+      const typing = document.getElementById("typingIndicator");
+      if (typing) typing.remove();
+    }
+
+    function scrollChatToBottom() {
+      const container = document.getElementById("chatMessages");
+      setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
+    }
+
+    function showQuickActions() {
+      const container = document.getElementById("quickActionsContainer");
+      container.innerHTML = "";
+      quickActions.forEach(action => {
+        const chip = document.createElement("button");
+        chip.className = "chatbot-chip";
+        chip.textContent = action.label;
+        chip.onclick = () => sendQuickAction(action.prompt);
+        container.appendChild(chip);
+      });
+    }
+
+    function hideQuickActions() { document.getElementById("quickActionsContainer").innerHTML = ""; }
+
+    function sendQuickAction(prompt) {
+      hideQuickActions();
+      addUserMessage(prompt);
+      setTimeout(() => { showTypingIndicator(); setTimeout(() => { removeTypingIndicator(); addBotMessage(getSimulatedBotReply(prompt)); }, 900); }, 100);
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById("chatInput");
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = "";
+      hideQuickActions();
+      addUserMessage(msg);
+      setTimeout(() => { showTypingIndicator(); setTimeout(() => { removeTypingIndicator(); addBotMessage(getSimulatedBotReply(msg)); }, 900); }, 100);
+    }
+
+    function toggleChatbot() {
+      const windowEl = document.querySelector(".chatbot-window");
+      if (!windowEl) return;
+      if (windowEl.classList.contains("open")) closeChatbot(); else openChatbot();
+    }
+
+    function openChatbot() {
+      const windowEl = document.querySelector(".chatbot-window");
+      if (!windowEl) return;
+      windowEl.classList.add("open");
+      windowEl.classList.remove("minimized");
+      if (chatMessages.length === 0) initChatbot();
+      const input = document.getElementById("chatInput");
+      if (input) input.focus();
+    }
+
+    function closeChatbot() {
+      const windowEl = document.querySelector(".chatbot-window");
+      if (!windowEl) return;
+      windowEl.classList.remove("open", "minimized");
+      chatMessages.length = 0;
+    }
+
+    function minimizeChatbot() {
+      const windowEl = document.querySelector(".chatbot-window");
+      if (!windowEl) return;
+      windowEl.classList.toggle("minimized");
+      if (!windowEl.classList.contains("minimized")) {
+        const input = document.getElementById("chatInput");
+        if (input) input.focus();
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("chatInput");
+      if (input) {
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+        });
+      }
+    });
+
+    function updateHeaderOnScroll() {
+      const header = document.querySelector(".main-header");
+      if (!header) return;
+      if (window.scrollY > 12) header.classList.add("is-scrolled"); else header.classList.remove("is-scrolled");
+    }
+
+    window.addEventListener("scroll", updateHeaderOnScroll, { passive: true });
+    window.addEventListener("load", updateHeaderOnScroll);
+  </script>
+ </body>
+</html>
