@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#075b7d">
+  <meta name="description" content="Sistema integrato di monitoraggio e rendicontazione dei servizi per i Lotti 4–5–6–7 della sanità sarda.">
+  <title>RAS SERVICE HUB — Control Room</title>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="./favicon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">Vai al contenuto</a>
+  <header class="app-header" id="appHeader">
+    <a class="brand" href="#/home" aria-label="RAS SERVICE HUB, Home">
+      <img class="brand-logo" src="./assets/ras-service-hub-v2.webp" alt="RAS SERVICE HUB">
+    </a>
+    <button class="menu-toggle icon-btn" id="menuToggle" aria-label="Apri menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav" aria-label="Navigazione principale">
+      <a href="#/home" data-route="home">Home</a>
+      <a href="#/governance" data-route="governance">Governance</a>
+      <a href="#/planning" data-route="planning">Pianificazione</a>
+      <a href="#/staff" data-route="staff">Personale</a>
+      <a href="#/interventions" data-route="interventions">Interventi</a>
+      <a href="#/quality" data-route="quality">Qualità</a>
+      <a href="#/cam" data-route="cam">CAM</a>
+      <a href="#/reports" data-route="reports">Report</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Ricerca globale"><svg class="ui-icon" aria-hidden="true"><use href="#i-search"/></svg></button>
+      <button class="icon-btn has-badge" id="notifyBtn" aria-label="Notifiche"><svg class="ui-icon" aria-hidden="true"><use href="#i-bell"/></svg><b>3</b></button>
+      <button class="profile-btn" id="profileBtn" aria-label="Profilo utente"><span>MR</span><em><strong>Mario Rossi</strong><small>Direzione Generale</small></em></button>
+      <button class="reserved-btn" id="loginBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-lock"/></svg> Area riservata</button>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <div class="brand compact"><img class="brand-logo" src="./assets/ras-service-hub-v2.webp" alt="RAS SERVICE HUB"></div>
+    <p>Ambienti più sani. Persone più forti. Una Sardegna che cura.</p>
+    <nav><button data-legal="privacy">Privacy</button><button data-legal="legal">Note legali</button><button data-legal="support">Assistenza</button><span>v2.1.0</span></nav>
+  </footer>
+
+  <div class="overlay" id="overlay" hidden></div>
+  <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Pannello dettaglio"><div class="drawer-head"><div><small id="drawerEyebrow"></small><h2 id="drawerTitle"></h2></div><button class="icon-btn close-btn" data-close aria-label="Chiudi">×</button></div><div id="drawerBody" class="drawer-body"></div></aside>
+  <div class="modal-wrap" id="modalWrap" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><small id="modalEyebrow"></small><h2 id="modalTitle"></h2></div><button class="icon-btn close-btn" data-close aria-label="Chiudi">×</button></div><div id="modalBody" class="modal-body"></div></section></div>
+  <div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21h16M6 21V4h8v17M14 9h4v12M9 7h2M9 11h2M9 15h2"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v3a3 3 0 0 0 0 6v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a3 3 0 0 0 0-6V6a1 1 0 0 1 1-1Z M15 5v2m0 3v4m0 3v2"/></symbol>
+    <symbol id="i-spray" viewBox="0 0 24 24"><path d="M9 8h5v3l3 4v6H6v-6l3-4V8Z M9 8V4h8V2H7v3h2 M14 4l4 5 M6 16h11 M20 3h1m-1 3 1 1"/></symbol>
+    <symbol id="i-paper-roll" viewBox="0 0 24 24"><ellipse cx="8" cy="8" rx="5" ry="6"/><ellipse cx="8" cy="8" rx="1.5" ry="2"/><path d="M8 2h9c3 0 4 3 4 6v13l-3-1-3 1-2-1V8 M3 8v9c0 3 2 4 5 4h5 M16 15h1m2 0h1"/></symbol>
+    <symbol id="i-vacuum" viewBox="0 0 24 24"><rect x="3" y="10" width="10" height="9" rx="3"/><circle cx="5" cy="20" r="1"/><circle cx="11" cy="20" r="1"/><path d="M6 10V8h4v2 M13 14h1a3 3 0 0 0 3-3V5a2 2 0 0 1 4 0v12 M18 21l1-4h3l1 4Z M6 14h4"/></symbol>
+    <symbol id="i-mop" viewBox="0 0 24 24"><path d="m17 2-6 13 M8 14l8 3-2 5H3l5-8Z M8 17l-2 5m5-4-1 4m3-3-1 3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 4s-8 0-12 4-4 12-4 12 8 0 12-4 4-12 4-12Z"/><path d="M4 20c4-8 8-8 16-16"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16v-5M12 16V7M17 16v-9"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.7 2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM14 2v6h6M9 13h8M9 17h8"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+  </svg>
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
