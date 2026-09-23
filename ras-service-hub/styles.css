@@ -77,3 +77,11 @@ svg.ui-icon{width:26px;height:26px;flex-shrink:0}
 .risk-codes .risk-item small{font-size:12px;color:#000}
 .risk-badge{display:inline-block;color:#000;font-size:12px;line-height:1.4;font-weight:700;padding:6px 9px;border-radius:5px;white-space:normal}
 .classification-list .ghost-btn{display:flex;align-items:center;gap:10px}
+
+/* CAM title background and explicit demo identification. */
+.cam-page-hero{position:relative;isolation:isolate;overflow:hidden;background:#edf5ef}
+.cam-page-hero::before{content:"";position:absolute;inset:-24px;z-index:-2;background:url('./assets/cam-background.webp') center 48%/cover no-repeat;filter:blur(10px);pointer-events:none}
+.cam-page-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(247,252,249,.94),rgba(247,252,249,.78) 60%,rgba(247,252,249,.55));pointer-events:none}
+.cam-page-hero .inner{position:relative}
+.cam-page-hero p,.cam-page-hero .crumb{color:#385769}
+.demo-label{display:table;margin-bottom:14px;padding:5px 12px;border:1px solid rgba(255,255,255,.65);border-radius:6px;background:rgba(255,255,255,.16);color:#fff;font-size:13px;font-weight:700;line-height:1.4;letter-spacing:.06em;text-transform:uppercase}

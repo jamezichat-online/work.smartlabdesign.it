@@ -79,7 +79,7 @@
     const heroImgs=['hero-01.webp','hero-02.webp','hero-03.webp'];
     return `<section class="hero" id="hero">
       <div class="slides">${heroImgs.map((img,i)=>`<div class="slide ${i===0?'active':''}" data-slide="${i}"><img src="./assets/${img}" alt="${['Operatrice durante il lavaggio di un corridoio ospedaliero','Pulizia di una superficie sanitaria con panno e spray','Operatore durante un intervento di derattizzazione'][i]}" ${i?'loading="lazy"':''}></div>`).join('')}</div>
-      <div class="hero-inner"><div class="hero-copy"><span class="eyebrow">Sistema integrato di monitoraggio e rendicontazione</span><h1>RAS SERVICE HUB</h1><h2>Service Control & Environmental Performance</h2><p>Una control room unificata per pianificazione, esecuzione, controllo qualità, CAM e reporting.</p></div></div>
+      <div class="hero-inner"><div class="hero-copy"><span class="demo-label">Ambiente demo</span><span class="eyebrow">Sistema integrato di monitoraggio e rendicontazione</span><h1>RAS SERVICE HUB</h1><h2>Service Control & Environmental Performance</h2><p>Una control room unificata per pianificazione, esecuzione, controllo qualità, CAM e reporting.</p></div></div>
       <div class="slider-meta">${heroImgs.map((_,i)=>`<button class="dot ${i===0?'active':''}" data-slide-to="${i}" aria-label="Vai alla slide ${i+1}"></button>`).join('')}</div><div class="slide-progress play"><i></i></div>
     </section>
     ${filtersTemplate(true)}${kpiTemplate()}
@@ -105,7 +105,7 @@
   }
 
   function pageHero(title,subtitle,iconName,actions=''){
-    return `<section class="page-hero"><div class="inner"><div><div class="crumb">Home / ${title}</div><span class="eyebrow">${icon(iconName)} Control room operativa</span><h1>${title}</h1><p>${subtitle}</p></div><div class="section-actions">${actions}</div></div></section>`;
+    return `<section class="page-hero${route()==='cam'?' cam-page-hero':''}"><div class="inner"><div><div class="crumb">Home / ${title}</div><span class="eyebrow">${icon(iconName)} Control room operativa</span><h1>${title}</h1><p>${subtitle}</p></div><div class="section-actions">${actions}</div></div></section>`;
   }
   function tabs(items,active='overview'){return `<nav class="subnav" aria-label="Sezioni">${items.map(i=>`<button data-tab="${i[0]}" class="${(state.tab||active)===i[0]?'active':''}">${i[1]}</button>`).join('')}</nav>`}
   function toolbar(placeholder,actions=''){return `<div class="toolbar"><label class="search-field">${icon('search')}<input type="search" data-local-search placeholder="${placeholder}" aria-label="${placeholder}"></label><div class="toolbar-group"><button class="ghost-btn" data-action="filter">${icon('filter')} Filtri</button><button class="ghost-btn" data-action="export">${icon('download')} Esporta</button>${actions}</div></div>`}
