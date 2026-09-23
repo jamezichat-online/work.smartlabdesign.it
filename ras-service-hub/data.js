@@ -7,8 +7,6 @@ window.RAS_DATA = (() => {
       {id:'areus-sc',name:'AREUS Sulcis-Cagliari',surface:9125.91,risk:[0,2138.80,1215.47,1841.20,3930.44]}
     ]},
     {id:'5', name:'Lotto 5', surface:221160, entities:[{id:'brotzu',name:'AO Brotzu',surface:221160,risk:[15055,43830,12415,42790,107070],note:'I mq del blocco operatorio non rientrano nel canone €/mq/mese: la pulizia e sanificazione è ricompresa nel presidio sostitutivo.'}]},
-    {id:'6', name:'Lotto 6', surface:140100, entities:[{id:'aou-ca',name:'AOU Cagliari',surface:140100,risk:[9600,23500,9000,23000,75000]}]},
-    {id:'7', name:'Lotto 7', surface:242166.24, entities:[{id:'aou-ss',name:'AOU Sassari',surface:242166.24,risk:[11611.24,16555,34200,66800,113000]}]}
   ];
 
   const products = [
@@ -83,21 +81,18 @@ window.RAS_DATA = (() => {
   const tickets = [
     ['TCK-260914','Guasto dispenser sapone','Anomalia','ASL 8 Cagliari','Alta','In presa','01:42'],
     ['TCK-260913','Risanamento area ad alto rischio','Straordinario','AO Brotzu','Critica','Autorizzazione','00:38'],
-    ['TCK-260912','Pulizia vetrate esterne','Extra-canone','AOU Sassari','Media','Pianificata','18:20'],
-    ['TCK-260911','Materiale economale esaurito','A chiamata','AOU Cagliari','Alta','Esecuzione','02:11'],
     ['TCK-260910','Verifica frequenza corridoio','Informazione','ASL 7 Sulcis','Bassa','Chiusa','—']
   ].map(t=>({id:t[0],title:t[1],type:t[2],entity:t[3],priority:t[4],status:t[5],sla:t[6]}));
 
   const nc = [
     ['NC-1042','Pulizia non conforme','ASL 8 Cagliari','Alta','Azione correttiva','03:18'],
     ['NC-1041','Mancata frequenza','AO Brotzu','Critica','Presa in carico','00:44'],
-    ['NC-1040','Prodotto non idoneo','AOU Sassari','Media','Verifica','12:22'],
     ['NC-1039','Attrezzatura','ASL 7 Sulcis','Bassa','Chiusa','—']
   ].map(n=>({id:n[0],cause:n[1],entity:n[2],severity:n[3],status:n[4],sla:n[5]}));
 
-  const people = Array.from({length:12},(_,i)=>({
+  const people = Array.from({length:6},(_,i)=>({
     id:`DEMO-${String(i+1).padStart(3,'0')}`,name:`Operatore Demo ${String(i+1).padStart(2,'0')}`,
-    role:i%4===0?'Caposquadra':'Addetto servizi',lot:String(4+(i%4)),entity:lots[i%4].entities[0].name,
+    role:i%4===0?'Caposquadra':'Addetto servizi',lot:lots[i%lots.length].id,entity:lots[i%lots.length].entities[0].name,
     hours:30+(i%3)*6,status:i===7?'Formazione':'Attivo',shift:i%2?'07:00–13:00':'13:00–19:00'
   }));
 
@@ -105,10 +100,8 @@ window.RAS_DATA = (() => {
     ['07:00','ASL 7 Sulcis','Area ad alto rischio','Detersione e disinfezione','Operatore Demo 01','Completata'],
     ['08:30','ASL 8 Cagliari','Area a medio rischio','Pulizia ordinaria','Operatore Demo 02','In corso'],
     ['09:15','AO Brotzu','Blocco operatorio','Presidio sostitutivo','Squadra Demo A','In corso'],
-    ['10:00','AOU Cagliari','Aree esterne','Derattizzazione programmata','Squadra Demo B','Pianificata'],
-    ['11:30','AOU Sassari','Area a basso rischio','Risanamento periodico','Operatore Demo 05','In ritardo']
   ].map((a,i)=>({id:`POG-${2600+i}`,time:a[0],entity:a[1],area:a[2],task:a[3],operator:a[4],status:a[5]}));
 
   return {lots,products,materials,machines,equipment,uniforms,tickets,nc,people,activities,
-    meta:{totalSurface:1012792.26,realCounts:{products:15,materials:11,machines:19,equipment:32,uniforms:7},updated:'22 set 2026, 12:18'}};
+    meta:{totalSurface:lots.reduce((total,lot)=>total+lot.surface,0),realCounts:{products:15,materials:11,machines:19,equipment:32,uniforms:7},updated:'22 set 2026, 12:18'}};
 })();
