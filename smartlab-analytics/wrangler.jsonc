@@ -8,8 +8,19 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*", "/catalog.json"]
+    "run_worker_first": [
+      "/api/*",
+      "/catalog.json"
+    ]
   },
-  "d1_databases": [{ "binding": "DB", "database_name": "smartlab-analytics-db" }],
-  "observability": { "enabled": false }
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "smartlab-analytics-db",
+      "database_id": "217e137b-a2a4-4a31-9118-402e3f532be3"
+    }
+  ],
+  "observability": {
+    "enabled": false
+  }
 }
