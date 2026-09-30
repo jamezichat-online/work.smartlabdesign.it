@@ -9,6 +9,7 @@
   const shortDate = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit' });
   const dayKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' });
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const projectImage = s => s?.image ? 'url("' + encodeURI(s.image).replace(/"/g, '%22').replace(/\\/g, '%5C') + '")' : 'none';
   const periodName = () => state.days === 1 ? 'oggi' : 'ultimi ' + state.days + ' giorni';
   function todayStart(now = Date.now()) {
     const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now).map(p => [p.type, p.value]));
@@ -99,8 +100,8 @@
     });
     $('activity-chart').innerHTML = `<div class="chart-title"><span>${category.toUpperCase()} · ${periodName().toUpperCase()}</span><span>${number.format(total)} ACCESSI</span></div><div class="chart-scroll" tabindex="0" role="region" aria-label="Accessi per progetto, scorrimento orizzontale"><div class="chart-bars project-chart" style="--columns:${sites.length}" role="list" aria-label="Accessi per progetto, ${periodName()}">${sites.map(s => {
       const count = metrics(s.id).total;
-      return `<div class="chart-column" role="listitem" aria-label="${escape(s.name)} · ${escape(s.subtitle)}: ${number.format(count)} accessi"><span class="chart-value" aria-hidden="true">${number.format(count)}</span><div class="chart-track" aria-hidden="true"><div class="chart-bar" style="--height:${count / max * 100}%;--accent:${escape(s.color)}" data-project="${escape(s.id)}" data-total="${count}"></div></div><span class="chart-label" aria-hidden="true">${escape(s.name)}<small>${escape(s.subtitle)}</small></span></div>`;
-    }).join('')}</div></div><p class="chart-note">${total ? 'Una barra per progetto. I colori corrispondono alle card e i numeri indicano gli accessi nel periodo selezionato.' : 'Nessun accesso registrato in questo periodo.'}</p>`;
+      return `<div class="chart-column" role="listitem" aria-label="${escape(s.name)} · ${escape(s.subtitle)}: ${number.format(count)} accessi"><span class="chart-value" aria-hidden="true">${number.format(count)}</span><div class="chart-track" aria-hidden="true"><div class="chart-bar" style="--height:${count / max * 100}%;--accent:${escape(s.color)};--surface:${escape(s.surface || '#042125')};--project-image:${escape(projectImage(s))};--image-position:${escape(s.imagePosition || '50% 50%')}" data-project="${escape(s.id)}" data-total="${count}"></div></div><span class="chart-label" aria-hidden="true">${escape(s.name)}<small>${escape(s.subtitle)}</small></span></div>`;
+    }).join('')}</div></div><p class="chart-note">${total ? 'Una barra per progetto. Le immagini e i colori corrispondono alle card e i numeri indicano gli accessi nel periodo selezionato.' : 'Nessun accesso registrato in questo periodo.'}</p>`;
   }
   function chart(hours, target = $('detail-chart')) {
     const buckets = new Map();
@@ -119,6 +120,12 @@
   async function openDetail(site) {
     state.site = site; state.detailRows = []; state.next = null;
     const s = state.sites.find(s => s.id === site);
+    const detail = $('detail');
+    detail.classList.toggle('project-detail', !!s);
+    detail.style.setProperty('--project-image', projectImage(s));
+    detail.style.setProperty('--surface', s?.surface || '#062d31');
+    detail.style.setProperty('--accent', s?.color || '#00bfc4');
+    detail.style.setProperty('--image-position', s?.imagePosition || '50% 50%');
     const chosen = s ? [s] : state.sites;
     const m = chosen.reduce((acc, s) => { const row = metrics(s.id); return { total: acc.total + row.total, today: acc.today + row.today }; }, { total: 0, today: 0 });
     $('detail-title').textContent = s ? s.name : 'Tutti gli accessi.';
