@@ -1,0 +1,19 @@
+{
+  "name": "smartlab-analytics",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test",
+    "preview": "node scripts/preview.mjs"
+  },
+  "devDependencies": { "wrangler": "^4.139.0" },
+  "cloudflare": {
+    "bindings": {
+      "ADMIN_TOKEN": { "description": "Password privata per consultare SmartLab Analytics. Scegli una password di almeno 20 caratteri; non inserirla nel repository." },
+      "DB": { "description": "Registro accessi: sito, percorso e data/ora. Nessun IP o profilo dei visitatori." }
+    }
+  }
+}
