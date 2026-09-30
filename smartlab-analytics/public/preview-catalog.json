@@ -10,7 +10,8 @@
     "surface": "#22232b",
     "image": "./card-images/auxcore.webp",
     "imagePosition": "50% 40%",
-    "number": "01"
+    "number": "01",
+    "modalImage": "https://live.smartlabdesign.it/auxcore/hero-poster.jpg"
   },
   {
     "id": "milanosport",
@@ -23,7 +24,8 @@
     "surface": "#102d31",
     "image": "./card-images/milanosport.webp",
     "imagePosition": "50% 50%",
-    "number": "02"
+    "number": "02",
+    "modalImage": "https://live.smartlabdesign.it/milanosport-control-hub/assets/hero-cozzi.webp"
   },
   {
     "id": "ras",
@@ -36,7 +38,8 @@
     "surface": "#12263c",
     "image": "./card-images/ras.webp",
     "imagePosition": "50% 40%",
-    "number": "03"
+    "number": "03",
+    "modalImage": "https://live.smartlabdesign.it/ras-service-hub/assets/hero-01.webp"
   },
   {
     "id": "sport",
@@ -49,7 +52,8 @@
     "surface": "#03132e",
     "image": "./card-images/sport.webp",
     "imagePosition": "75% 50%",
-    "number": "04"
+    "number": "04",
+    "modalImage": "https://live.smartlabdesign.it/sport-salute-control-hub/hero-control-hub-green-wide.webp"
   },
   {
     "id": "veritas",
@@ -62,7 +66,8 @@
     "surface": "#1d282d",
     "image": "./card-images/veritas.webp",
     "imagePosition": "50% 40%",
-    "number": "05"
+    "number": "05",
+    "modalImage": "./modal-images/veritas.jpg"
   },
   {
     "id": "burger",
@@ -75,7 +80,8 @@
     "surface": "#20120b",
     "image": "./card-images/burger.webp",
     "imagePosition": "50% 45%",
-    "number": "06"
+    "number": "06",
+    "modalImage": "https://sites.smartlabdesign.it/giggiooo-burger/assets/hero-poster-v2.jpg"
   },
   {
     "id": "right",
@@ -88,7 +94,8 @@
     "surface": "#1c0e0b",
     "image": "./card-images/right.webp",
     "imagePosition": "50% 50%",
-    "number": "07"
+    "number": "07",
+    "modalImage": "https://d2ol7oe51mr4n9.cloudfront.net/user_37u4BdIWLdxIKRnNlGRqjLjMgTw/46aa4109-9f74-4251-8837-866468284918.png"
   },
   {
     "id": "fold02",
@@ -101,7 +108,8 @@
     "surface": "#162c53",
     "image": "./card-images/fold02.webp",
     "imagePosition": "50% 40%",
-    "number": "08"
+    "number": "08",
+    "modalImage": "https://sites.smartlabdesign.it/fold-3d-study-02/background.png"
   },
   {
     "id": "fold03",
@@ -114,7 +122,8 @@
     "surface": "#162c53",
     "image": "./card-images/fold03.webp",
     "imagePosition": "50% 40%",
-    "number": "09"
+    "number": "09",
+    "modalImage": "https://sites.smartlabdesign.it/fold-3d-study-03/background.png"
   },
   {
     "id": "portfolio",
@@ -127,6 +136,7 @@
     "surface": "#0f322b",
     "image": "./card-images/portfolio.webp",
     "imagePosition": "35% 50%",
-    "number": "10"
+    "number": "10",
+    "modalImage": "https://sites.smartlabdesign.it/assets/og-home.jpg"
   }
 ]

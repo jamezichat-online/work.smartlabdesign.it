@@ -13,6 +13,7 @@ for (const site of catalog) {
     const image = await readFile(resolve(root, 'public', site.image));
     site.image = 'data:image/webp;base64,' + image.toString('base64');
   } else site.image = './public/' + site.image.replace(/^\.\//, '');
+  if (site.modalImage?.startsWith('./') && !standalonePath) site.modalImage = './public/' + site.modalImage.replace(/^\.\//, '');
 }
 let html = await readFile(resolve(root, 'public/preview.html'), 'utf8');
 const json = JSON.stringify(catalog).replace(/</g, '\\u003c');

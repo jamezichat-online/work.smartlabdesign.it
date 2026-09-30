@@ -9,7 +9,7 @@
   const shortDate = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit' });
   const dayKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' });
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const projectImage = s => s?.image ? 'url("' + encodeURI(s.image).replace(/"/g, '%22').replace(/\\/g, '%5C') + '")' : 'none';
+  const projectImage = (s, image = s?.image) => image ? 'url("' + encodeURI(image).replace(/"/g, '%22').replace(/\\/g, '%5C') + '")' : 'none';
   const periodName = () => state.days === 1 ? 'oggi' : 'ultimi ' + state.days + ' giorni';
   function todayStart(now = Date.now()) {
     const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now).map(p => [p.type, p.value]));
@@ -122,7 +122,7 @@
     const s = state.sites.find(s => s.id === site);
     const detail = $('detail');
     detail.classList.toggle('project-detail', !!s);
-    detail.style.setProperty('--project-image', projectImage(s));
+    detail.style.setProperty('--project-image', projectImage(s, s?.modalImage || s?.image));
     detail.style.setProperty('--surface', s?.surface || '#062d31');
     detail.style.setProperty('--accent', s?.color || '#00bfc4');
     detail.style.setProperty('--image-position', s?.imagePosition || '50% 50%');

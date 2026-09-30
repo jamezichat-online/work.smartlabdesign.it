@@ -48,3 +48,9 @@ dialog{width:min(1020px,calc(100% - 40px));max-height:90svh;padding:0;color:var(
 .project-chart .chart-bar{background-color:var(--accent);background-image:linear-gradient(to top,color-mix(in srgb,var(--surface) 92%,transparent),color-mix(in srgb,var(--accent) 30%,transparent) 55%,color-mix(in srgb,var(--surface) 15%,transparent)),var(--project-image);background-size:cover;background-position:center,var(--image-position);background-repeat:no-repeat;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 50%,transparent)}
 .project-chart .chart-column:hover .chart-bar{background-color:var(--accent);background-image:linear-gradient(to top,color-mix(in srgb,var(--surface) 92%,transparent),color-mix(in srgb,var(--accent) 30%,transparent) 55%,color-mix(in srgb,var(--surface) 15%,transparent)),var(--project-image);filter:brightness(1.12)}
 @media(max-width:640px){#detail.project-detail .dialog-content{padding-top:36px}#detail.project-detail .dialog-content:before{height:260px}}
+
+/* Only the decorative image zooms; bar heights, colors and brightness stay fixed. */
+.project-chart .chart-bar{position:relative;isolation:isolate;overflow:hidden;background-image:none;filter:none}
+.project-chart .chart-bar:before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(to top,color-mix(in srgb,var(--surface) 92%,transparent),color-mix(in srgb,var(--accent) 30%,transparent) 55%,color-mix(in srgb,var(--surface) 15%,transparent)),var(--project-image);background-size:cover;background-position:center,var(--image-position);background-repeat:no-repeat;transform:scale(1);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.project-chart .chart-column:hover .chart-bar{background-color:var(--accent);background-image:none;filter:none}
+.project-chart .chart-column:hover .chart-bar:before{transform:scale(1.045)}
