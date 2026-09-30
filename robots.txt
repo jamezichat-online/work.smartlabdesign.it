@@ -1,2 +1,2 @@
 User-agent: *
-Disallow: /sport-salute-control-hub/
+Allow: /
