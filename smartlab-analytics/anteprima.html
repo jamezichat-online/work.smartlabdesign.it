@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="it" data-mode="preview">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#062d31">
+  <title>SmartLab Analytics — Anteprima dimostrativa</title>
+  <meta name="description" content="Area privata di consultazione delle visualizzazioni dei siti SmartLabDesign.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>:root{--ink:#062d31;--deep:#042125;--cream:#fff0ce;--muted:#b7c8c6;--coral:#ff6848;--pink:#ff2d87;--aqua:#00bfc4;--sun:#ffbc42;--line:rgba(255,240,206,.17);font-size:16px;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--cream);font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}button,input,select{font:inherit}button,a,select{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:wait;opacity:.5}button,a{ -webkit-tap-highlight-color:transparent}a{color:inherit}button{color:inherit}[hidden]{display:none!important}:focus-visible{outline:3px solid var(--sun);outline-offset:5px}button{border:0}svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.topbar{width:min(1480px,calc(100% - 80px));margin:auto;min-height:105px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:20px}.wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;font:800 24px/.9 'Barlow Condensed',sans-serif;letter-spacing:.06em}.brand-sub{display:block;color:var(--aqua);font:500 12px/1.6 'DM Mono',monospace;letter-spacing:.22em;margin-top:5px}.brand-icon{display:grid;place-items:center;width:47px;height:47px;background:var(--cream);color:var(--ink);border-radius:3px 16px 3px 16px;box-shadow:4px 4px 0 var(--coral);font-size:24px}.top-actions{display:flex;align-items:center;gap:22px}.mode-badge{font:500 12px 'DM Mono',monospace;padding:10px 14px;border:1px solid var(--line);border-radius:25px;letter-spacing:.03em}.mode-badge.preview{color:var(--sun);border-color:#ffbc4250}.shell{width:min(1480px,calc(100% - 80px));margin:auto}.preview-note{margin-top:22px;padding:13px 17px;background:#ffbc420c;border-left:3px solid var(--sun);color:#e2d8c2;font-size:14px;line-height:1.5}.preview-note span{display:inline-block;color:var(--sun);font:500 12px 'DM Mono',monospace;margin-right:18px}
+.overview{display:grid;grid-template-columns:1fr 1.14fr;gap:50px;align-items:center;padding:48px 0 43px}.eyebrow{font:500 12px/1.4 'DM Mono',monospace;letter-spacing:.12em;color:var(--aqua)}h1{font:900 clamp(52px,5.8vw,86px)/.9 'Barlow Condensed',sans-serif;letter-spacing:-.024em;margin:17px 0 20px;text-transform:uppercase}h1 span{color:var(--coral)}.intro{max-width:450px;color:var(--muted);line-height:1.5;margin:0;font-size:16px}.overview-metrics{display:grid;grid-template-columns:1.3fr .7fr 1fr;padding:28px 0 28px 32px;gap:28px;border-left:1px solid var(--line)}.metric{min-width:0}.metric>span{font:500 12px/1.5 'DM Mono',monospace;display:block;color:var(--muted);letter-spacing:.03em}.metric strong{font:800 clamp(45px,5vw,72px)/1.2 'Barlow Condensed',sans-serif;display:block;font-variant-numeric:tabular-nums}.metric:first-child strong{color:var(--aqua)}.metric small{display:block;color:var(--muted);font-size:13px;line-height:1.5}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:30px;border-top:1px solid var(--line);padding-top:26px}.filter-tabs,.toolbar-actions{display:flex;align-items:center;gap:10px}.filter{padding:12px 17px;border:1px solid transparent;border-radius:30px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;white-space:nowrap;transition:background .2s,color .2s}.filter.active{color:var(--ink);background:var(--cream)}.filter:hover:not(.active){border-color:var(--line);color:var(--cream)}.filter span{display:inline-block;margin-left:8px;opacity:.7}.period-label{font-size:14px;color:var(--muted)}select{background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:11px 36px 11px 14px;color:var(--cream);font-size:14px;min-height:44px}.icon-button{width:44px;height:44px;background:transparent;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}.icon-button:hover{background:var(--aqua);color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px 28px;padding-right:7px}.card{--accent:var(--aqua);position:relative;display:block;min-width:0;text-align:left;overflow:hidden;isolation:isolate;background:#103b3f;border:1px solid #fff0ce60;border-radius:5px 35px 5px 35px;box-shadow:6px 6px 0 color-mix(in srgb,var(--accent) 70%,var(--ink));padding:0;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}.card:hover{transform:translate(-3px,-4px);box-shadow:9px 10px 0 var(--accent)}.card:active{transform:translate(0,0)}.card-cover{height:264px;position:relative;overflow:hidden;background:linear-gradient(135deg,#12494d,var(--deep))}.card-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .8s;opacity:.8}.card:hover .card-cover img{transform:scale(1.055);filter:saturate(1.15)}.card-cover:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#042125 0%,#042125bb 28%,#04212518 78%)}.card-number{position:absolute;inset:0;display:grid;place-items:center;font:900 155px/.9 'Barlow Condensed',sans-serif;color:var(--accent);opacity:.17;letter-spacing:-.07em}.card-meta{position:absolute;top:20px;left:22px;right:22px;z-index:1;display:flex;justify-content:space-between;gap:8px;align-items:center;font:500 12px 'DM Mono',monospace;text-shadow:0 1px 6px #000}.category-tag{border:1px solid #fff0ce80;background:#04212585;backdrop-filter:blur(10px);padding:7px 9px;border-radius:4px 12px 4px 12px;font-size:11px;color:var(--cream)}.card-title{position:absolute;left:22px;bottom:24px;right:20px;z-index:2;font:900 clamp(31px,3.2vw,45px)/.95 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:-.01em;margin:0;overflow-wrap:anywhere}.card-title span{display:block;font:700 24px/1.12 'Barlow Condensed',sans-serif;color:var(--accent);margin-top:6px;letter-spacing:0}.card-data{background:var(--deep);padding:19px 22px 20px}.card-stats{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line)}.card-total{display:flex;align-items:baseline;gap:10px;min-width:0}.card-total strong{font:800 42px/1 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums}.card-total small{color:var(--muted);font-size:13px}.today-pill{padding:7px 9px;border-radius:20px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-size:13px;font-weight:600;white-space:nowrap}.card-bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;padding-top:15px}.last-view{color:var(--muted);font-size:12px;line-height:1.5}.last-view span{display:block;color:var(--cream);font-size:13px}.open-detail{flex-shrink:0;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;color:var(--ink);background:var(--accent)}.open-detail svg{width:17px;height:17px;stroke-width:2}.card.loading{opacity:.55;pointer-events:none}
+.activity{margin-top:65px;padding-bottom:30px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}h2{font:800 42px/1.05 'Barlow Condensed',sans-serif;margin:8px 0 0}.outline,.primary{min-height:44px;font-size:14px;font-weight:600;padding:12px 20px;border-radius:5px 15px 5px 15px}.outline{border:1px solid var(--line);background:transparent}.outline:hover{border-color:var(--aqua);color:var(--aqua)}.primary{background:var(--cream);color:var(--ink);box-shadow:4px 4px 0 var(--coral)}.primary:hover{background:var(--aqua)}.table-wrap{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:6px 20px 6px 20px}table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap}th{text-align:left;padding:15px 22px;background:#fff0ce05;font:500 12px 'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}td{padding:17px 22px;border-top:1px solid var(--line)}td:first-child{font-weight:600}.table-time{font-family:'DM Mono',monospace;font-size:13px;color:var(--aqua)}.path{color:var(--muted);font-size:13px;max-width:340px;overflow:hidden;text-overflow:ellipsis}.site-dot{display:inline-block;width:8px;height:8px;margin-right:12px;background:var(--accent);border-radius:50%}.empty{padding:35px 24px;text-align:center;color:var(--muted);font-size:15px;line-height:1.6}.footer{border-top:1px solid var(--line);padding:24px 0 32px;display:flex;justify-content:space-between;gap:20px;font:400 12px 'DM Mono',monospace;color:var(--muted);line-height:1.5}.footer>div{display:flex;gap:22px;align-items:center}.text-button{padding:8px 0;background:transparent;color:var(--cream);font-size:13px;text-decoration:underline;text-underline-offset:4px}.error-banner{background:#ff684814;border-left:3px solid var(--coral);padding:15px 20px;margin-bottom:25px;line-height:1.5}
+dialog{width:min(1020px,calc(100% - 40px));max-height:90svh;padding:0;color:var(--cream);background:var(--ink);border:1px solid #fff0ce50;border-radius:6px 35px 6px 35px;box-shadow:0 30px 100px #0009}dialog::backdrop{background:#00171999;backdrop-filter:blur(13px)}.dialog-top{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 30px;border-bottom:1px solid var(--line);background:#062d31ed;backdrop-filter:blur(10px)}.close{width:40px;height:40px;background:#fff0ce08;border:1px solid var(--line);border-radius:50%;font-size:27px;font-weight:400}.close:hover{color:var(--ink);background:var(--coral)}.dialog-content{padding:25px 30px 35px}.dialog-content>h2{font-size:55px;letter-spacing:-.02em}.dialog-content>p{color:var(--muted);line-height:1.6}.detail-summary{display:flex;gap:45px;margin:30px 0 15px}.detail-summary strong{display:block;font:800 48px 'Barlow Condensed',sans-serif;color:var(--aqua)}.detail-summary span{font-size:14px;color:var(--muted)}.chart{margin:20px 0 30px;border:1px solid var(--line);border-radius:8px;padding:20px}.chart-title{font:500 12px 'DM Mono',monospace;color:var(--muted);margin-bottom:25px}.chart-bars{height:110px;display:flex;gap:clamp(2px,.7vw,12px);align-items:end}.chart-column{height:100%;flex:1;display:flex;flex-direction:column;justify-content:end;align-items:stretch;gap:8px;min-width:0}.chart-bar{height:var(--height);min-height:2px;background:var(--aqua);border-radius:3px 3px 0 0;transition:height .35s}.chart-label{font:400 11px 'DM Mono',monospace;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;min-height:14px}.load-more{display:block;margin:25px auto 0}pre{font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:20px}code{color:var(--cream);font-size:14px}.muted{color:var(--muted);font-size:14px}.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:var(--cream);color:var(--ink);padding:15px 23px;box-shadow:4px 4px 0 var(--coral);border-radius:4px 14px 4px 14px;z-index:10;max-width:90vw;font-size:14px}.login-panel{max-width:640px;margin:65px auto 100px}.login-panel>p{color:var(--muted);line-height:1.6}.login-panel form{margin-top:32px;display:grid;gap:15px;max-width:440px}.login-panel label{font-size:14px}.login-panel input{padding:14px 16px;background:var(--deep);color:var(--cream);border:1px solid var(--line);border-radius:6px;min-width:0}.login-panel .primary{margin-top:8px}.login-panel #login-message{color:var(--coral);font-size:14px;line-height:1.5}
+@media(min-width:1600px){.card-cover{height:290px}}@media(max-width:1100px){.overview{grid-template-columns:1fr 1fr;gap:25px}.overview-metrics{gap:15px;padding-left:20px;grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1;display:flex;gap:15px;align-items:center}.metric:last-child>span{max-width:90px}.metric:last-child strong{font-size:38px}.metric:last-child small{max-width:100px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.card-title{font-size:42px}.toolbar{align-items:flex-start;flex-wrap:wrap}.footer{flex-wrap:wrap}}@media(max-width:640px){.shell,.topbar{width:calc(100% - 36px)}.topbar{min-height:86px}.wordmark{font-size:21px}.brand-icon{width:39px;height:39px;font-size:22px}.brand-sub{font-size:10px}.mode-badge{font-size:10px;padding:8px 10px}.top-actions{gap:12px}.overview{grid-template-columns:1fr;gap:26px;padding:32px 0}.overview h1{font-size:64px}.overview-metrics{border-left:0;border-top:1px solid var(--line);padding:24px 0 0;grid-template-columns:1.25fr .7fr 1fr;gap:10px}.metric:last-child{grid-column:auto;display:block}.metric:last-child>span{max-width:none}.metric:last-child strong,.metric strong{font-size:49px}.metric small{font-size:12px}.metric>span{font-size:10px;min-height:30px}.metric:last-child small{max-width:none}.cards{grid-template-columns:1fr;gap:26px}.card-cover{height:260px}.card-title{font-size:43px}.toolbar{gap:18px;padding-top:20px;margin-bottom:25px}.filter{font-size:13px;padding:11px 13px}.filter-tabs{gap:2px;width:100%;justify-content:space-between}.toolbar-actions{width:100%;justify-content:end}.period-label{margin-right:auto}.preview-note{font-size:13px;margin-top:18px}.preview-note span{display:block;margin-bottom:5px}.card-data{padding:18px 22px}.activity{margin-top:48px}th,td{padding:15px}.footer{font-size:10px;padding-bottom:25px}.footer>div{width:100%;justify-content:space-between;gap:10px}.dialog-content{padding:22px 20px 30px}.dialog-top{padding:15px 20px}.dialog-content>h2{font-size:42px}.detail-summary{gap:28px}.detail-summary strong{font-size:42px}.chart{padding:15px}.chart-label{font-size:10px}dialog{width:calc(100% - 22px);max-height:94svh}.login-panel{margin-top:45px}.login-panel h1{font-size:60px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+  <header class="topbar"><a class="wordmark" href="./" aria-label="SmartLab Analytics, home"><span class="brand-icon" aria-hidden="true">SL</span><span>SMARTLAB<span class="brand-sub">ANALYTICS</span></span></a><div class="top-actions"><span id="mode-badge" class="mode-badge">AREA PRIVATA</span><button class="text-button" id="logout" hidden>Esci</button></div></header>
+  <main class="shell">
+    <section id="login" class="login-panel" hidden aria-labelledby="login-title"><span class="eyebrow">SMARTLAB / ACCESSO RISERVATO</span><h1 id="login-title">IL TUO STUDIO.<br><span>IN NUMERI.</span></h1><p>Accedi per consultare le visualizzazioni dei tuoi siti.</p><form id="login-form"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required><button class="primary" type="submit">Accedi</button><p id="login-message" role="status"></p></form></section>
+    <section id="workspace" hidden>
+      <div id="preview-note" class="preview-note" hidden><span>ANTEPRIMA INTERATTIVA</span> Le cifre sono dimostrative. La raccolta reale non è ancora attiva.</div>
+      <section class="overview"><div><span class="eyebrow">SMARTLAB / SITE MONITOR</span><h1>I TUOI SITI.<br><span>IN NUMERI.</span></h1><p id="period-caption" class="intro">Le visualizzazioni dei tuoi progetti, in un unico spazio.</p></div><div class="overview-metrics"><div class="metric"><span>VISUALIZZAZIONI</span><strong id="total">—</strong><small id="total-period">ultimi 7 giorni</small></div><div class="metric"><span>OGGI</span><strong id="today">—</strong><small id="today-date">ora italiana</small></div><div class="metric"><span>SITI CON ACCESSI</span><strong id="active">—</strong><small id="registered">— progetti registrati</small></div></div></section>
+      <div class="toolbar"><div class="filter-tabs" role="group" aria-label="Tipologia di sito"><button class="filter active" data-category="all" aria-pressed="true">Tutti i siti <span id="all-count"></span></button><button class="filter" data-category="dashboard" aria-pressed="false">Dashboard</button><button class="filter" data-category="personal" aria-pressed="false">Personali</button></div><div class="toolbar-actions"><label class="period-label" for="days">Periodo</label><select id="days"><option value="1">Oggi</option><option value="7" selected>Ultimi 7 giorni</option><option value="30">Ultimi 30 giorni</option><option value="90">Ultimi 90 giorni</option></select><button class="icon-button" id="refresh" aria-label="Aggiorna visualizzazioni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5 8a8 8 0 0 1 13-3l2 2M4 17l2 2a8 8 0 0 0 13-3"/></svg></button></div></div>
+      <div id="error" class="error-banner" role="alert" hidden></div>
+      <section id="cards" class="cards" aria-label="Visualizzazioni per progetto"></section>
+      <section class="activity" aria-labelledby="activity-title"><div class="section-head"><div><span class="eyebrow">ULTIMI ACCESSI</span><h2 id="activity-title">Il registro.</h2></div><button class="outline" id="all-views">Vedi tutti</button></div><div id="recent-views" class="table-wrap"></div></section>
+      <footer class="footer"><p>VISUALIZZAZIONI DI PAGINA / EUROPE·ROME</p><div><span id="updated">—</span><button class="text-button" id="setup">Collega i siti</button></div></footer>
+    </section>
+  </main>
+  <dialog id="detail" aria-labelledby="detail-title"><div class="dialog-top"><span class="eyebrow" id="detail-label">REGISTRO ACCESSI</span><button class="close" aria-label="Chiudi dettaglio">×</button></div><div class="dialog-content"><h2 id="detail-title"></h2><p id="detail-description"></p><div id="detail-summary" class="detail-summary"></div><div id="detail-chart" class="chart" aria-label="Andamento giornaliero"></div><div id="detail-views" class="table-wrap"></div><button class="outline load-more" id="load-more" hidden>Carica altri accessi</button></div></dialog>
+  <dialog id="connection" aria-labelledby="connection-title"><div class="dialog-top"><span class="eyebrow">ATTIVAZIONE</span><button class="close" aria-label="Chiudi collegamento">×</button></div><div class="dialog-content"><h2 id="connection-title">Collega i tuoi siti.</h2><p>Inserisci questo script prima di <code>&lt;/head&gt;</code> nelle pagine da monitorare. I siti continuano a funzionare su GitHub.</p><pre id="snippet"></pre><button class="primary" id="copy-snippet">Copia script</button><p id="copy-result" role="status"></p><h3>Escludi le tue verifiche</h3><p>Aggiungi <code>?smartlab-ignore=1</code> al link del sito una volta. Per includere nuovamente il browser, usa <code>?smartlab-ignore=0</code>. La preferenza rimane soltanto su quel browser e su quel dominio.</p><p class="muted">Una visualizzazione indica un caricamento di pagina, non un visitatore unico. I browser che bloccano lo script o richiedono di non essere tracciati possono non comparire nel registro.</p></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+<script type="application/json" id="preview-catalog">[
+  {"id":"auxcore","name":"AUXCORE","subtitle":"ASP Ragusa","category":"dashboard","host":"live.smartlabdesign.it","path":"/auxcore/","color":"#b65db9","image":"https://live.smartlabdesign.it/auxcore/hero-poster.jpg","number":"01"},
+  {"id":"milanosport","name":"Milanosport","subtitle":"Control Hub","category":"dashboard","host":"live.smartlabdesign.it","path":"/milanosport-control-hub/","color":"#00bfc4","image":"https://live.smartlabdesign.it/milanosport-control-hub/assets/hero-cozzi.webp","number":"02"},
+  {"id":"ras","name":"RAS Sanità","subtitle":"Service Hub","category":"dashboard","host":"live.smartlabdesign.it","path":"/ras-service-hub/","color":"#ff6848","image":"https://live.smartlabdesign.it/ras-service-hub/assets/hero-01.webp","number":"03"},
+  {"id":"sport","name":"Sport e Salute","subtitle":"Control Hub","category":"dashboard","host":"live.smartlabdesign.it","path":"/sport-salute-control-hub/","color":"#ffbc42","image":"https://live.smartlabdesign.it/sport-salute-control-hub/hero-control-hub-green-wide.webp","number":"04"},
+  {"id":"veritas","name":"Veritas","subtitle":"Control Hub","category":"dashboard","host":"live.smartlabdesign.it","path":"/veritas-control-hub/","color":"#83cb80","image":null,"number":"05"},
+  {"id":"burger","name":"Giggiooo","subtitle":"Burger","category":"personal","host":"sites.smartlabdesign.it","path":"/giggiooo-burger/","color":"#dbb468","image":"https://sites.smartlabdesign.it/giggiooo-burger/assets/hero-poster-v2.jpg","number":"06"},
+  {"id":"right","name":"The Right One","subtitle":"A Story About Jack","category":"personal","host":"sites.smartlabdesign.it","path":"/the-right-one/","color":"#ff2d87","image":"https://d2ol7oe51mr4n9.cloudfront.net/user_37u4BdIWLdxIKRnNlGRqjLjMgTw/46aa4109-9f74-4251-8837-866468284918.png","number":"07"},
+  {"id":"fold02","name":"Fold Study","subtitle":"Experiment 02","category":"personal","host":"sites.smartlabdesign.it","path":"/fold-3d-study-02/","color":"#a7a0ff","image":null,"number":"08"},
+  {"id":"fold03","name":"Fold Study","subtitle":"Experiment 03","category":"personal","host":"sites.smartlabdesign.it","path":"/fold-3d-study-03/","color":"#00bfc4","image":null,"number":"09"},
+  {"id":"portfolio","name":"SmartLabDesign","subtitle":"Creative Force","category":"personal","host":"sites.smartlabdesign.it","path":"/","color":"#ff6848","image":"https://sites.smartlabdesign.it/assets/og-home.jpg","number":"10"}
+]
+</script><script>(() => {
+  'use strict';
+  const preview = document.documentElement.dataset.mode === 'preview';
+  const $ = id => document.getElementById(id);
+  const state = { sites: [], summary: null, recent: [], category: 'all', days: 7, site: null, next: null, detailRows: [], fake: [] };
+  const number = new Intl.NumberFormat('it-IT');
+  const date = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit', year: 'numeric' });
+  const time = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+  const shortDate = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: '2-digit', month: '2-digit' });
+  const dayKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' });
+  const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const periodName = () => state.days === 1 ? 'oggi' : 'ultimi ' + state.days + ' giorni';
+  function todayStart(now = Date.now()) {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now).map(p => [p.type, p.value]));
+    const midnight = Date.UTC(+parts.year, +parts.month - 1, +parts.day);
+    const hour = +new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', hourCycle: 'h23' }).format(midnight - 10800000);
+    return midnight - ((hour - 21 + 24) % 24) * 3600000;
+  }
+  const periodStart = () => todayStart(todayStart() + 43200000 - (state.days - 1) * 86400000);
+  async function api(path, options) {
+    const response = await fetch(path, { credentials: 'same-origin', ...options });
+    let data; try { data = await response.json(); } catch { throw new Error('Servizio non disponibile. Riprova tra poco.'); }
+    if (!response.ok) { const error = new Error(data.error || 'Impossibile caricare i dati.'); error.status = response.status; throw error; }
+    return data;
+  }
+  function notify(message) { $('toast').textContent = message; $('toast').hidden = false; clearTimeout(notify.timer); notify.timer = setTimeout(() => $('toast').hidden = true, 3000); }
+  function showLogin() { $('workspace').hidden = true; $('login').hidden = false; $('logout').hidden = true; }
+  function showWorkspace() { $('login').hidden = true; $('workspace').hidden = false; $('logout').hidden = preview; }
+  function fakeData() {
+    const counts = [128, 91, 69, 47, 28, 104, 33, 17, 12, 59];
+    state.fake = state.sites.flatMap((s, index) => Array.from({ length: counts[index] || 20 }, (_, i) => {
+      const day = (i * 5 + index * 2) % 14;
+      const dayStart = todayStart(todayStart() + 43200000 - day * 86400000);
+      let ts = dayStart + (8 + (i * 3 + index) % 11) * 3600000 + ((i * 17) % 60) * 60000 + (i % 60) * 1000;
+      if (day === 0 && ts > Date.now()) ts = Date.now() - (i * 61000 + index * 32000);
+      return { id: 'demo-' + index + '-' + i, site: s.id, path: s.path, ts };
+    })).sort((a, b) => b.ts - a.ts || b.id.localeCompare(a.id));
+  }
+  function previewSummary() {
+    const rows = state.fake.filter(r => r.ts >= periodStart());
+    const sites = state.sites.map(s => { const records = rows.filter(r => r.site === s.id); return { site: s.id, total: records.length, today: records.filter(r => dayKey.format(r.ts) === dayKey.format(Date.now())).length, last: records[0]?.ts || null }; });
+    const hours = new Map(); for (const r of rows) { const h = Math.floor(r.ts / 3600000) * 3600000; hours.set(h, (hours.get(h) || 0) + 1); }
+    return { sites, hours: [...hours].map(([hour, total]) => ({ hour, total })), from: periodStart(), updatedAt: Date.now() };
+  }
+  function previewViews(site, cursor) {
+    const rows = state.fake.filter(r => r.ts >= periodStart() && (!site || r.site === site) && (!cursor || r.ts < cursor.ts || r.ts === cursor.ts && r.id < cursor.id));
+    const records = rows.slice(0, 50), last = records.at(-1);
+    return { records, next: rows.length > 50 ? { ts: last.ts, id: last.id } : null };
+  }
+  const metrics = id => state.summary?.sites.find(row => row.site === id) || { total: 0, today: 0, last: null };
+  const selectedSites = () => state.sites.filter(s => state.category === 'all' || s.category === state.category);
+  function renderCards() {
+    $('cards').innerHTML = selectedSites().map(s => {
+      const m = metrics(s.id);
+      const last = m.last ? date.format(m.last) + ' · ' + time.format(m.last).slice(0, 5) : 'Nessun accesso nel periodo';
+      return `<button class="card" data-site="${escape(s.id)}" style="--accent:${escape(s.color)}" aria-label="Apri registro ${escape(s.name)}, ${number.format(m.total)} visualizzazioni"><div class="card-cover"><span class="card-number" aria-hidden="true">${escape(s.number)}</span>${s.image ? `<img src="${escape(s.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}<div class="card-meta"><span>${escape(s.number)} / SMARTLAB</span><span class="category-tag">${s.category === 'dashboard' ? 'DASHBOARD' : 'PERSONALE'}</span></div><h2 class="card-title">${escape(s.name)}<span>${escape(s.subtitle)}</span></h2></div><div class="card-data"><div class="card-stats"><div class="card-total"><strong>${number.format(m.total)}</strong><small>visualizzazioni</small></div><span class="today-pill">${number.format(m.today)} oggi</span></div><div class="card-bottom"><div class="last-view">Ultimo accesso<span>${escape(last)}</span></div><span class="open-detail" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/></svg></span></div></div></button>`;
+    }).join('');
+    $('cards').querySelectorAll('img').forEach(img => img.addEventListener('error', () => { img.hidden = true; }));
+    const visible = selectedSites(); const rows = state.recent.filter(r => visible.some(s => s.id === r.site));
+    renderTable($('recent-views'), rows.slice(0, 8));
+  }
+  function renderSummary() {
+    const rows = state.summary.sites;
+    $('total').textContent = number.format(rows.reduce((sum, row) => sum + row.total, 0));
+    $('today').textContent = number.format(rows.reduce((sum, row) => sum + row.today, 0));
+    $('active').textContent = rows.filter(row => row.total > 0).length;
+    $('registered').textContent = state.sites.length + ' progetti registrati';
+    $('all-count').textContent = state.sites.length;
+    $('total-period').textContent = periodName();
+    $('today-date').textContent = date.format(Date.now());
+    $('updated').textContent = (preview ? 'Demo aggiornata ' : 'Aggiornato ') + time.format(state.summary.updatedAt).slice(0, 5);
+    renderCards();
+  }
+  function renderTable(target, records) {
+    if (!records.length) { target.innerHTML = '<div class="empty">Nessun accesso registrato in questo periodo.</div>'; return; }
+    target.innerHTML = `<table><thead><tr><th scope="col">Progetto</th><th scope="col">Giorno</th><th scope="col">Ora italiana</th><th scope="col">Pagina</th></tr></thead><tbody>${records.map(r => {
+      const s = state.sites.find(s => s.id === r.site);
+      return `<tr><td><span class="site-dot" style="--accent:${escape(s?.color || '#00bfc4')}" aria-hidden="true"></span>${escape(s?.name || r.site)}</td><td>${date.format(r.ts)}</td><td class="table-time">${time.format(r.ts)}</td><td class="path" title="${escape(r.path)}">${escape(r.path)}</td></tr>`;
+    }).join('')}</tbody></table>`;
+  }
+  async function refresh() {
+    $('refresh').disabled = true; $('days').disabled = true; $('error').hidden = true;
+    try {
+      const [summary, recent] = await Promise.all([preview ? previewSummary() : api('/api/summary?days=' + state.days), preview ? previewViews(null, null) : api('/api/views?days=' + state.days)]);
+      state.summary = summary; state.recent = recent.records; renderSummary();
+    } catch (e) { if (e.status === 401) showLogin(); else { $('error').textContent = e.message; $('error').hidden = false; } }
+    finally { $('refresh').disabled = false; $('days').disabled = false; }
+  }
+  function chart(hours, records) {
+    const buckets = new Map();
+    if (records) for (const r of records) { const key = dayKey.format(r.ts); buckets.set(key, (buckets.get(key) || 0) + 1); }
+    else for (const row of hours) { const key = dayKey.format(row.hour); buckets.set(key, (buckets.get(key) || 0) + row.total); }
+    const dates = Array.from({ length: state.days }, (_, i) => todayStart(todayStart() + 43200000 - (state.days - 1 - i) * 86400000));
+    const values = dates.map(ts => ({ ts, total: buckets.get(dayKey.format(ts)) || 0 }));
+    const max = Math.max(1, ...values.map(v => v.total));
+    $('detail-chart').innerHTML = `<div class="chart-title">VISUALIZZAZIONI PER GIORNO · ${periodName().toUpperCase()}</div><div class="chart-bars">${values.map((v, i) => `<div class="chart-column" title="${date.format(v.ts)}: ${v.total} visualizzazioni"><div class="chart-bar" style="--height:${Math.max(1, v.total / max * 85)}%" role="img" aria-label="${date.format(v.ts)}: ${v.total} visualizzazioni"></div><span class="chart-label">${state.days <= 7 || i === 0 || i === values.length - 1 || i % Math.ceil(state.days / 6) === 0 ? shortDate.format(v.ts) : ''}</span></div>`).join('')}</div>`;
+  }
+  async function getViews(site, cursor) {
+    if (preview) return previewViews(site, cursor);
+    const params = new URLSearchParams({ days: state.days }); if (site) params.set('site', site); if (cursor) params.set('before', JSON.stringify(cursor));
+    return api('/api/views?' + params);
+  }
+  async function openDetail(site) {
+    state.site = site; state.detailRows = []; state.next = null;
+    const s = state.sites.find(s => s.id === site);
+    const chosen = s ? [s] : state.sites;
+    const m = chosen.reduce((acc, s) => { const row = metrics(s.id); return { total: acc.total + row.total, today: acc.today + row.today }; }, { total: 0, today: 0 });
+    $('detail-title').textContent = s ? s.name : 'Tutti gli accessi.';
+    $('detail-description').textContent = s ? s.host + s.path : 'Registro dei siti · ' + periodName();
+    $('detail-summary').innerHTML = `<div><strong>${number.format(m.total)}</strong><span>${periodName()}</span></div><div><strong>${number.format(m.today)}</strong><span>oggi</span></div>`;
+    $('detail-chart').hidden = !!site;
+    if (!site) chart(state.summary.hours);
+    $('detail-views').innerHTML = '<div class="empty">Caricamento degli accessi…</div>'; $('load-more').hidden = true;
+    $('detail').showModal();
+    try { const result = await getViews(site, null); state.detailRows = result.records; state.next = result.next; renderTable($('detail-views'), state.detailRows); $('load-more').hidden = !state.next; }
+    catch (e) { $('detail-views').innerHTML = `<div class="empty">${escape(e.message)}</div>`; }
+  }
+  async function init() {
+    if (preview) {
+      $('mode-badge').textContent = 'ANTEPRIMA / DEMO'; $('mode-badge').classList.add('preview'); $('preview-note').hidden = false;
+      $('setup').textContent = 'Come si attiva';
+      const embedded = document.getElementById('preview-catalog');
+      state.sites = embedded ? JSON.parse(embedded.textContent) : await api('./preview-catalog.json'); fakeData(); showWorkspace(); await refresh();
+    } else {
+      try { state.sites = await api('/api/sites'); showWorkspace(); await refresh(); }
+      catch (e) { showLogin(); if (e.status !== 401) $('login-message').textContent = e.message; }
+    }
+  }
+  $('cards').addEventListener('click', event => { const card = event.target.closest('[data-site]'); if (card && state.summary) openDetail(card.dataset.site); });
+  document.querySelectorAll('[data-category]').forEach(button => button.addEventListener('click', () => {
+    state.category = button.dataset.category;
+    document.querySelectorAll('[data-category]').forEach(b => { const active = b === button; b.classList.toggle('active', active); b.setAttribute('aria-pressed', active); });
+    renderCards();
+  }));
+  $('refresh').addEventListener('click', refresh);
+  $('days').addEventListener('change', () => { state.days = Number($('days').value); refresh(); });
+  $('all-views').addEventListener('click', () => { if (state.summary) openDetail(null); });
+  $('load-more').addEventListener('click', async () => {
+    $('load-more').disabled = true;
+    try { const result = await getViews(state.site, state.next); state.detailRows.push(...result.records); state.next = result.next; renderTable($('detail-views'), state.detailRows); $('load-more').hidden = !state.next; }
+    catch (e) { notify(e.message); } finally { $('load-more').disabled = false; }
+  });
+  document.querySelectorAll('dialog').forEach(dialog => {
+    dialog.querySelector('.close').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => { const rect = dialog.getBoundingClientRect(); if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) dialog.close(); });
+  });
+  $('setup').addEventListener('click', () => {
+    $('snippet').textContent = preview ? 'Il collegamento reale sarà disponibile dopo la pubblicazione sul tuo account Cloudflare Free. Nessun accesso reale viene raccolto da questa anteprima.' : '<script defer src="' + location.origin + '/tracker.js" referrerpolicy="no-referrer"></script>';
+    $('copy-snippet').hidden = preview; $('connection').showModal();
+  });
+  $('copy-snippet').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('snippet').textContent); $('copy-result').textContent = 'Script copiato.'; } catch { $('copy-result').textContent = 'Seleziona e copia lo script qui sopra.'; } });
+  $('login-form').addEventListener('submit', async event => {
+    event.preventDefault(); const button = $('login-form').querySelector('button'); button.disabled = true; $('login-message').textContent = '';
+    try { await api('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: $('password').value }) }); $('password').value = ''; state.sites = await api('/api/sites'); showWorkspace(); await refresh(); }
+    catch (e) { $('login-message').textContent = e.message; } finally { button.disabled = false; }
+  });
+  $('logout').addEventListener('click', async () => { try { await api('/api/logout', { method: 'POST' }); state.summary = null; state.recent = []; $('cards').replaceChildren(); $('recent-views').replaceChildren(); showLogin(); } catch (e) { notify(e.message); } });
+  init().catch(e => { showLogin(); $('login-message').textContent = e.message; });
+})();
+</script></body>
+</html>

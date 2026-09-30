@@ -119,7 +119,8 @@
     if (preview) {
       $('mode-badge').textContent = 'ANTEPRIMA / DEMO'; $('mode-badge').classList.add('preview'); $('preview-note').hidden = false;
       $('setup').textContent = 'Come si attiva';
-      state.sites = await api('./preview-catalog.json'); fakeData(); showWorkspace(); await refresh();
+      const embedded = document.getElementById('preview-catalog');
+      state.sites = embedded ? JSON.parse(embedded.textContent) : await api('./preview-catalog.json'); fakeData(); showWorkspace(); await refresh();
     } else {
       try { state.sites = await api('/api/sites'); showWorkspace(); await refresh(); }
       catch (e) { showLogin(); if (e.status !== 401) $('login-message').textContent = e.message; }
