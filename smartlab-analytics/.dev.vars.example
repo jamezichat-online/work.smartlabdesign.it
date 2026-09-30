@@ -1,0 +1,3 @@
+# Inserisci questa chiave come SECRET in Cloudflare, non come variabile pubblica.
+# La password deve essere scelta da te e avere almeno 20 caratteri.
+ADMIN_TOKEN=
