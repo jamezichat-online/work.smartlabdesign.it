@@ -196,7 +196,7 @@ dialog{width:min(1020px,calc(100% - 40px));max-height:90svh;padding:0;color:var(
     dialog.addEventListener('click', event => { const rect = dialog.getBoundingClientRect(); if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) dialog.close(); });
   });
   $('setup').addEventListener('click', () => {
-    $('snippet').textContent = preview ? 'Il collegamento reale sarà disponibile dopo la pubblicazione sul tuo account Cloudflare Free. Nessun accesso reale viene raccolto da questa anteprima.' : '<script defer src="' + location.origin + '/tracker.js" referrerpolicy="no-referrer"></script>';
+    $('snippet').textContent = preview ? 'Il collegamento reale sarà disponibile dopo la pubblicazione sul tuo account Cloudflare Free. Nessun accesso reale viene raccolto da questa anteprima.' : '<script defer src="' + location.origin + '/tracker.js" referrerpolicy="no-referrer"><\/script>';
     $('copy-snippet').hidden = preview; $('connection').showModal();
   });
   $('copy-snippet').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('snippet').textContent); $('copy-result').textContent = 'Script copiato.'; } catch { $('copy-result').textContent = 'Seleziona e copia lo script qui sopra.'; } });
