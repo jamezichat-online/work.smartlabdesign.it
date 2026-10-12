@@ -1,23 +1,58 @@
-<!-- AUXCORE intro v3 · gestito da .github/auxcore-intro (non modificare a mano: lo ripristina install.py / il workflow) -->
+<!-- AUXCORE intro v4 · gestito da .github/auxcore-intro (non modificare a mano: lo ripristina install.py / il workflow) -->
 <style id="aux-intro-cover">html:not(.aux-intro-ready):not(.aux-intro-done)::after{content:"";position:fixed;inset:0;background:#eef3fb;z-index:2147483646}</style>
 <script>(function(){var d=document.documentElement,n=navigator,c=n.connection||{},f=/[?&]intro=1\b/.test(location.search),s=false;try{s=!!sessionStorage.getItem('auxIntroSeen')}catch(e){}
 var reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-var P=innerWidth/innerHeight<.95;var T=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
-var weak=P||T||c.saveData||/^(slow-2g|2g|3g)$/.test(c.effectiveType||'')||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2)||(P?Math.min(innerWidth/1080,innerHeight/1500)<.28:Math.min(innerWidth/1920,innerHeight/1080)<.45);
-if(reduced||(!f&&(s||weak))){d.classList.add('aux-intro-done');return}
-setTimeout(function(){if(!d.classList.contains('aux-intro-ready'))d.classList.add('aux-intro-done')},4000);
-window.AUX_INTRO={mode:'site',transition:'symbol',once:true,controls:false,home:'#root',media:'/auxcore-catania/intro/media/',heroVideo:'/auxcore-catania/hero-catania-scrub.mp4',heroPoster:'/auxcore-catania/hero-catania-poster.jpg',music:[{url:'/auxcore-catania/intro/media/music.mp3'}]};})();</script>
-<script>(function(){var d=document.documentElement,t0=Date.now(),t0r=0,last=-1,still=0;
+var R=innerWidth/innerHeight,T=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+var net=c.saveData||/^(slow-2g|2g)$/.test(c.effectiveType||'');
+/* telefono in verticale -> video MP4 (leggero, nessun rischio di crash); desktop/laptop orizzontale -> intro HTML animata; il resto (tablet, touch in orizzontale) -> nessuna intro */
+var mode=R<.62?'video':(!T&&R>=.95&&!(n.deviceMemory&&n.deviceMemory<=2)&&!(n.hardwareConcurrency&&n.hardwareConcurrency<=2)&&Math.min(innerWidth/1920,innerHeight/1080)>=.45&&!/^3g$/.test(c.effectiveType||'')?'engine':'none');
+if(reduced||mode=='none'||(!f&&(s||net))){d.classList.add('aux-intro-done');return}
+window.__AUX_MODE=mode;
+function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn);else fn()}
+if(mode=='video'){
+ ready(function(){var V='/auxcore-catania/intro/media/intro-mobile.mp4',done=false,ov=document.createElement('div'),v=document.createElement('video'),tm,iv,last=-1,still=0;
+  ov.id='auxVid';ov.setAttribute('role','region');ov.setAttribute('aria-label','Intro AUXCORE');
+  v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');v.preload='auto';v.setAttribute('aria-hidden','true');v.src=V;
+  var snd=document.createElement('button'),sk=document.createElement('button'),bar=document.createElement('div');bar.className='av-bar';
+  snd.type=sk.type='button';snd.className='av-btn';sk.className='av-btn av-skip';snd.setAttribute('aria-pressed','false');snd.setAttribute('aria-label','Attiva audio');
+  snd.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="10" width="3" height="4" rx="1"/><rect x="8" y="6" width="3" height="12" rx="1"/><rect x="13" y="9" width="3" height="6" rx="1"/><rect x="18" y="4" width="3" height="16" rx="1"/></svg><span>Attiva audio</span>';
+  sk.innerHTML='Salta intro <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  bar.appendChild(snd);var bot=document.createElement('div');bot.className='av-bot';var pg=document.createElement('div');pg.className='av-prog';pg.innerHTML='<i></i>';bot.appendChild(sk);ov.appendChild(v);ov.appendChild(bar);ov.appendChild(bot);ov.appendChild(pg);document.body.appendChild(ov);d.classList.add('aux-vid-on');
+  function end(){if(done)return;done=true;clearTimeout(tm);clearInterval(iv);try{sessionStorage.setItem('auxIntroSeen','1')}catch(e){}
+   d.classList.add('aux-intro-ready','aux-intro-done');ov.style.opacity='0';try{v.pause()}catch(e){}
+   setTimeout(function(){d.classList.remove('aux-vid-on');if(ov.parentNode)ov.parentNode.removeChild(ov);try{v.removeAttribute('src');v.load()}catch(e){}document.dispatchEvent(new Event('auxintro:done'))},650)}
+  function fail(){if(done)return;done=true;clearTimeout(tm);clearInterval(iv);d.classList.add('aux-intro-ready','aux-intro-done');d.classList.remove('aux-vid-on');if(ov.parentNode)ov.parentNode.removeChild(ov);try{v.removeAttribute('src');v.load()}catch(e){}}
+  snd.addEventListener('click',function(){var on=v.muted;v.muted=!on;if(on)v.volume=1;snd.setAttribute('aria-pressed',on?'true':'false');snd.setAttribute('aria-label',on?'Disattiva audio':'Attiva audio');snd.querySelector('span').textContent=on?'Audio attivo':'Attiva audio';snd.classList.toggle('on',on)});
+  sk.addEventListener('click',end);v.addEventListener('ended',end);v.addEventListener('timeupdate',function(){if(v.duration)pg.firstChild.style.transform='scaleX('+Math.min(1,v.currentTime/v.duration)+')'});v.addEventListener('error',fail);
+  v.addEventListener('playing',function(){clearTimeout(tm);d.classList.add('aux-intro-ready');ov.classList.add('live');
+   iv=setInterval(function(){if(document.hidden||v.paused)return;var t=v.currentTime;if(Math.abs(t-last)<.01){if(++still>=6)end()}else still=0;last=t},1000)},{once:true});
+  tm=setTimeout(fail,9000);
+  var p;try{p=v.play()}catch(e){}if(p&&p.catch)p.catch(fail);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')end()});
+  });
+}else{
+ setTimeout(function(){if(!d.classList.contains('aux-intro-ready'))d.classList.add('aux-intro-done')},4000);
+ window.AUX_INTRO={mode:'site',transition:'symbol',once:true,controls:false,home:'#root',media:'/auxcore-catania/intro/media/',heroVideo:'/auxcore-catania/hero-catania-scrub.mp4',heroPoster:'/auxcore-catania/hero-catania-poster.jpg',music:[{url:'/auxcore-catania/intro/media/music.mp3'}]};
+ ready(function(){['gsap.min.js','intro.js'].forEach(function(n){var e=document.createElement('script');e.async=false;e.charset='utf-8';e.src='/auxcore-catania/intro/'+n;document.head.appendChild(e)})});
+}})();</script>
+<style id="aux-intro-vid-css">#auxVid{position:fixed;inset:0;z-index:2147483645;background:#eef3fb;opacity:1;transition:opacity .6s ease;overflow:hidden;touch-action:none}
+#auxVid video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#eef3fb;pointer-events:none}
+#auxVid .av-bar{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;display:flex;gap:8px;z-index:2;opacity:0;transition:opacity .4s}#auxVid.live .av-bar,#auxVid.live .av-bot{opacity:1}
+#auxVid .av-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid rgba(255,255,255,.9);border-radius:999px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#1a2447;font:600 14px/1 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;letter-spacing:-.01em;cursor:pointer;box-shadow:0 8px 22px rgba(23,45,95,.14);-webkit-tap-highlight-color:transparent}
+#auxVid .av-btn.on{color:#5b4fc9}#auxVid .av-btn:focus-visible{outline:2px solid #5b4fc9;outline-offset:3px}
+#auxVid .av-bot{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);display:flex;justify-content:center;z-index:2;opacity:0;transition:opacity .4s}
+#auxVid .av-skip{min-height:52px;padding:0 26px;font-size:16px;color:#fff;border-color:rgba(255,255,255,.55);background:linear-gradient(120deg,#2f6fd6,#7a4fd0 60%,#b04fc0);box-shadow:0 12px 30px rgba(91,79,201,.38)}
+#auxVid .av-prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(23,45,95,.1);z-index:2}#auxVid .av-prog i{display:block;height:100%;background:linear-gradient(90deg,#2f6fd6,#b04fc0);transform-origin:0 50%;transform:scaleX(0)}
+html.aux-vid-on,html.aux-vid-on body{overflow:hidden!important}</style>
+<script>(function(){if(window.__AUX_MODE!=='engine')return;var d=document.documentElement,t0=Date.now(),t0r=0,last=-1,still=0;
 function out(){try{window.AuxIntro&&window.AuxIntro.finish()}catch(e){}var h=document.getElementById('auxIntro');if(h&&h.parentNode)h.parentNode.removeChild(h);d.classList.remove('aux-intro-on');d.classList.add('aux-intro-done');try{sessionStorage.setItem('auxIntroSeen','1')}catch(e){}clearInterval(iv)}
 var iv=setInterval(function(){if(d.classList.contains('aux-intro-done')){clearInterval(iv);return}if(!d.classList.contains('aux-intro-on'))return;
 if(d.classList.contains('aux-intro-ready')&&!t0r)t0r=Date.now();if(!window.__AUX_NOGUARD&&((t0r&&Date.now()-t0r>75000)||Date.now()-t0>110000)){out();return}
 var a=window.__aux,t=a&&a.tl?a.tl.time():-1;if(t>=0&&!document.hidden&&!a.tl.paused()){if(Math.abs(t-last)<.01){if(++still>=5)out()}else still=0;last=t}},1000)})();</script>
-<script src="/auxcore-catania/intro/gsap.min.js" defer></script>
-<script src="/auxcore-catania/intro/intro.js" charset="utf-8" defer></script>
 <style id="aux-intro-replay-css">.aux-replay{position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px 0 14px;border:1px solid rgba(255,255,255,.9);border-radius:999px;background:rgba(255,255,255,.7);-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#173b8e;font:600 14px/1 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;letter-spacing:-.01em;cursor:pointer;box-shadow:0 10px 26px rgba(23,45,95,.16);padding-bottom:env(safe-area-inset-bottom,0)}
 .aux-replay:hover{background:rgba(255,255,255,.92)}.aux-replay:focus-visible{outline:2px solid #5b4fc9;outline-offset:3px}
-.aux-replay svg{flex:none}html.aux-intro-on .aux-replay{display:none}@media(max-width:520px){.aux-replay{left:12px;bottom:12px;padding:0 14px 0 12px;font-size:13px}}</style>
-<script>(function(){var m=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;if(m||innerWidth/innerHeight<.95||(window.matchMedia&&matchMedia('(pointer:coarse)').matches))return;
+.aux-replay svg{flex:none}html.aux-intro-on .aux-replay,html.aux-vid-on .aux-replay{display:none}@media(max-width:520px){.aux-replay{left:12px;bottom:12px;padding:0 14px 0 12px;font-size:13px}}</style>
+<script>(function(){var m=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;var R=innerWidth/innerHeight,C=window.matchMedia&&matchMedia('(pointer:coarse)').matches;if(m||!(R<.62||(!C&&R>=.95)))return;
 function add(){if(document.getElementById('aux-replay'))return;var b=document.createElement('button');b.id='aux-replay';b.type='button';b.className='aux-replay';b.setAttribute('aria-label','Rivedi l’intro AUXCORE');
 b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l14 8-14 8z"/></svg>Rivedi l’intro';
 b.addEventListener('click',function(){try{sessionStorage.removeItem('auxIntroSeen')}catch(e){}location.href=location.pathname+'?intro=1'});document.body.appendChild(b)}
