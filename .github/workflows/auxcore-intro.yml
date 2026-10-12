@@ -1,0 +1,38 @@
+name: AUXCORE Catania · mantieni l'intro
+
+# A ogni pubblicazione del sito (push su main che tocca auxcore-catania) verifica che l'intro sia ancora al suo posto
+# e, se la pubblicazione l'ha rimossa, la rimette. Nessuna azione manuale richiesta.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "auxcore-catania/**"
+      - ".github/auxcore-intro/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auxcore-intro
+  cancel-in-progress: false
+
+jobs:
+  ensure-intro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ripristina intro e snippet
+        run: python3 .github/auxcore-intro/install.py
+      - name: Commit solo se qualcosa e' cambiato
+        run: |
+          if [ -n "$(git status --porcelain auxcore-catania)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add auxcore-catania
+            git commit -m "AUXCORE Catania: ripristina l'intro dopo la pubblicazione del sito"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo "Intro gia' presente: nessuna modifica."
+          fi
