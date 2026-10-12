@@ -1,7 +1,7 @@
 /*! AUXCORE intro \u00b7 SmartLab Design \u00b7 GSAP 3 required (window.gsap) */
 (function(){
 'use strict';
-const CFG=Object.assign({media:'media/',heroVideo:null,heroPoster:null,mode:'demo',home:'#home',once:false,controls:true,fonts:true,fontBase:null,perfGuard:true,minScale:.45,minScalePort:.28,music:null,musicVolume:.9,musicOffset:0},window.AUX_INTRO||{});
+const CFG=Object.assign({media:'media/',heroVideo:null,heroPoster:null,mode:'demo',home:'#home',once:false,controls:true,fonts:true,fontBase:null,perfGuard:true,minScale:.45,minScalePort:.28,allowPortrait:false,music:null,musicVolume:.9,musicOffset:0},window.AUX_INTRO||{});
 CFG.heroVideo=CFG.heroVideo||CFG.media+'hero.mp4';CFG.heroPoster=CFG.heroPoster||CFG.media+'hero-poster.jpg';
 const DOCEL=document.documentElement;
 if(DOCEL.classList.contains('aux-intro-done')||document.getElementById('auxIntro'))return;
@@ -10,7 +10,7 @@ if(CFG.once&&!/[?&]intro=1\b/.test(location.search)){try{if(sessionStorage.getIt
 /* quando NON mostrare l'intro (sul sito): riduzione movimento sempre; il resto si puo' forzare con ?intro=1 */
 if(CFG.mode==='site'){const FORCE=/[?&]intro=1\b/.test(location.search),N=navigator,C=N.connection||{};
   const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const weak=C.saveData||/^(slow-2g|2g|3g)$/.test(C.effectiveType||'')||(N.deviceMemory&&N.deviceMemory<=2)||(N.hardwareConcurrency&&N.hardwareConcurrency<=2)||((innerWidth/innerHeight<.95)?Math.min(innerWidth/1080,innerHeight/1500)<CFG.minScalePort:Math.min(innerWidth/1920,innerHeight/1080)<CFG.minScale);
+  const weak=C.saveData||/^(slow-2g|2g|3g)$/.test(C.effectiveType||'')||(N.deviceMemory&&N.deviceMemory<=2)||(N.hardwareConcurrency&&N.hardwareConcurrency<=2)||((innerWidth/innerHeight<.95)?(!CFG.allowPortrait||Math.min(innerWidth/1080,innerHeight/1500)<CFG.minScalePort):Math.min(innerWidth/1920,innerHeight/1080)<CFG.minScale);
   if(reduced||(weak&&!FORCE)){DOCEL.classList.add('aux-intro-done');return}}
 if(CFG.fonts&&!document.getElementById('aux-intro-fonts')){const FB=CFG.fontBase||CFG.media+'fonts/';const st=document.createElement('style');st.id='aux-intro-fonts';
   st.textContent="@font-face{font-family:AuxInter;font-style:normal;font-weight:100 900;font-display:swap;src:url(%sinter-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:AuxInter;font-style:normal;font-weight:100 900;font-display:swap;src:url(%sinter-greek.woff2) format('woff2');unicode-range:U+0370-03FF}@font-face{font-family:AuxMono;font-style:normal;font-weight:500;font-display:swap;src:url(%smono-500.woff2) format('woff2')}@font-face{font-family:AuxMono;font-style:normal;font-weight:600;font-display:swap;src:url(%smono-600.woff2) format('woff2')}".split('%s').join(FB);document.head.appendChild(st)}
