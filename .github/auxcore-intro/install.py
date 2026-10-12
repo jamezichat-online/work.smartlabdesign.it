@@ -16,7 +16,8 @@ SITE = REPO / "auxcore-catania"
 PAYLOAD = HERE / "payload"
 SNIPPET = (HERE / "snippet.html").read_text(encoding="utf-8").strip()
 START = "<!-- AUXCORE intro v"
-END = '<script src="/auxcore-catania/intro/intro.js" charset="utf-8" defer></script>'
+END = "<!-- /AUXCORE intro -->"
+LEGACY_END = '<script src="/auxcore-catania/intro/intro.js" charset="utf-8" defer></script>'
 changed = []
 
 def digest(p): return hashlib.sha1(p.read_bytes()).hexdigest()
@@ -43,9 +44,11 @@ html = index.read_text(encoding="utf-8")
 new = html
 if START in new:
     a = new.index(START)
-    b = new.find(END, a)
+    b, n = new.find(END, a), len(END)
+    if b == -1:  # versioni precedenti dello snippet non avevano il marcatore di chiusura
+        b, n = new.find(LEGACY_END, a), len(LEGACY_END)
     if b != -1:
-        new = new[:a].rstrip("\n") + "\n" + new[b + len(END):].lstrip("\n")
+        new = new[:a].rstrip("\n") + "\n" + new[b + n:].lstrip("\n")
 m = re.search(r'<meta name="viewport"[^>]*>', new) or re.search(r"<head[^>]*>", new)
 if not m:
     sys.exit("<head> non trovato in index.html: impossibile inserire lo snippet")
