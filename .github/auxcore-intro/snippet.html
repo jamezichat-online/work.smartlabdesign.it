@@ -1,0 +1,11 @@
+<!-- AUXCORE intro v2 · gestito da .github/auxcore-intro (non modificare a mano: lo ripristina install.py / il workflow) -->
+<style id="aux-intro-cover">html:not(.aux-intro-ready):not(.aux-intro-done)::after{content:"";position:fixed;inset:0;background:#eef3fb;z-index:2147483646}</style>
+<script>(function(){var d=document.documentElement,n=navigator,c=n.connection||{},f=/[?&]intro=1\b/.test(location.search),s=false;try{s=!!sessionStorage.getItem('auxIntroSeen')}catch(e){}
+var reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var P=innerWidth/innerHeight<.95;
+var weak=c.saveData||/^(slow-2g|2g|3g)$/.test(c.effectiveType||'')||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2)||(P?Math.min(innerWidth/1080,innerHeight/1500)<.28:Math.min(innerWidth/1920,innerHeight/1080)<.45);
+if(reduced||(!f&&(s||weak))){d.classList.add('aux-intro-done');return}
+setTimeout(function(){if(!d.classList.contains('aux-intro-ready'))d.classList.add('aux-intro-done')},4000);
+window.AUX_INTRO={mode:'site',transition:'symbol',once:true,controls:false,home:'#root',media:'/auxcore-catania/intro/media/',heroVideo:'/auxcore-catania/hero-catania-scrub.mp4',heroPoster:'/auxcore-catania/hero-catania-poster.jpg',music:[{url:'/auxcore-catania/intro/media/music.mp3'}]};})();</script>
+<script src="/auxcore-catania/intro/gsap.min.js" defer></script>
+<script src="/auxcore-catania/intro/intro.js" charset="utf-8" defer></script>
