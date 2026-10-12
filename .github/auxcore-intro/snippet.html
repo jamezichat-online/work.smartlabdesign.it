@@ -2,22 +2,22 @@
 <style id="aux-intro-cover">html:not(.aux-intro-ready):not(.aux-intro-done)::after{content:"";position:fixed;inset:0;background:#eef3fb;z-index:2147483646}</style>
 <script>(function(){var d=document.documentElement,n=navigator,c=n.connection||{},f=/[?&]intro=1\b/.test(location.search),s=false;try{s=!!sessionStorage.getItem('auxIntroSeen')}catch(e){}
 var reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-var P=innerWidth/innerHeight<.95;
-var weak=P||c.saveData||/^(slow-2g|2g|3g)$/.test(c.effectiveType||'')||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2)||(P?Math.min(innerWidth/1080,innerHeight/1500)<.28:Math.min(innerWidth/1920,innerHeight/1080)<.45);
+var P=innerWidth/innerHeight<.95;var T=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+var weak=P||T||c.saveData||/^(slow-2g|2g|3g)$/.test(c.effectiveType||'')||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2)||(P?Math.min(innerWidth/1080,innerHeight/1500)<.28:Math.min(innerWidth/1920,innerHeight/1080)<.45);
 if(reduced||(!f&&(s||weak))){d.classList.add('aux-intro-done');return}
 setTimeout(function(){if(!d.classList.contains('aux-intro-ready'))d.classList.add('aux-intro-done')},4000);
 window.AUX_INTRO={mode:'site',transition:'symbol',once:true,controls:false,home:'#root',media:'/auxcore-catania/intro/media/',heroVideo:'/auxcore-catania/hero-catania-scrub.mp4',heroPoster:'/auxcore-catania/hero-catania-poster.jpg',music:[{url:'/auxcore-catania/intro/media/music.mp3'}]};})();</script>
-<script>(function(){var d=document.documentElement,t0=Date.now(),last=-1,still=0;
+<script>(function(){var d=document.documentElement,t0=Date.now(),t0r=0,last=-1,still=0;
 function out(){try{window.AuxIntro&&window.AuxIntro.finish()}catch(e){}var h=document.getElementById('auxIntro');if(h&&h.parentNode)h.parentNode.removeChild(h);d.classList.remove('aux-intro-on');d.classList.add('aux-intro-done');try{sessionStorage.setItem('auxIntroSeen','1')}catch(e){}clearInterval(iv)}
 var iv=setInterval(function(){if(d.classList.contains('aux-intro-done')){clearInterval(iv);return}if(!d.classList.contains('aux-intro-on'))return;
-if(Date.now()-t0>55000){out();return}
+if(d.classList.contains('aux-intro-ready')&&!t0r)t0r=Date.now();if(!window.__AUX_NOGUARD&&((t0r&&Date.now()-t0r>75000)||Date.now()-t0>110000)){out();return}
 var a=window.__aux,t=a&&a.tl?a.tl.time():-1;if(t>=0&&!document.hidden&&!a.tl.paused()){if(Math.abs(t-last)<.01){if(++still>=5)out()}else still=0;last=t}},1000)})();</script>
 <script src="/auxcore-catania/intro/gsap.min.js" defer></script>
 <script src="/auxcore-catania/intro/intro.js" charset="utf-8" defer></script>
 <style id="aux-intro-replay-css">.aux-replay{position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px 0 14px;border:1px solid rgba(255,255,255,.9);border-radius:999px;background:rgba(255,255,255,.7);-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#173b8e;font:600 14px/1 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;letter-spacing:-.01em;cursor:pointer;box-shadow:0 10px 26px rgba(23,45,95,.16);padding-bottom:env(safe-area-inset-bottom,0)}
 .aux-replay:hover{background:rgba(255,255,255,.92)}.aux-replay:focus-visible{outline:2px solid #5b4fc9;outline-offset:3px}
 .aux-replay svg{flex:none}html.aux-intro-on .aux-replay{display:none}@media(max-width:520px){.aux-replay{left:12px;bottom:12px;padding:0 14px 0 12px;font-size:13px}}</style>
-<script>(function(){var m=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;if(m||innerWidth/innerHeight<.95)return;
+<script>(function(){var m=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;if(m||innerWidth/innerHeight<.95||(window.matchMedia&&matchMedia('(pointer:coarse)').matches))return;
 function add(){if(document.getElementById('aux-replay'))return;var b=document.createElement('button');b.id='aux-replay';b.type='button';b.className='aux-replay';b.setAttribute('aria-label','Rivedi l’intro AUXCORE');
 b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l14 8-14 8z"/></svg>Rivedi l’intro';
 b.addEventListener('click',function(){try{sessionStorage.removeItem('auxIntroSeen')}catch(e){}location.href=location.pathname+'?intro=1'});document.body.appendChild(b)}
