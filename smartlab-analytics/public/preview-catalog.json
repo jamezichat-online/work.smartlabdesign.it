@@ -148,9 +148,9 @@
     "path": "/3d-frames/",
     "color": "#00bfc4",
     "surface": "#062d31",
-    "image": "./card-images/fold03.webp",
+    "image": "./card-images/3dframes.webp",
     "imagePosition": "50% 50%",
     "number": "11",
-    "modalImage": "./card-images/fold03.webp"
+    "modalImage": "./card-images/3dframes.webp"
   }
 ]
