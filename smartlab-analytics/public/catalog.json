@@ -138,5 +138,19 @@
     "imagePosition": "35% 50%",
     "number": "10",
     "modalImage": "https://sites.smartlabdesign.it/assets/og-home.jpg"
+  },
+  {
+    "id": "3dframes",
+    "name": "3D Video Frames",
+    "subtitle": "Video Frame Explorer",
+    "category": "personal",
+    "host": "sites.smartlabdesign.it",
+    "path": "/3d-frames/",
+    "color": "#00bfc4",
+    "surface": "#062d31",
+    "image": "./card-images/fold03.webp",
+    "imagePosition": "50% 50%",
+    "number": "11",
+    "modalImage": "./card-images/fold03.webp"
   }
 ]
