@@ -75,13 +75,13 @@
     "subtitle": "Burger",
     "category": "personal",
     "host": "sites.smartlabdesign.it",
-    "path": "/giggiooo-burger/",
+    "path": "/giggiooo-burger-v2/",
     "color": "#daa76a",
     "surface": "#20120b",
     "image": "./card-images/burger.webp",
-    "imagePosition": "50% 45%",
+    "imagePosition": "50% 55%",
     "number": "06",
-    "modalImage": "https://sites.smartlabdesign.it/giggiooo-burger/assets/hero-poster-v2.jpg"
+    "modalImage": "https://sites.smartlabdesign.it/giggiooo-burger-v2/assets/hero-packaging-poster.webp"
   },
   {
     "id": "right",

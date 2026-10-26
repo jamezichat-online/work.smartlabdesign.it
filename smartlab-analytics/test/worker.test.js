@@ -28,7 +28,7 @@ async function login(env) {
 }
 test('registrazione del sito con controllo origin e percorsi', () => {
   assert.equal(matchSite('https://live.smartlabdesign.it', '/auxcore/').id, 'auxcore');
-  assert.equal(matchSite('https://sites.smartlabdesign.it', '/giggiooo-burger/').id, 'burger');
+  assert.equal(matchSite('https://sites.smartlabdesign.it', '/giggiooo-burger-v2/').id, 'burger');
   assert.equal(matchSite('https://sites.smartlabdesign.it', '/').id, 'portfolio');
   for (const path of ['/auxcoreevil/', '/auxcore/../secret', '/auxcore/?email=x', '/auxcore/#x', '/auxcore/%2e%2e/x']) assert.equal(matchSite('https://live.smartlabdesign.it', path), null);
   assert.equal(matchSite('https://attacker.example', '/auxcore/'), null);

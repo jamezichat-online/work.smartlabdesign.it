@@ -18,7 +18,7 @@ URLS = {
     'milanosport': 'https://live.smartlabdesign.it/milanosport-control-hub/assets/hero-cozzi.webp',
     'ras': 'https://live.smartlabdesign.it/ras-service-hub/assets/hero-01.webp',
     'sport': 'https://live.smartlabdesign.it/sport-salute-control-hub/hero-control-hub-green-wide.webp',
-    'burger': 'https://sites.smartlabdesign.it/giggiooo-burger/assets/hero-poster-v2.jpg',
+    'burger': 'https://sites.smartlabdesign.it/giggiooo-burger-v2/assets/hero-packaging-poster.webp',
     'right': 'https://d2ol7oe51mr4n9.cloudfront.net/user_37u4BdIWLdxIKRnNlGRqjLjMgTw/46aa4109-9f74-4251-8837-866468284918.png',
     'fold02': 'https://sites.smartlabdesign.it/fold-3d-study-02/background.png',
     'fold03': 'https://sites.smartlabdesign.it/fold-3d-study-03/background.png',
