@@ -17,3 +17,7 @@
 
 /* Images stay on the card plane, including on hover. */
 .activity .art img,.activity:hover .art img,.activity.tilt-active .art img{transform:none;transition:none}
+
+/* One rigid plane: only the whole card rotates; its contents stay attached. */
+.activity,.activity *{cursor:pointer}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.activity{transform:perspective(1100px) rotateY(var(--tilt-y,0deg));transform-origin:center;transition:transform 500ms ease,box-shadow .2s}.activity.tilt-active{transition:box-shadow .2s;will-change:transform}.activity .art,.activity .card-copy,.activity .art img,.activity .card-copy h3,.activity .card-copy p,.activity .card-copy b{transform:none;transform-style:flat}}
