@@ -9,8 +9,11 @@
 .module h3,.card-copy h3{white-space:normal;height:auto}
 #close{float:right;display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;max-width:44px;max-height:44px;aspect-ratio:1;padding:0;line-height:1;border:0;border-radius:50%;background:#cd212a;color:#fff;font-size:28px}
 #detail.login-dialog{width:min(94%,560px);max-width:560px}#detail.login-dialog h2{font-size:1.75rem}
-@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.activity{overflow:visible;transform:perspective(1100px) rotateY(var(--tilt-y,0deg));transform-style:preserve-3d;transition:transform 500ms ease,box-shadow .2s}.activity .art,.activity .card-copy{overflow:visible;transform-style:preserve-3d}.activity .art img{border-radius:6px 6px 0 0;transform:translateZ(0);transition:transform 500ms ease}.activity .card-copy h3{transform:translateZ(0);transition:transform 500ms ease}.activity .card-copy p,.activity .card-copy b{transform:translateZ(0)}.activity.tilt-active{transition:transform 100ms ease-out,box-shadow .2s}.activity.tilt-active .art img{transform:translateZ(27px)}.activity.tilt-active .card-copy h3{transform:translateZ(44px)}}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.activity{overflow:visible;transform:perspective(1100px) rotateY(var(--tilt-y,0deg));transform-style:preserve-3d;transition:transform 500ms ease,box-shadow .2s}.activity .art,.activity .card-copy{overflow:visible;transform-style:preserve-3d}.activity .art img{border-radius:6px 6px 0 0;transform:translateZ(0);transition:transform 500ms ease}.activity .card-copy h3{transform:translateZ(0);transition:transform 500ms ease}.activity .card-copy p,.activity .card-copy b{transform:translateZ(0)}.activity.tilt-active{transition:transform 100ms ease-out,box-shadow .2s}.activity.tilt-active .art img{transform:none}.activity.tilt-active .card-copy h3{transform:translateZ(44px)}}
 
 @media(max-width:1100px){header nav{grid-column:1/-1;grid-row:auto;box-sizing:border-box;width:100%;max-width:none}}
 
 @media(max-width:1100px){header nav{position:fixed;top:76px;left:0;right:0;bottom:0;width:auto;grid-column:auto;overflow-y:auto}.menu-open nav{min-height:0}}
+
+/* Images stay on the card plane, including on hover. */
+.activity .art img,.activity:hover .art img,.activity.tilt-active .art img{transform:none;transition:none}
