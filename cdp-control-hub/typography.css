@@ -6,3 +6,5 @@
 @media(min-width:451px) and (max-width:700px){.module{padding:22px 18px}.module h3{font-size:1.375rem}.module ul{font-size:.9375rem}}
 @media(max-width:700px){nav{gap:8px}nav a{white-space:nowrap;gap:4px}nav .ico{width:14px;height:14px}}
 @media(max-width:700px){.chart text{font-size:18px}}
+/* Emphasize card headings while preserving the section hierarchy. */
+.card-copy h3,.module h3,.site-sheet h3,.dash-panel h3{font-weight:700}
