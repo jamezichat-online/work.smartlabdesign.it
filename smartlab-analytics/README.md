@@ -1,5 +1,9 @@
 # SmartLab Analytics
 
+Per l'accesso automatico in sola lettura, il confronto incrementale e il controllo
+settimanale vedere [MONITORING.md](MONITORING.md). I test locali non certificano lo
+stato del deploy o dei dati in produzione.
+
 App privata per visualizzare gli accessi ai siti SmartLabDesign. Card personalizzate nello stile del portfolio, riepilogo delle visualizzazioni, filtri per sito e periodo, registro cronologico con giorno e ora in `Europe/Rome`.
 
 **Stato:** sorgenti pronti; il servizio deve essere attivato sul proprio account Cloudflare. Le pagine esistenti non contengono ancora il tracker e non vengono monitorate.

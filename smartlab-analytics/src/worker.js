@@ -1,4 +1,5 @@
 import sites from '../public/catalog.json' with { type: 'json' };
+import { monitoring } from './monitoring.js';
 
 const ready = new WeakMap();
 const enc = new TextEncoder();
@@ -96,6 +97,7 @@ async function collect(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url), path = url.pathname;
+    if (path === '/api/monitoring/visits') return monitoring(request, env, sites);
     if (path === '/api/collect') return collect(request, env);
     if (path === '/api/login') {
       if (request.method !== 'POST' || !sameOrigin(request)) return fault('Richiesta non autorizzata.', 403);
