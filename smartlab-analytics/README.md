@@ -26,6 +26,11 @@ Non serve spostare i siti, modificare il dominio o creare utenti per i visitator
 
 ## Siti predisposti
 
+Il catalogo comprende ora 14 progetti. Sono inclusi anche VoidSignal, Creative
+development (Type Lab e Hidden Stories) e POMATA, pubblicati nel portfolio. Il
+tracker è presente nelle rispettive pagine e nella sottopagina POMATA Classica;
+le visite precedenti alla sua attivazione non vengono ricostruite.
+
 Sono registrati i 5 progetti su `live.smartlabdesign.it` (AUXCORE, Milanosport, RAS, Sport e Salute, Veritas), i progetti Giggiooo Burger, The Right One, Fold Study 02 e 03 e la home portfolio su `sites.smartlabdesign.it`. Le corrispondenze sono definite in `public/catalog.json`. Per aggiungere un sito modifica quel file, aggiungi la copertina in `public/card-images/` e rigenera l'anteprima con `npm run build:preview`.
 
 ## Card, link e grafico
