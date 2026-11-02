@@ -70,6 +70,20 @@
     "modalImage": "./modal-images/veritas.jpg"
   },
   {
+    "id": "cdp",
+    "name": "CdP",
+    "subtitle": "Control HUB",
+    "category": "dashboard",
+    "host": "live.smartlabdesign.it",
+    "path": "/cdp-control-hub/",
+    "color": "#91b4dc",
+    "surface": "#162b46",
+    "image": "./card-images/cdp.webp",
+    "imagePosition": "50% 50%",
+    "number": "06",
+    "modalImage": "https://live.smartlabdesign.it/cdp-control-hub/assets/control-hub.jpg"
+  },
+  {
     "id": "burger",
     "name": "Giggiooo",
     "subtitle": "Burger",
@@ -80,7 +94,7 @@
     "surface": "#20120b",
     "image": "./card-images/burger.webp",
     "imagePosition": "50% 55%",
-    "number": "06",
+    "number": "07",
     "modalImage": "https://sites.smartlabdesign.it/giggiooo-burger-v2/assets/hero-packaging-poster.webp"
   },
   {
@@ -94,7 +108,7 @@
     "surface": "#1c0e0b",
     "image": "./card-images/right.webp",
     "imagePosition": "50% 50%",
-    "number": "07",
+    "number": "08",
     "modalImage": "https://d2ol7oe51mr4n9.cloudfront.net/user_37u4BdIWLdxIKRnNlGRqjLjMgTw/46aa4109-9f74-4251-8837-866468284918.png"
   },
   {
@@ -108,7 +122,7 @@
     "surface": "#162c53",
     "image": "./card-images/fold02.webp",
     "imagePosition": "50% 40%",
-    "number": "08",
+    "number": "09",
     "modalImage": "https://sites.smartlabdesign.it/fold-3d-study-02/background.png"
   },
   {
@@ -122,7 +136,7 @@
     "surface": "#162c53",
     "image": "./card-images/fold03.webp",
     "imagePosition": "50% 40%",
-    "number": "09",
+    "number": "10",
     "modalImage": "https://sites.smartlabdesign.it/fold-3d-study-03/background.png"
   },
   {
@@ -136,7 +150,7 @@
     "surface": "#0f322b",
     "image": "./card-images/portfolio.webp",
     "imagePosition": "35% 50%",
-    "number": "10",
+    "number": "11",
     "modalImage": "https://sites.smartlabdesign.it/assets/og-home.jpg"
   },
   {
@@ -150,7 +164,7 @@
     "surface": "#062d31",
     "image": "./card-images/3dframes.webp",
     "imagePosition": "50% 50%",
-    "number": "11",
+    "number": "12",
     "modalImage": "./card-images/3dframes.webp"
   },
   {
@@ -164,7 +178,7 @@
     "surface": "#030304",
     "image": "./card-images/voidsignal.webp",
     "imagePosition": "50% 50%",
-    "number": "12",
+    "number": "13",
     "modalImage": "https://voidsignalbrand.com/assets/og.jpg"
   },
   {
@@ -178,7 +192,7 @@
     "surface": "#062d31",
     "image": "./card-images/typelens.webp",
     "imagePosition": "50% 50%",
-    "number": "13",
+    "number": "14",
     "modalImage": "https://sites.smartlabdesign.it/type-lens/cover.jpg"
   },
   {
@@ -192,21 +206,7 @@
     "surface": "#1a120c",
     "image": "./card-images/pomata.webp",
     "imagePosition": "60% 50%",
-    "number": "14",
-    "modalImage": "https://sites.smartlabdesign.it/pomata/assets/pomata-campaign.webp"
-  },
-  {
-    "id": "cdp",
-    "name": "CdP",
-    "subtitle": "Control HUB",
-    "category": "dashboard",
-    "host": "live.smartlabdesign.it",
-    "path": "/cdp-control-hub/",
-    "color": "#91b4dc",
-    "surface": "#162b46",
-    "image": "./card-images/cdp.webp",
-    "imagePosition": "50% 50%",
     "number": "15",
-    "modalImage": "https://live.smartlabdesign.it/cdp-control-hub/assets/control-hub.jpg"
+    "modalImage": "https://sites.smartlabdesign.it/pomata/assets/pomata-campaign.webp"
   }
 ]
