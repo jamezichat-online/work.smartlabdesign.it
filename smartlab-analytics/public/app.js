@@ -49,7 +49,8 @@
     return { records, next: rows.length > 50 ? { ts: last.ts, id: last.id } : null };
   }
   const metrics = id => state.summary?.sites.find(row => row.site === id) || { total: 0, today: 0, last: null };
-  const selectedSites = () => state.sites.filter(s => state.category === 'all' || s.category === state.category);
+  const selectedSites = () => state.sites.filter(s => state.category === 'all' || s.category === state.category)
+    .sort((a, b) => Number(a.category !== 'dashboard') - Number(b.category !== 'dashboard'));
   function renderCards() {
     $('cards').innerHTML = selectedSites().map(s => {
       const m = metrics(s.id);
