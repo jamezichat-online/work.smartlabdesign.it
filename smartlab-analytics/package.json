@@ -6,15 +6,28 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "node --test",
+    "test": "node --test test/*.test.js",
+    "test:monitoring:e2e": "node scripts/test-monitoring-e2e.mjs",
+    "monitor": "node scripts/monitor.mjs",
     "preview": "node scripts/preview.mjs",
     "build:preview": "node scripts/build-preview.mjs"
   },
-  "devDependencies": { "wrangler": "^4.139.0" },
+  "devDependencies": {
+    "esbuild": "0.28.1",
+    "miniflare": "5.20260926.1-alpha",
+    "wrangler": "^4.139.0"
+  },
   "cloudflare": {
     "bindings": {
-      "ADMIN_TOKEN": { "description": "Password privata per consultare SmartLab Analytics. Scegli una password di almeno 20 caratteri; non inserirla nel repository." },
-      "DB": { "description": "Registro accessi: sito, percorso e data/ora. Nessun IP o profilo dei visitatori." }
+      "ADMIN_TOKEN": {
+        "description": "Password privata per consultare SmartLab Analytics. Scegli una password di almeno 20 caratteri; non inserirla nel repository."
+      },
+      "MONITORING_TOKEN": {
+        "description": "Token distinto dalla password amministrativa, almeno 32 caratteri casuali, per l'API in sola lettura. Conservare come secret."
+      },
+      "DB": {
+        "description": "Registro accessi: sito, percorso e data/ora. Nessun IP o profilo dei visitatori."
+      }
     }
   }
 }
