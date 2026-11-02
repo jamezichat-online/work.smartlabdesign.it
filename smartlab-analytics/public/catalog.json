@@ -194,5 +194,19 @@
     "imagePosition": "60% 50%",
     "number": "14",
     "modalImage": "https://sites.smartlabdesign.it/pomata/assets/pomata-campaign.webp"
+  },
+  {
+    "id": "cdp",
+    "name": "CdP",
+    "subtitle": "Control HUB",
+    "category": "dashboard",
+    "host": "live.smartlabdesign.it",
+    "path": "/cdp-control-hub/",
+    "color": "#91b4dc",
+    "surface": "#162b46",
+    "image": "./card-images/cdp.webp",
+    "imagePosition": "50% 50%",
+    "number": "15",
+    "modalImage": "https://live.smartlabdesign.it/cdp-control-hub/assets/control-hub.jpg"
   }
 ]

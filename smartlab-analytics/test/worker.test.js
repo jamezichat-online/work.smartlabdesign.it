@@ -83,6 +83,16 @@ test('nuovi progetti del portfolio: raccolta sulle pagine reali e sottopagina PO
   assert.equal(matchSite('https://sites.smartlabdesign.it', '/pomata-evil/'), null);
   assert.equal(matchSite('https://evil.example', '/pomata/'), null);
 });
+test('CdP Control HUB: raccolta e registrazione nella dashboard corretta', async () => {
+  const { db, sql } = database();
+  const path = '/cdp-control-hub/', eventId = crypto.randomUUID();
+  assert.equal(matchSite('https://live.smartlabdesign.it', path).id, 'cdp');
+  assert.equal(matchSite('https://sites.smartlabdesign.it', path), null);
+  assert.equal(matchSite('https://live.smartlabdesign.it', '/cdp-control-hub-evil/'), null);
+  const response = await worker.fetch(request('/api/collect', 'POST', { path, eventId }, 'https://live.smartlabdesign.it'), { DB: db });
+  assert.equal(response.status, 204);
+  assert.equal(sql.prepare('SELECT site FROM views WHERE id = ?').get(eventId).site, 'cdp');
+});
 test('payload eccessivo rifiutato', async () => {
   const { db } = database();
   assert.equal((await worker.fetch(request('/api/collect', 'POST', { path: '/auxcore/', eventId: crypto.randomUUID(), large: 'x'.repeat(3000) }, 'https://live.smartlabdesign.it'), { DB: db })).status, 400);
