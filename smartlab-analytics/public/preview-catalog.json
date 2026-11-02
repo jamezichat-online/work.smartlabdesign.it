@@ -152,5 +152,47 @@
     "imagePosition": "50% 50%",
     "number": "11",
     "modalImage": "./card-images/3dframes.webp"
+  },
+  {
+    "id": "voidsignal",
+    "name": "VoidSignal",
+    "subtitle": "Brand & Case Study",
+    "category": "personal",
+    "host": "sites.smartlabdesign.it",
+    "path": "/voidsignal/",
+    "color": "#a98bff",
+    "surface": "#030304",
+    "image": "./card-images/voidsignal.webp",
+    "imagePosition": "50% 50%",
+    "number": "12",
+    "modalImage": "https://sites.smartlabdesign.it/voidsignal/assets/og.jpg"
+  },
+  {
+    "id": "typelens",
+    "name": "Creative development",
+    "subtitle": "Type Lab & Hidden Stories",
+    "category": "personal",
+    "host": "sites.smartlabdesign.it",
+    "path": "/type-lens/",
+    "color": "#00bfc4",
+    "surface": "#062d31",
+    "image": "./card-images/typelens.webp",
+    "imagePosition": "50% 50%",
+    "number": "13",
+    "modalImage": "https://sites.smartlabdesign.it/type-lens/cover.jpg"
+  },
+  {
+    "id": "pomata",
+    "name": "POMATA",
+    "subtitle": "Spavalderia siciliana",
+    "category": "personal",
+    "host": "sites.smartlabdesign.it",
+    "path": "/pomata/",
+    "color": "#e15b42",
+    "surface": "#1a120c",
+    "image": "./card-images/pomata.webp",
+    "imagePosition": "60% 50%",
+    "number": "14",
+    "modalImage": "https://sites.smartlabdesign.it/pomata/assets/pomata-campaign.webp"
   }
 ]

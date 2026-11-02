@@ -72,6 +72,17 @@ test('origini esterne e dati non validi non scrivono nel database', async () => 
   assert.equal((await worker.fetch(request('/api/collect', 'POST', { path: '/auxcore/', eventId: crypto.randomUUID() }, 'https://evil.example'), env)).status, 403);
   for (const path of ['/auxcore/?email=secret', '/not-registered/']) assert.equal((await worker.fetch(request('/api/collect', 'POST', { path, eventId: crypto.randomUUID() }, 'https://live.smartlabdesign.it'), env)).status, 400);
 });
+test('nuovi progetti del portfolio: raccolta sulle pagine reali e sottopagina POMATA', async () => {
+  const { db, sql } = database();
+  for (const [path, site] of [['/voidsignal/', 'voidsignal'], ['/type-lens/', 'typelens'], ['/pomata/', 'pomata'], ['/pomata/classica/', 'pomata']]) {
+    const eventId = crypto.randomUUID();
+    const response = await worker.fetch(request('/api/collect', 'POST', { path, eventId }, 'https://sites.smartlabdesign.it'), { DB: db });
+    assert.equal(response.status, 204);
+    assert.equal(sql.prepare('SELECT site FROM views WHERE id = ?').get(eventId).site, site);
+  }
+  assert.equal(matchSite('https://sites.smartlabdesign.it', '/pomata-evil/'), null);
+  assert.equal(matchSite('https://evil.example', '/pomata/'), null);
+});
 test('payload eccessivo rifiutato', async () => {
   const { db } = database();
   assert.equal((await worker.fetch(request('/api/collect', 'POST', { path: '/auxcore/', eventId: crypto.randomUUID(), large: 'x'.repeat(3000) }, 'https://live.smartlabdesign.it'), { DB: db })).status, 400);
