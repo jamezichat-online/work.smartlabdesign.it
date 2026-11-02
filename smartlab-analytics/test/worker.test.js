@@ -74,7 +74,7 @@ test('origini esterne e dati non validi non scrivono nel database', async () => 
 });
 test('nuovi progetti del portfolio: raccolta sulle pagine reali e sottopagina POMATA', async () => {
   const { db, sql } = database();
-  for (const [path, site] of [['/voidsignal/', 'voidsignal'], ['/type-lens/', 'typelens'], ['/pomata/', 'pomata'], ['/pomata/classica/', 'pomata']]) {
+  for (const [path, site] of [['/type-lens/', 'typelens'], ['/pomata/', 'pomata'], ['/pomata/classica/', 'pomata']]) {
     const eventId = crypto.randomUUID();
     const response = await worker.fetch(request('/api/collect', 'POST', { path, eventId }, 'https://sites.smartlabdesign.it'), { DB: db });
     assert.equal(response.status, 204);
@@ -92,6 +92,17 @@ test('CdP Control HUB: raccolta e registrazione nella dashboard corretta', async
   const response = await worker.fetch(request('/api/collect', 'POST', { path, eventId }, 'https://live.smartlabdesign.it'), { DB: db });
   assert.equal(response.status, 204);
   assert.equal(sql.prepare('SELECT site FROM views WHERE id = ?').get(eventId).site, 'cdp');
+});
+test('VoidSignal usa il dominio ufficiale, non il case study del portfolio', async () => {
+  const { db, sql } = database();
+  assert.equal(matchSite('https://voidsignalbrand.com', '/').id, 'voidsignal');
+  assert.equal(matchSite('https://voidsignalbrand.com', '/index.html').id, 'voidsignal');
+  assert.equal(matchSite('https://sites.smartlabdesign.it', '/voidsignal/'), null);
+  assert.equal(matchSite('https://voidsignalbrand.com.evil.example', '/'), null);
+  const eventId = crypto.randomUUID();
+  const response = await worker.fetch(request('/api/collect', 'POST', { path: '/', eventId }, 'https://voidsignalbrand.com'), { DB: db });
+  assert.equal(response.status, 204);
+  assert.equal(sql.prepare('SELECT site FROM views WHERE id = ?').get(eventId).site, 'voidsignal');
 });
 test('payload eccessivo rifiutato', async () => {
   const { db } = database();

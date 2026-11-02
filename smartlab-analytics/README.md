@@ -71,3 +71,7 @@ L'anteprima locale è disponibile su `http://localhost:4173` e non raccoglie vis
 I test verificano la protezione delle API, cookie di sessione e CSRF, raccolta e minimizzazione dei dati, idempotenza, validazione degli origin, paginazione e cambio dell'ora legale. Il binding SQLite dei test riproduce le operazioni D1; la verifica finale del deploy e della raccolta va completata sull'account Cloudflare reale.
 
 Documentazione: [Workers Free](https://developers.cloudflare.com/workers/platform/pricing/), [D1 Free](https://developers.cloudflare.com/d1/platform/pricing/), [provisioning automatico](https://developers.cloudflare.com/workers/wrangler/configuration/#automatic-provisioning), [importazione GitHub e root directory](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/).
+
+VoidSignal usa il dominio ufficiale `https://voidsignalbrand.com/`, con ID
+`voidsignal` invariato per conservare lo storico. Il case study del portfolio
+non viene più tracciato come sito VoidSignal; `www` reindirizza al dominio canonico.
