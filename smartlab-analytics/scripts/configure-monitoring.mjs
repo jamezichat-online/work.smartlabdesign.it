@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile, unlink, chmod, realpath } from 'node:fs/promises';
-import { resolve, join, relative, isAbsolute } from 'node:path';
+import { resolve, join, relative, isAbsolute, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
@@ -11,7 +11,7 @@ process.umask(0o077);
 await mkdir(directory, { recursive: true, mode: 0o700 });
 const repoRoot = await realpath(fileURLToPath(new URL('../../', import.meta.url)));
 const location = relative(repoRoot, await realpath(directory));
-if (!location || (!location.startsWith('..') && !isAbsolute(location))) throw new Error('La cartella privata deve essere esterna al repository.');
+if (!location || (location !== '..' && !location.startsWith('..' + sep) && !isAbsolute(location))) throw new Error('La cartella privata deve essere esterna al repository.');
 await chmod(directory, 0o700);
 const credentialPath = join(directory, 'credentials.json');
 let credentials;
