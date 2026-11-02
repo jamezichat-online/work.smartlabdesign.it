@@ -26,7 +26,8 @@ Non serve spostare i siti, modificare il dominio o creare utenti per i visitator
 
 ## Siti predisposti
 
-Il catalogo comprende ora 14 progetti. Sono inclusi anche VoidSignal, Creative
+Il catalogo comprende ora 15 progetti, incluso CdP Control HUB su
+`live.smartlabdesign.it/cdp-control-hub/`, con il tracker attivo. Sono inclusi anche VoidSignal, Creative
 development (Type Lab e Hidden Stories) e POMATA, pubblicati nel portfolio. Il
 tracker è presente nelle rispettive pagine e nella sottopagina POMATA Classica;
 le visite precedenti alla sua attivazione non vengono ricostruite.
