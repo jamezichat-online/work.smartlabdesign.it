@@ -1,0 +1,14 @@
+{
+  "segments": [
+    {
+      "type": "range",
+      "start": 0,
+      "end": 1,
+      "frames": [
+        0,
+        100
+      ]
+    }
+  ],
+  "use": "Reading progress only; no video or frame sequence. Native semantic navigation governs the operational story."
+}

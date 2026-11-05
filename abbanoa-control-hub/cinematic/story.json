@@ -1,0 +1,48 @@
+{
+  "title": "Abbanoa · percorso operativo del servizio",
+  "engine": "SmartLab CWE 0.1.0-alpha",
+  "modules": [
+    "CWE-06",
+    "CWE-04",
+    "CWE-09",
+    "CWE-10"
+  ],
+  "scenes": [
+    {
+      "id": "requests",
+      "visualStory": "Accesso a interventi straordinari e segnalazioni",
+      "headline": "Richieste",
+      "copyMode": "flow"
+    },
+    {
+      "id": "planning",
+      "visualStory": "Piano di lavoro e anagrafica sedi",
+      "headline": "Pianificazione",
+      "copyMode": "flow"
+    },
+    {
+      "id": "resources",
+      "visualStory": "Operatori, turni e copertura",
+      "headline": "Risorse",
+      "copyMode": "flow"
+    },
+    {
+      "id": "execution",
+      "visualStory": "Attività ordinarie e prestazioni",
+      "headline": "Esecuzione",
+      "copyMode": "flow"
+    },
+    {
+      "id": "control",
+      "visualStory": "Audit, campionamento e conformità",
+      "headline": "Controllo",
+      "copyMode": "flow"
+    },
+    {
+      "id": "report",
+      "visualStory": "Verifiche in contraddittorio e verbali",
+      "headline": "Report",
+      "copyMode": "flow"
+    }
+  ]
+}

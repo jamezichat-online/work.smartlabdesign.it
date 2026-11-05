@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0-alpha",
+  "variants": {
+    "desktop": {
+      "frameCount": 1,
+      "width": 2172,
+      "height": 724,
+      "pattern": "assets/hero-v3.webp",
+      "poster": "assets/hero-v3.webp"
+    },
+    "mobile": {
+      "frameCount": 1,
+      "width": 2172,
+      "height": 724,
+      "pattern": "assets/hero-v3.webp",
+      "poster": "assets/hero-v3.webp"
+    }
+  },
+  "mobileComposition": "Photo above copy, right-aligned subjects, independent SVG wave. No sequence preload."
+}
