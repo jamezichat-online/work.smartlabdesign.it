@@ -179,6 +179,32 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     .back .icon { width: .65em; }
     .intro { margin-bottom: 24px; }
     .intro h2 { font-size: 30px; line-height: 36px; color: #1f2937; }
+    .site-context {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px 16px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #e1ecfa;
+      color: var(--inps-blue);
+    }
+    .site-context[hidden] { display: none; }
+    .site-summary { display: flex; align-items: flex-start; gap: 8px; flex: 1 1 170px; }
+    .site-summary .icon { margin-top: 2px; }
+    .site-summary strong { display: block; font-size: 14px; line-height: 20px; }
+    .site-context .general {
+      border: 0;
+      border-radius: 8px;
+      padding: 6px 9px;
+      background: white;
+      color: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
     .caption, .small { font-size: 14px; line-height: 20px; }
     .caption, .tiny { color: var(--gray); }
     .tiny { font-size: 12px; line-height: 16px; }
@@ -339,15 +365,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       cursor: pointer;
     }
     .site-item[aria-pressed="true"] { font-weight: 700; }
-    .site-item.flash { animation: flash .3s ease; }
     .address { display: block; color: var(--gray); font-size: 12px; font-weight: 400; }
     .fade { animation: fade-in .5s ease both; }
     .sites.open .slide { animation: slide-in .3s ease both; }
     .chart .bar { animation: grow 1s ease both; }
     .ring .arc { animation: ring 1.5s 1s ease both; }
+    .dashboard.has-site .bar,
+    .dashboard.has-site .arc { animation: none; }
     @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     @keyframes slide-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-    @keyframes flash { from { background: #3b82f61a; } to { background: transparent; } }
     @keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
     @keyframes ring { from { stroke-dasharray: 0 100; } to { stroke-dasharray: var(--value) 100; } }
     @media (max-width: 360px) {
@@ -376,19 +402,29 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <header class="header"><h1><svg class="icon" aria-hidden="true"><use href="#leaf"/></svg> GREENPS</h1></header>
       <div class="scroll">
         <div class="intro fade" style="animation-delay: .1s">
-          <h2>Sostenibilità</h2>
-          <p class="caption">Monitoraggio servizi Direzione Generale</p>
+          <h2 tabindex="-1">Sostenibilità</h2>
+          <p class="caption" id="general-caption">Monitoraggio servizi Direzione Generale</p>
+          <div class="site-context" hidden>
+            <div class="site-summary">
+              <svg class="icon" aria-hidden="true"><use href="#building"/></svg>
+              <div>
+                <strong id="dashboard-site"></strong>
+                <div class="tiny">Dati simulati</div>
+              </div>
+            </div>
+            <button type="button" class="general" aria-label="Torna alla vista generale">Vista generale</button>
+          </div>
         </div>
         <article class="stat-card fade" style="animation-delay: .2s">
           <div class="row">
             <div>
               <h3>Raccolta differenziata</h3>
               <p class="caption">Percentuale di rifiuti differenziati</p>
-              <div class="badge"><svg class="icon" aria-hidden="true"><use href="#up-arrow"/></svg> +2.5% rispetto al mese scorso</div>
+              <div class="badge"><svg class="icon" aria-hidden="true"><use href="#up-arrow"/></svg> <span data-metric="recyclingTrend">+2.5% rispetto al mese scorso</span></div>
             </div>
             <div class="ring" style="--value:78">
               <svg width="96" height="96" aria-hidden="true"><circle cx="48" cy="48" r="40"/><circle class="arc" cx="48" cy="48" r="40" pathLength="100"/></svg>
-              <span class="number" data-count="78" data-delay="1000" data-step="1" data-tick="20" data-suffix="%">78%</span>
+              <span class="number" data-metric="recycling" data-count="78" data-delay="1000" data-step="1" data-tick="20" data-suffix="%">78%</span>
             </div>
           </div>
         </article>
@@ -406,10 +442,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <div class="row total">
             <div>
               <span class="caption">Totale risparmiato</span>
-              <h4 class="number" data-count="13" data-delay="1700" data-step="1" data-tick="50" data-decimals="1">13.0</h4>
+              <h4 class="number" data-metric="co2" data-count="13" data-delay="1700" data-step="1" data-tick="50" data-decimals="1">13.0</h4>
               <span class="tiny">tonnellate di CO₂</span>
             </div>
-            <div class="badge"><svg class="icon" aria-hidden="true"><use href="#up-arrow"/></svg> +12% rispetto al 2025</div>
+            <div class="badge"><svg class="icon" aria-hidden="true"><use href="#up-arrow"/></svg> <span data-metric="co2Trend">+12% rispetto al 2025</span></div>
           </div>
         </article>
         <article class="stat-card fade" style="animation-delay: .4s">
@@ -420,13 +456,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             </div>
             <div class="ring green" style="--value:85">
               <svg width="96" height="96" aria-hidden="true"><circle cx="48" cy="48" r="40"/><circle class="arc" cx="48" cy="48" r="40" pathLength="100" style="animation-delay:1.3s"/></svg>
-              <span class="number" data-count="85" data-delay="1300" data-step="1" data-tick="20" data-suffix="%">85%</span>
+              <span class="number" data-metric="ecological" data-count="85" data-delay="1300" data-step="1" data-tick="20" data-suffix="%">85%</span>
             </div>
           </div>
           <div class="tiles">
-            <div class="tile"><div class="tiny">Detergenti</div><div class="small">92%</div></div>
-            <div class="tile"><div class="tiny">Carta</div><div class="small">88%</div></div>
-            <div class="tile"><div class="tiny">Plastica</div><div class="small">75%</div></div>
+            <div class="tile"><div class="tiny">Detergenti</div><div class="small" data-metric="detergents">92%</div></div>
+            <div class="tile"><div class="tiny">Carta</div><div class="small" data-metric="paper">88%</div></div>
+            <div class="tile"><div class="tiny">Plastica</div><div class="small" data-metric="plastic">75%</div></div>
           </div>
         </article>
         <article class="stat-card fade" style="animation-delay: .5s">
@@ -434,12 +470,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <p class="caption">Risparmio energetico</p>
           <div class="row progress">
             <progress class="track" aria-label="Risparmio energetico" value="68" max="100">68%</progress>
-            <span class="number" aria-hidden="true">68%</span>
+            <span class="number" data-metric="efficiency" aria-hidden="true">68%</span>
           </div>
           <div class="row machine-data">
-            <div><div class="number" data-count="42" data-delay="1100" data-step="1" data-tick="50">42</div><div class="tiny">Macchinari<br>efficienti</div></div>
-            <div><div class="number" data-count="8700" data-delay="1100" data-step="100" data-tick="20">8700</div><div class="tiny">kWh<br>risparmiati</div></div>
-            <div><div class="number">-32%</div><div class="tiny">Consumo<br>energetico</div></div>
+            <div><div class="number" data-metric="machines" data-count="42" data-delay="1100" data-step="1" data-tick="50">42</div><div class="tiny">Macchinari<br>efficienti</div></div>
+            <div><div class="number" data-metric="energy" data-count="8700" data-delay="1100" data-step="100" data-tick="20">8700</div><div class="tiny">kWh<br>risparmiati</div></div>
+            <div><div class="number" data-metric="consumption">-32%</div><div class="tiny">Consumo<br>energetico</div></div>
           </div>
         </article>
         <article class="stat-card fade" style="animation-delay: .6s">
@@ -447,12 +483,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <p class="caption">Riduzione rispetto all'anno precedente</p>
           <div class="row waste">
             <div class="row">
-              <div class="number large" data-count="23" data-delay="1400" data-step="1" data-tick="50" data-suffix="%">23%</div>
-              <div><div class="small">Riduzione</div><div class="badge"><svg class="icon" aria-hidden="true"><use href="#down-arrow"/></svg> -15% rispetto al 2025</div></div>
+              <div class="number large" data-metric="wasteReduction" data-count="23" data-delay="1400" data-step="1" data-tick="50" data-suffix="%">23%</div>
+              <div><div class="small">Riduzione</div><div class="badge"><svg class="icon" aria-hidden="true"><use href="#down-arrow"/></svg> <span data-metric="wasteTrend">-15% rispetto al 2025</span></div></div>
             </div>
             <div class="right">
               <div class="caption">Totale conferito</div>
-              <div class="number" data-count="245" data-delay="1400" data-step="5" data-tick="20">245</div>
+              <div class="number" data-metric="waste" data-count="245" data-delay="1400" data-step="5" data-tick="20">245</div>
               <div class="tiny">tonnellate</div>
             </div>
           </div>
@@ -475,17 +511,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <svg class="icon" aria-hidden="true"><use href="#down"/></svg>
           </button>
           <ul class="site-list" id="lot-1" hidden>
-            <li><button type="button" class="site-item" data-site-id="1" aria-pressed="false">Direzione provinciale di Alessandria<span class="address">Via Morbelli, 34 – 15121 Alessandria</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="2" aria-pressed="false">Agenzia di Acqui Terme (AL)<span class="address">Via Alessandria, 15 – 15011 Acqui Terme (AL)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="3" aria-pressed="false">Agenzia di Novi Ligure<span class="address">Via Paolo Giacometti, 22, 15067 Novi Ligure (AL)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="4" aria-pressed="false">Agenzia di Casale Monferrato (AL)<span class="address">Strada Casale-Asti, 2/M – 15033 Casale Monferrato (AL)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="5" aria-pressed="false">Direzione provinciale di Asti<span class="address">Via F.lli Rosselli, 22/24 – 14100 Asti</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="6" aria-pressed="false">Agenzia di Nizza Monferrato (AT)<span class="address">P.zza Martiri di Alessandria, 3 – 14049 Nizza Monferrato (AT)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="7" aria-pressed="false">Direzione provinciale di Biella<span class="address">Via Tripoli, 14 – 13900 Biella</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="8" aria-pressed="false">Direzione provinciale di Novara<span class="address">C.so Della Vittoria, 8 – 28100 Novara</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="9" aria-pressed="false">Direzione provinciale di Vercelli<span class="address">P.zza Zumaglini, 10 – 13100 Vercelli</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="10" aria-pressed="false">Agenzia di Borgosesia (VC)<span class="address">Piazzale Enrico Lora 1- 13011 Borgosesia (VC)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="11" aria-pressed="false">Direzione provinciale Verbano-Cusio-Ossola (VB)<span class="address">C.so Guglielmo Marconi, 99 – 28883 Gravellona Toce (VB)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="1" aria-pressed="false"><span class="site-name">Direzione provinciale di Alessandria</span><span class="address">Via Morbelli, 34 – 15121 Alessandria</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="2" aria-pressed="false"><span class="site-name">Agenzia di Acqui Terme (AL)</span><span class="address">Via Alessandria, 15 – 15011 Acqui Terme (AL)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="3" aria-pressed="false"><span class="site-name">Agenzia di Novi Ligure</span><span class="address">Via Paolo Giacometti, 22, 15067 Novi Ligure (AL)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="4" aria-pressed="false"><span class="site-name">Agenzia di Casale Monferrato (AL)</span><span class="address">Strada Casale-Asti, 2/M – 15033 Casale Monferrato (AL)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="5" aria-pressed="false"><span class="site-name">Direzione provinciale di Asti</span><span class="address">Via F.lli Rosselli, 22/24 – 14100 Asti</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="6" aria-pressed="false"><span class="site-name">Agenzia di Nizza Monferrato (AT)</span><span class="address">P.zza Martiri di Alessandria, 3 – 14049 Nizza Monferrato (AT)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="7" aria-pressed="false"><span class="site-name">Direzione provinciale di Biella</span><span class="address">Via Tripoli, 14 – 13900 Biella</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="8" aria-pressed="false"><span class="site-name">Direzione provinciale di Novara</span><span class="address">C.so Della Vittoria, 8 – 28100 Novara</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="9" aria-pressed="false"><span class="site-name">Direzione provinciale di Vercelli</span><span class="address">P.zza Zumaglini, 10 – 13100 Vercelli</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="10" aria-pressed="false"><span class="site-name">Agenzia di Borgosesia (VC)</span><span class="address">Piazzale Enrico Lora 1- 13011 Borgosesia (VC)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="11" aria-pressed="false"><span class="site-name">Direzione provinciale Verbano-Cusio-Ossola (VB)</span><span class="address">C.so Guglielmo Marconi, 99 – 28883 Gravellona Toce (VB)</span></button></li>
           </ul>
         </div>
         <div class="slide" style="animation-delay: .3s">
@@ -494,27 +530,27 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <svg class="icon" aria-hidden="true"><use href="#down"/></svg>
           </button>
           <ul class="site-list" id="lot-2" hidden>
-            <li><button type="button" class="site-item" data-site-id="12" aria-pressed="false">Direzione regionale Piemonte<span class="address">Via Arcivescovado, 9 – 10121 Torino</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="13" aria-pressed="false">Direzione provinciale di Torino<span class="address">C.so Vittorio Emanuele II, n. 3 – 10125 Torino</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="14" aria-pressed="false">Agenzia TO – Lingotto (TO)<span class="address">Via Nizza, 362/10 – 10127 Torino</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="15" aria-pressed="false">Agenzia TO - S. Paolo (TO)<span class="address">Via Millio, 41 – 10141 Torino</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="16" aria-pressed="false">Agenzia di Bussoleno (TO)<span class="address">Via Del Traforo, 62 – 10053 Bussoleno (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="17" aria-pressed="false">Agenzia di Carmagnola (TO)<span class="address">Piazza Martiri, 22 – 10022 Carmagnola (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="18" aria-pressed="false">Agenzia di Chieri (TO)<span class="address">Piazza Cavour, 4 – 10023 Chieri (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="19" aria-pressed="false">Agenzia di Cirie’ (TO)<span class="address">Via Robaronzino, 4 – 10073 Cirie’ (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="20" aria-pressed="false">Agenzia di Orbassano (TO)<span class="address">Via Rivalta, 14/B – 10043 Orbassano (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="21" aria-pressed="false">Agenzia di Rivarolo Canavese (TO)<span class="address">C.so Indipendenza, 53 – 10086 Rivarolo Canavese (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="22" aria-pressed="false">Agenzia Complessa di Collegno (TO)<span class="address">C.so Francia, 45 – 10093 Collegno (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="23" aria-pressed="false">Agenzia Complessa di Ivrea (TO)<span class="address">P.zza Lamarmora, 15 – 10015 Ivrea (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="24" aria-pressed="false">Agenzia Complessa di Moncalieri (TO)<span class="address">Via Montenero, 21/23 – 10024 Moncalieri (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="25" aria-pressed="false">Agenzia Complessa di Pinerolo (TO)<span class="address">Viale Kennedy, 5 – 10064 Pinerolo (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="26" aria-pressed="false">Agenzia Complessa di Torino Nord (TO)<span class="address">C.so Giulio Cesare, 290 – 10154 Torino</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="27" aria-pressed="false">Punto INPS di Chivasso (TO)<span class="address">Via Lungo P.zza d’Armi, 6 – 10034 Chivasso (TO)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="28" aria-pressed="false">Direzione provinciale di Cuneo<span class="address">C.so Santorre di Santarosa, 15 – 12100 Cuneo</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="29" aria-pressed="false">Agenzia di Alba (CN)<span class="address">P.zza Medford, 1 – 12051 Alba (CN)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="30" aria-pressed="false">Agenzia di Mondovì<span class="address">Via Vittorio Veneto, 17/H – 12084 Mondovì (CN)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="31" aria-pressed="false">Agenzia di Saluzzo (CN)<span class="address">Via Vittime di Brescia, 1 – 12037 Saluzzo (CN)</span></button></li>
-            <li><button type="button" class="site-item" data-site-id="32" aria-pressed="false">Direzione Regionale Valle d’Aosta<span class="address">Corso Battaglione Aosta, 39 - 11100 Aosta (AO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="12" aria-pressed="false"><span class="site-name">Direzione regionale Piemonte</span><span class="address">Via Arcivescovado, 9 – 10121 Torino</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="13" aria-pressed="false"><span class="site-name">Direzione provinciale di Torino</span><span class="address">C.so Vittorio Emanuele II, n. 3 – 10125 Torino</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="14" aria-pressed="false"><span class="site-name">Agenzia TO – Lingotto (TO)</span><span class="address">Via Nizza, 362/10 – 10127 Torino</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="15" aria-pressed="false"><span class="site-name">Agenzia TO - S. Paolo (TO)</span><span class="address">Via Millio, 41 – 10141 Torino</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="16" aria-pressed="false"><span class="site-name">Agenzia di Bussoleno (TO)</span><span class="address">Via Del Traforo, 62 – 10053 Bussoleno (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="17" aria-pressed="false"><span class="site-name">Agenzia di Carmagnola (TO)</span><span class="address">Piazza Martiri, 22 – 10022 Carmagnola (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="18" aria-pressed="false"><span class="site-name">Agenzia di Chieri (TO)</span><span class="address">Piazza Cavour, 4 – 10023 Chieri (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="19" aria-pressed="false"><span class="site-name">Agenzia di Cirie’ (TO)</span><span class="address">Via Robaronzino, 4 – 10073 Cirie’ (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="20" aria-pressed="false"><span class="site-name">Agenzia di Orbassano (TO)</span><span class="address">Via Rivalta, 14/B – 10043 Orbassano (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="21" aria-pressed="false"><span class="site-name">Agenzia di Rivarolo Canavese (TO)</span><span class="address">C.so Indipendenza, 53 – 10086 Rivarolo Canavese (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="22" aria-pressed="false"><span class="site-name">Agenzia Complessa di Collegno (TO)</span><span class="address">C.so Francia, 45 – 10093 Collegno (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="23" aria-pressed="false"><span class="site-name">Agenzia Complessa di Ivrea (TO)</span><span class="address">P.zza Lamarmora, 15 – 10015 Ivrea (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="24" aria-pressed="false"><span class="site-name">Agenzia Complessa di Moncalieri (TO)</span><span class="address">Via Montenero, 21/23 – 10024 Moncalieri (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="25" aria-pressed="false"><span class="site-name">Agenzia Complessa di Pinerolo (TO)</span><span class="address">Viale Kennedy, 5 – 10064 Pinerolo (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="26" aria-pressed="false"><span class="site-name">Agenzia Complessa di Torino Nord (TO)</span><span class="address">C.so Giulio Cesare, 290 – 10154 Torino</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="27" aria-pressed="false"><span class="site-name">Punto INPS di Chivasso (TO)</span><span class="address">Via Lungo P.zza d’Armi, 6 – 10034 Chivasso (TO)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="28" aria-pressed="false"><span class="site-name">Direzione provinciale di Cuneo</span><span class="address">C.so Santorre di Santarosa, 15 – 12100 Cuneo</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="29" aria-pressed="false"><span class="site-name">Agenzia di Alba (CN)</span><span class="address">P.zza Medford, 1 – 12051 Alba (CN)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="30" aria-pressed="false"><span class="site-name">Agenzia di Mondovì</span><span class="address">Via Vittorio Veneto, 17/H – 12084 Mondovì (CN)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="31" aria-pressed="false"><span class="site-name">Agenzia di Saluzzo (CN)</span><span class="address">Via Vittime di Brescia, 1 – 12037 Saluzzo (CN)</span></button></li>
+            <li><button type="button" class="site-item" data-site-id="32" aria-pressed="false"><span class="site-name">Direzione Regionale Valle d’Aosta</span><span class="address">Corso Battaglione Aosta, 39 - 11100 Aosta (AO)</span></button></li>
           </ul>
         </div>
       </div>
@@ -532,6 +568,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     const dashboardTab = document.querySelector('#dashboard-tab');
     const sitesTab = document.querySelector('#sites-tab');
     const tabs = document.querySelectorAll('.nav-item');
+    const siteContext = dashboard.querySelector('.site-context');
+    const siteLabel = dashboard.querySelector('#dashboard-site');
+    const generalCaption = dashboard.querySelector('#general-caption');
+    const chart = dashboard.querySelector('.chart');
+    const bars = [...chart.querySelectorAll('.bar')];
+    const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno'];
+    const originalChartLabel = chart.getAttribute('aria-label');
+    const originalHeights = bars.map(bar => bar.style.getPropertyValue('--height'));
+    const progress = dashboard.querySelector('.track');
+    const rings = dashboard.querySelectorAll('.ring');
+    const metricElements = [...dashboard.querySelectorAll('[data-metric]')];
+    const generalValues = Object.fromEntries(
+      metricElements.map(element => [element.dataset.metric, element.textContent])
+    );
+    const cancelCounters = [];
+    let selectedSite;
 
     function activateTab(tab) {
       for (const item of tabs) {
@@ -569,17 +621,89 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       });
     }
 
-    let selectedSite;
+    function simulateMetrics(siteId) {
+      // A stable seed gives each site its own reproducible demo data.
+      let seed = Math.imul(Number(siteId), 0x9e3779b9) >>> 0;
+      const integer = (min, max) => {
+        seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+        return min + Math.floor(seed / 4294967296 * (max - min + 1));
+      };
+      const pct = number => `${number}%`;
+      const monthlyCO2 = months.map((_, index) => integer(6 + 2 * index, 18 + 3 * index));
+      const detergents = integer(76, 99);
+      const paper = integer(72, 98);
+      const plastic = integer(60, 95);
+      const machines = integer(9, 54);
+      const wasteReduction = integer(9, 34);
+      return {
+        monthlyCO2,
+        values: {
+          recycling: pct(integer(61, 96)),
+          recyclingTrend: `+${(integer(4, 57) / 10).toFixed(1)}% rispetto al mese scorso`,
+          co2: (monthlyCO2.reduce((total, monthly) => total + monthly, 0) / 10).toFixed(1),
+          co2Trend: `+${integer(4, 23)}% rispetto al 2025`,
+          ecological: pct(Math.round((detergents + paper + plastic) / 3)),
+          detergents: pct(detergents),
+          paper: pct(paper),
+          plastic: pct(plastic),
+          efficiency: pct(integer(49, 88)),
+          machines: String(machines),
+          energy: String(machines * integer(12, 26) * 10),
+          consumption: pct(-integer(13, 41)),
+          wasteReduction: pct(wasteReduction),
+          wasteTrend: `-${wasteReduction}% rispetto al 2025`,
+          waste: String(integer(32, 280))
+        }
+      };
+    }
+
+    function renderDashboard(values, monthlyCO2) {
+      for (const cancel of cancelCounters.splice(0)) cancel();
+      for (const element of metricElements) {
+        element.textContent = values[element.dataset.metric];
+      }
+      rings[0].style.setProperty('--value', parseInt(values.recycling, 10));
+      rings[1].style.setProperty('--value', parseInt(values.ecological, 10));
+      progress.value = parseInt(values.efficiency, 10);
+      progress.textContent = values.efficiency;
+
+      bars.forEach((bar, index) => {
+        const height = monthlyCO2 ? `${monthlyCO2[index] * 5}px` : originalHeights[index];
+        bar.style.setProperty('--height', height);
+        if (monthlyCO2) bar.title = `${months[index]}: ${(monthlyCO2[index] / 10).toFixed(1)} t`;
+        else bar.removeAttribute('title');
+      });
+      chart.setAttribute('aria-label', monthlyCO2
+        ? `Risparmio di CO₂: ${bars.map(bar => bar.title).join(', ')}`
+        : originalChartLabel);
+    }
+
     sites.addEventListener('click', event => {
       const item = event.target.closest('.site-item');
       if (!item) return;
       selectedSite?.setAttribute('aria-pressed', 'false');
       selectedSite = item;
       item.setAttribute('aria-pressed', 'true');
-      item.classList.add('flash');
+      siteLabel.textContent = item.querySelector('.site-name').textContent;
+      const { values, monthlyCO2 } = simulateMetrics(item.dataset.siteId);
+      renderDashboard(values, monthlyCO2);
+      generalCaption.hidden = true;
+      siteContext.hidden = false;
+      dashboard.classList.add('has-site');
+      dashboard.querySelector('.scroll').scrollTop = 0;
+      showSites(false);
+      activateTab(dashboardTab);
+      dashboard.querySelector('h2').focus({ preventScroll: true });
     });
-    sites.addEventListener('animationend', event => {
-      if (event.animationName === 'flash') event.target.classList.remove('flash');
+
+    siteContext.querySelector('.general').addEventListener('click', () => {
+      selectedSite?.setAttribute('aria-pressed', 'false');
+      selectedSite = undefined;
+      siteContext.hidden = true;
+      generalCaption.hidden = false;
+      dashboard.classList.remove('has-site');
+      renderDashboard(generalValues);
+      dashboard.querySelector('h2').focus({ preventScroll: true });
     });
 
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -587,14 +711,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         const { count, delay, step, tick, decimals = 0, suffix = '' } = element.dataset;
         const render = number => { element.textContent = number.toFixed(Number(decimals)) + suffix; };
         render(0);
-        setTimeout(() => {
+        let timer;
+        const delayedStart = setTimeout(() => {
           let value = 0;
-          const timer = setInterval(() => {
+          timer = setInterval(() => {
             value = Math.min(value + Number(step), Number(count));
             render(value);
             if (value === Number(count)) clearInterval(timer);
           }, Number(tick));
         }, Number(delay));
+        cancelCounters.push(() => {
+          clearTimeout(delayedStart);
+          clearInterval(timer);
+        });
       }
     }
   </script>
