@@ -4,13 +4,13 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="description" content="BI-LogiControl — monitoraggio dei servizi di pulizia, sanificazione e prestazioni accessorie. Banca d’Italia, Lotto 2.">
 <meta name="theme-color" content="#38234f"><title>BI-LogiControl · Banca d’Italia · Lotto 2</title>
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="landing.css?v=modali"><script src="app.js?v=modali" defer></script>
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="landing.css?v=attivita-controllo"><script src="app.js?v=attivita-controllo" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Vai ai contenuti</a>
 <header class="header"><div class="header-inner">
 <a class="brand" href="#" aria-label="BI-LogiControl, panoramica"><img class="brand-logo" src="assets/bi-logicontrol-logo.png" width="290" height="97" alt="BI-LogiControl · Monitoraggio integrato dei servizi"></a>
-<nav class="header-nav" aria-label="Navigazione principale"><a href="#servizio">Il servizio</a><a href="#aree">Dashboard</a><button data-open="report">Report <span aria-hidden="true">↗</span></button></nav><button type="button" class="reserved-button" id="open-access" aria-haspopup="dialog">Accesso riservato</button>
+<nav class="header-nav" aria-label="Navigazione principale"><a href="#servizio">Il servizio</a><a href="#aree">Dashboard</a><a href="#reporting">Report <span aria-hidden="true">↓</span></a></nav><button type="button" class="reserved-button" id="open-access" aria-haspopup="dialog">Accesso riservato</button>
 </div></header>
 <section class="hero" id="servizio" aria-labelledby="hero-title">
 <img class="hero-image" src="assets/hero.jpg" alt="Operatori in divisa viola e lavasciuga in un ambiente istituzionale. Immagine illustrativa generata.">
@@ -20,8 +20,20 @@
 </div></div><span class="hero-caption">Calabria · Sardegna · Sicilia</span></div>
 </section>
 <main id="main" class="workspace landing">
-<section id="aree" aria-labelledby="areas-title"><div class="landing-intro"><div><h2 id="areas-title">Ogni area, una visione chiara.</h2><p id="active-branch" aria-live="polite"></p></div><span class="areas-count">7 aree di monitoraggio</span></div>
-<div class="cards landing-cards" id="cards"></div></section>
+<section id="aree" aria-labelledby="areas-title"><div class="landing-intro"><div><h2 id="areas-title">Ogni area, una visione chiara.</h2><p id="active-branch" aria-live="polite"></p></div></div>
+<section class="dashboard-group" id="attivita" aria-labelledby="attivita-title">
+<div class="group-heading"><h2 id="attivita-title">Attività</h2><p>Prestazioni programmate, richieste e servizi accessori.</p></div>
+<div class="cards landing-cards activity-cards" id="activity-cards"></div>
+</section>
+<section class="dashboard-group control-group" id="controllo" aria-labelledby="controllo-title">
+<div class="group-heading"><h2 id="controllo-title">Controllo</h2><p>Presenze, verifiche, sostenibilità e dotazioni della filiale.</p></div>
+<div class="cards landing-cards control-cards" id="control-cards"></div>
+</section>
+<section class="dashboard-group report-group" id="reporting" aria-labelledby="reporting-title">
+<h2 id="reporting-title" class="sr-only">Reporting direzionale</h2>
+<div class="cards landing-cards" id="report-cards"></div>
+</section>
+</section>
 <section class="scope-strip" aria-labelledby="scope-title"><div><h2 id="scope-title">Un unico lotto. Tre territori.</h2><p>Monitoraggio integrato a supporto del DEC e della Struttura di Gestione.</p></div><div class="scope-regions"><span>Calabria</span><span>Sardegna</span><span>Sicilia</span></div></section>
 <footer><div><strong>BI-LogiControl</strong><span>Banca d’Italia · Lotto 2</span></div></footer><p class="landing-demo">Anteprima progettuale · Dati dimostrativi nelle dashboard · Immagini illustrative generate, non fotografie degli stabili del committente.</p>
 </main>

@@ -155,3 +155,61 @@ dialog h2[tabindex="-1"]:focus { outline: none; }
   .hero-filters { grid-template-columns: minmax(0, 106px) minmax(0, 178px); gap: 10px; }
   .hero-filters select { padding-left: 11px; padding-right: 30px; background-position: right 8px center; }
 }
+
+.dashboard-group { margin-top: 46px; }
+.group-heading { margin-bottom: 20px; }
+.group-heading h2 { color: var(--deep); font-size: 26px; line-height: 1.2; }
+.group-heading p { margin: 7px 0 0; color: var(--muted); line-height: 1.5; }
+.activity-cards { grid-template-columns: repeat(6, minmax(0,1fr)); }
+.activity-cards > .landing-card { grid-column: span 2; background: #38234c; outline: 1px solid #6d428a; }
+.activity-cards > .landing-card:nth-last-child(-n+2) { grid-column: span 3; }
+.activity-cards .card-photo { aspect-ratio: auto; height: clamp(174px, 16vw, 230px); border-bottom: 4px solid #a378bb; }
+.activity-cards .card-topic { color: #e5d3f0; }
+.activity-cards .landing-card h3 { color: #fff; }
+.activity-cards .card-description { color: #eee4f3; }
+.activity-cards .card-access { color: #fff; border-color: #6c567e; }
+.activity-cards .card-access:hover { color: #eed6ff; }
+.activity-cards .photo-urgent, .activity-cards .photo-presence, .activity-cards .photo-ancillary {
+  background-image: url('assets/attivita.jpg');
+  background-size: 306% auto;
+}
+.photo-urgent { background-position: 1% 64%; }
+.photo-presence { background-position: 50% 47%; }
+.photo-ancillary { background-position: 99% 45%; }
+.control-group { background: #efedf2; padding: 23px; border-radius: 8px; }
+.control-cards { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+.control-cards .card-photo { height: 96px; aspect-ratio: auto; border-bottom-width: 2px; }
+.control-cards .landing-card-body { padding: 16px; }
+.control-cards .landing-card h3 { font-size: 19px; }
+.control-cards .card-description { font-size: 13px; }
+.report-group .report-card { margin-top: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.horizontal-chart, .donut-chart ul { list-style: none; padding: 0; margin: 0; }
+.horizontal-chart { display: grid; gap: 13px; padding: 5px 0 10px; }
+.horizontal-chart li { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px 12px; font-size: 14px; }
+.horizontal-chart strong, .donut-chart strong { font-variant-numeric: tabular-nums; color: var(--deep); }
+.horizontal-track { grid-column: 1/-1; height: 8px; background: #ece5f1; border-radius: 4px; overflow: hidden; }
+.horizontal-track > span { display: block; height: 100%; background: #694089; }
+.donut-chart { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; margin: 0; padding: 8px 0; }
+.donut-ring { display: grid; place-items: center; width: 132px; height: 132px; border-radius: 50%; background: conic-gradient(#694089 var(--share), #d8cde0 0); }
+.donut-ring > span { display: grid; place-content: center; width: 104px; height: 104px; padding: 8px; border-radius: 50%; background: white; color: var(--deep); text-align: center; font-size: 22px; line-height: 1.15; font-weight: 600; }
+.donut-ring small { font-size: 12px; font-weight: 400; }
+.donut-chart li { display: grid; grid-template-columns: 9px minmax(0,1fr) auto; align-items: center; gap: 7px; padding: 6px 0; }
+.donut-chart li i { height: 9px; border-radius: 50%; background: #694089; }
+.donut-chart li + li i { background: #d8cde0; }
+@media (max-width: 1000px) {
+  .activity-cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .activity-cards > .landing-card, .activity-cards > .landing-card:nth-last-child(-n+2) { grid-column: auto; }
+  .activity-cards > .landing-card:last-child { grid-column: 1/-1; }
+  .control-cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 560px) {
+  .dashboard-group { margin-top: 32px; }
+  .activity-cards,.control-cards { grid-template-columns: minmax(0,1fr); }
+  .control-group { padding: 15px; }
+  .activity-cards .card-photo { height: 180px; }
+}
+@media print {
+  .activity-cards > .landing-card { background: white; }
+  .activity-cards .landing-card h3,.activity-cards .card-description,.activity-cards .card-topic { color: black; }
+}

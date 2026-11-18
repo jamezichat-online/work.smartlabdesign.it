@@ -59,12 +59,15 @@ const DATA = Object.fromEntries(Object.keys(PERIODS).map(period => [
   BRANCHES[base.name].map(branch => branchRecord(base, branch, period)))
 ]));
 const AREA=[
- {id:'canone',title:'Prestazioni a canone',desc:'Ordinarie, periodiche, ripassi e prestazioni accessorie comprese nel canone.',full:'Prestazioni a canone',tabs:['Attività','Ore e presidio','Frequenze'],intro:'Pianificazione ed esecuzione delle attività ordinarie, periodiche e dei ripassi. Il confronto evidenzia le prestazioni ancora da completare nel periodo selezionato.'},
- {id:'extra',title:'Interventi aggiuntivi',desc:'Richieste extra, urgenze e pronto intervento: dalla presa in carico alla chiusura.',full:'Interventi aggiuntivi e pronto intervento',tabs:['Interventi','Tempi di risposta','Autorizzazioni'],intro:'Richieste aggiuntive, urgenze e pronto intervento, con confronto tra interventi richiesti e chiusi. Le finestre contrattuali del Lotto 2 devono essere validate sul capitolato.'},
+ {id:'canone',title:'Operazioni ordinarie',full:'Operazioni ordinarie',tabs:['Quotidiane','Periodiche','Ore di servizio'],intro:'Monitoraggio delle attività programmate di pulizia e sanificazione della filiale.'},
+ {id:'extra',title:'Operazioni aggiuntive',full:'Operazioni aggiuntive',tabs:['Richieste','Plafond'],intro:'Richieste di prestazioni aggiuntive, approvazione e consuntivo.'},
+ {"id":"urgent","title":"Pronto intervento","full":"Pronto intervento","tabs":["Interventi","Tempi"],"intro":"Interventi su richiesta e tempi distinti di presa in carico ed esecuzione."},
+ {"id":"presence","title":"Presidio estemporaneo","full":"Presidio estemporaneo","tabs":["Richieste e ore","Turni"],"intro":"Presenza di addetti attivata su richiesta per le attività di pulizia della filiale."},
+ {"id":"ancillary","title":"Prestazioni accessorie","full":"Prestazioni accessorie","tabs":["Prestazioni","Sorveglianza"],"intro":"Attività accessorie della filiale, stato di esecuzione e supervisione."},
  {id:'staff',title:'Personale e presenze',desc:'Copertura turni, sostituzioni, ore erogate e reperibilità dei referenti.',full:'Personale, presenze e copertura turni',tabs:['Copertura turni','Ore e presenze','Reperibilità'],intro:'Lettura aggregata di turni programmati, copertura effettiva e sostituzioni. I dati del prototipo sono aggregati per filiale e non contengono nominativi o presenze individuali.'},
  {id:'quality',title:'Qualità e verifiche',desc:'Check-list RIS/PRO, non conformità e avanzamento delle azioni correttive.',full:'Qualità, verifiche ispettive e non conformità',tabs:['Verifiche RIS','Verifiche PRO','Azioni correttive'],intro:'Controlli di risultato e di processo, rilievi NCQ/NCP, stato delle azioni correttive ed evidenze. Gli esiti seguenti sono esempi per la revisione del cruscotto.'},
  {id:'report',title:'Reporting direzionale',desc:'Indicatori, confronto territoriale e report per DEC e Struttura di Gestione.',full:'Reporting direzionale, KPI e andamento del servizio',tabs:['Indicatori','Dati della filiale','Report'],intro:'Sintesi degli indicatori operativi per DEC e Struttura di Gestione. Tutti i valori sono ricavati dallo stesso dataset delle schede di dettaglio.'},
- {id:'sustain',title:'Sostenibilità e CAM',desc:'Prodotti, consumi e impronta ambientale del servizio.',full:'Sostenibilità, CAM e consumi',tabs:['Prodotti e CAM','Consumi','Impronta ambientale'],intro:'Monitoraggio dei prodotti, delle evidenze ambientali e dei consumi. I riferimenti CAM 2021 della versione Frascati sono mantenuti come ambito informativo: requisiti e documenti applicabili al Lotto 2 sono da validare.'},
+ {id:'sustain',title:'Sostenibilità e CAM',desc:'Prodotti, consumi e impronta ambientale del servizio.',full:'Sostenibilità, CAM e consumi',tabs:['Prodotti e CAM','Consumi','Impronta ambientale'],intro:'Monitoraggio dei prodotti, delle evidenze ambientali e dei consumi. '},
  {id:'waste',title:'Rifiuti e dotazioni',desc:'Raccolta differenziata, materiali di consumo, dispenser e rifornimenti.',full:'Rifiuti, materiali di consumo e dotazioni igieniche',tabs:['Rifiuti','Materiali e dotazioni','Segnalazioni'],intro:'Tracciamento dei flussi di raccolta, dei rifornimenti e delle anomalie alle dotazioni igieniche. Le quantità e le segnalazioni mostrate sono esclusivamente dimostrative.'}
 ];
 const state = { region: 'Sicilia', branch: 'palermo', period: 'nov', area: null, tab: 0 };
@@ -121,8 +124,11 @@ function chart(labels,actual,planned=null,unit='',compact=false){
  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(labels.map((l,i)=>l+': '+fmt(actual[i])+unit+(planned?' su '+fmt(planned[i])+unit+' pianificate':'')).join('; '))}">${parts.join('')}</svg>${planned?'<div class="legend"><span><i class="neutral"></i>Pianificate</span><span><i></i>Eseguite</span></div>':''}`;
 }
 const CARD_META={
- canone:{image:0,tag:'Attività e pianificazione',description:'Prestazioni ordinarie, periodiche, ripassi e servizi accessori. Consulta il piano di lavoro, l’avanzamento e il rispetto delle frequenze.'},
- extra:{image:1,tag:'Richieste e tempestività',description:'Interventi aggiuntivi, urgenze e pronto intervento. Segui ogni richiesta dalla presa in carico alla chiusura.'},
+ canone:{image:0,tag:'Attività e pianificazione',description:'Consulta le pulizie e le sanificazioni quotidiane e periodiche, con piano di lavoro e avanzamento.'},
+ extra:{image:1,tag:'Richieste e approvazioni',description:'Segui le operazioni aggiuntive dalla richiesta al consuntivo e consulta il plafond.'},
+ urgent:{image:'urgent',tag:'Interventi su richiesta',description:'Consulta gli interventi urgenti e i tempi di presa in carico ed esecuzione.'},
+ presence:{image:'presence',tag:'Presenza su richiesta',description:'Verifica i presidi attivati, le fasce di servizio e le ore erogate.'},
+ ancillary:{image:'ancillary',tag:'Servizi di supporto',description:'Segui le prestazioni accessorie, dalle dotazioni alla sorveglianza con fiduciario.'},
  staff:{image:2,tag:'Persone e continuità',description:'Presenze, copertura dei turni, ore erogate e sostituzioni. Verifica la continuità operativa del servizio.'},
  quality:{image:3,tag:'Controlli e miglioramento',description:'Verifiche RIS/PRO, non conformità ed evidenze. Monitora rilievi, azioni correttive e tempi di ripristino.'},
  sustain:{image:4,tag:'Ambiente e risorse',description:'Prodotti, requisiti ambientali, consumi e impronta carbonica. Consulta gli indicatori di sostenibilità del servizio.'},
@@ -130,50 +136,112 @@ const CARD_META={
  report:{image:6,tag:'Sintesi e decisioni',description:'Una lettura trasversale dell’andamento del servizio: indicatori, riepiloghi per filiale e report per il DEC e la Struttura di Gestione.'}
 };
 function render(){
- const order=['canone','extra','staff','quality','sustain','waste','report'];
- $('#cards').innerHTML=order.map(id=>{const ar=AREA.find(a=>a.id===id),m=CARD_META[id];return `<article class="card landing-card ${id==='report'?'report-card':''}" data-category="${id}"><div class="card-photo photo-${m.image}" role="img" aria-label="${esc(ar.title)}: immagine illustrativa del servizio"></div><div class="landing-card-body"><p class="card-topic">${m.tag}</p><h3>${ar.title}</h3><p class="card-description">${m.description}</p><button class="card-access" data-open="${id}" aria-label="Apri dashboard: ${ar.title}">Apri dashboard <span aria-hidden="true">↗</span></button></div></article>`}).join('');
+ const groups = [
+  ['#activity-cards', ['canone','urgent','presence','ancillary','extra']],
+  ['#control-cards', ['staff','quality','sustain','waste']],
+  ['#report-cards', ['report']]
+ ];
+ for (const [container, order] of groups) $(container).innerHTML=order.map(id=>{const ar=AREA.find(a=>a.id===id),m=CARD_META[id];return `<article class="card landing-card ${id==='report'?'report-card':''}" data-category="${id}"><div class="card-photo photo-${m.image}" role="img" aria-label="${esc(ar.title)}: immagine illustrativa del servizio"></div><div class="landing-card-body"><p class="card-topic">${m.tag}</p><h3>${ar.title}</h3><p class="card-description">${m.description}</p><button class="card-access" data-open="${id}" aria-label="Apri dashboard: ${ar.title}">Apri dashboard <span aria-hidden="true">↗</span></button></div></article>`}).join('');
 }
 function modalFilters() {
  return `<div class="modal-filters"><div class="modal-branch"><span>Filiale operativa</span><strong>${esc(currentBranch().label)}</strong></div><label>Periodo<select data-modal-period>${Object.entries(PERIODS).map(([key, label]) => `<option value="${key}" ${state.period === key ? 'selected' : ''}>${label}</option>`).join('')}</select></label><span class="modal-demo">Dati dimostrativi</span></div>`;
 }
-function modalStats(a,id){const by={
+function modalStats(a,id){const op=operations(a); const by={
+ urgent:[['Interventi richiesti',fmt(a.extra[2])],['Interventi chiusi',fmt(a.closed[2])],['Esecuzione media',fmt(op.urgentDuration,1)+' min']],
+ presence:[['Presidi richiesti',fmt(a.shifts[2])],['Presidi coperti',fmt(a.covered[2])],['Ore erogate',fmt(op.presenceHours)+' h']],
+ ancillary:[['Prestazioni eseguite',fmt(sum(op.ancillary.map(([,count])=>count)))],['Supervisioni svolte',fmt(sum(op.supervision.map(([,count])=>count)))],['Tipologie',fmt(op.ancillary.length)]],
  canone:[['Attività pianificate',fmt(a.p)],['Completamento',pc(a.d,a.p)],['Da completare',fmt(a.p-a.d)]],
- extra:[['Richieste ricevute',fmt(a.requested)],['Interventi chiusi',fmt(a.completed)],['Ancora aperti',fmt(a.requested-a.completed)]],
+ extra:[['Richieste ricevute',fmt(op.extraRequested)],['Approvate',fmt(op.extraApproved)],['Consuntivato',fmt(op.spent)+' €']],
  staff:[['Copertura turni',pc(a.c,a.s)],['Ore erogate',fmt(a.hours)+' h'],['Sostituzioni',fmt(a.substitutions)]],
  quality:[['Check-list eseguite',fmt(a.checks)],['Azioni aperte',fmt(a.open)],['Chiusura media',fmt(a.days,1)+' gg']],
  report:[['Completamento attività',pc(a.d,a.p)],['Copertura turni',pc(a.c,a.s)],['Controlli conformi',pc(a.checks-a.nc,a.checks)]],
  sustain:[['Prodotti verificati CAM',pc(a.cam,a.products)],['Detergenti',fmt(a.detergent)+' L'],['Emissioni · stima demo',fmt(sum(a.emissions))+' kg CO₂e']],
  waste:[['Rifornimenti',fmt(a.restock)],['Segnalazioni aperte',fmt(a.tickets)],['Dotazioni verificate',pc(a.verified,a.devices)]]};return by[id].map(([l,v])=>`<div class="modal-stat"><span>${l}</span><strong>${v}</strong></div>`).join('')}
+function operations(a) {
+ const supervision = [['Ordinarie',Math.round(a.d/21)],['Pronto intervento',Math.floor(a.closed[2]/3)],['Aggiuntive',Math.floor(a.closed[0]/2)]];
+ const extraRequested = a.extra[0] + a.extra[1];
+ const extraClosed = a.closed[0] + a.closed[1];
+ const spent = a.closed[0] * 165 + a.closed[1] * 225;
+ return {
+  urgentDuration: Math.round((a.response[2] * 1.45 + 6) * 10) / 10,
+  presenceHoursPlanned: a.shifts[2] * 4, presenceHours: a.covered[2] * 4,
+  extraRequested, extraClosed, extraApproved: Math.floor((extraRequested + extraClosed) / 2),
+  spent, budget: extraRequested * 250 + 900, supervision,
+  ancillary: [
+   ['Raccolta e conferimento rifiuti',Math.round(a.d/8)], ['Dotazioni igieniche',a.verified],
+   ['Distributori no touch',Math.round(a.restock/2)], ['Fornitura di beni di consumo',a.restock],
+   ['Gestione tende',Math.round(a.people/3)], ['Sorveglianza con fiduciario',sum(supervision.map(([,count])=>count))],
+   ['Rimozione guano e carcasse',Math.floor(a.tickets/2)]
+  ]
+ };
+}
+
+function horizontalBars(items, unit = '', decimals = 0, limit = Math.max(1,...items.map(([,value])=>value))) {
+ return '<ul class="horizontal-chart">' + items.map(([label,value]) =>
+  '<li><span>'+esc(label)+'</span><strong>'+fmt(value,decimals)+(unit?' '+unit:'')+'</strong>' +
+  '<div class="horizontal-track" aria-hidden="true"><span style="width:'+Math.min(100,value/limit*100)+'%"></span></div></li>'
+ ).join('') + '</ul>';
+}
+
+function donut(items, unit = '') {
+ const total = sum(items.map(([,value])=>value));
+ const ratio = total ? items[0][1]/total : 0;
+ return '<figure class="donut-chart"><div class="donut-ring" style="--share:'+ratio*360+'deg" aria-hidden="true"><span>'+fmt(total)+(unit?'<small>'+esc(unit)+'</small>':'')+'</span></div>' +
+  '<figcaption><ul aria-label="Totale '+fmt(total)+(unit?' '+esc(unit):'')+'">' + items.map(([label,value])=>
+   '<li><i aria-hidden="true"></i><span>'+esc(label)+'</span><strong>'+fmt(value)+(unit?' '+esc(unit):'')+'</strong></li>'
+  ).join('')+'</ul></figcaption></figure>';
+}
+
 function panel(title,body,note=''){return `<section class="detail-section"><h3>${title}</h3>${body}${note?`<p class="chart-caption">${note}</p>`:''}</section>`}
 function insight(text){return `<div class="insight"><strong>Lettura del dato.</strong> ${text}</div>`}
-function detailContent(id,tab,a){let rs=rows();
+function detailContent(id,tab,a){const rs=rows(); const op=operations(a);
  switch(id){
- case 'canone':
- if(tab===0)return panel('Attività pianificate ed eseguite',chart(['Ordinarie','Periodiche','Ripassi'],a.done,a.plan))+panel('Completamento per attività',table(['Tipo attività','Pianificate','Eseguite','Completamento'],['Ordinarie','Periodiche','Ripassi'].map((n,i)=>[n,fmt(a.plan[i]),fmt(a.done[i]),pc(a.done[i],a.plan[i])]),[1,2,3]))+insight(`${fmt(a.p-a.d)} attività pianificate risultano ancora da completare nel periodo. Il dato non equivale automaticamente a uno scostamento contrattuale: occorre verificarne la scadenza.`);
- if(tab===1)return panel('Ore pianificate e consuntivate per filiale',chart(rs.map(r=>r.name),rs.map(r=>r.hours),rs.map(r=>r.hoursPlan),' h'))+panel('Presidio e continuità',table(['Filiale','Pianificate (h)','Erogate (h)','Differenza (h)'],rs.map(r=>[r.name,fmt(r.hoursPlan),fmt(r.hours),fmt(r.hours-r.hoursPlan)]),[1,2,3]))+insight('Fasce orarie del presidio, frequenze e prestazioni accessorie saranno definite dal capitolato e dal piano operativo del Lotto 2. Nessuna copertura 24/7 o 8×5 è assunta in questa anteprima.');
- return panel('Frequenze e residui da verificare',table(['Attività','Residuo','Verifica'],['Ordinarie','Periodiche','Ripassi'].map((n,i)=>[n,fmt(a.plan[i]-a.done[i]),'Confronto con piano di lavoro']),[1]))+panel('Prestazioni accessorie', '<p class="modal-intro">Il perimetro conserva le prestazioni accessorie comprese nel canone. Tipologie, frequenze e ambienti devono essere associati al piano approvato del Lotto 2.</p>')+insight('Le frequenze di Frascati non vengono trasferite automaticamente alla nuova commessa.');
+ case 'canone': {
+  const label = tab === 0 ? 'Quotidiane' : 'Periodiche';
+  if (tab === 2) return panel('Ore di servizio', horizontalBars([['Pianificate',a.hoursPlan],['Erogate',a.hours]], 'h'));
+  const planned = tab === 0 ? a.plan[0] + a.plan[2] : a.plan[1];
+  const done = tab === 0 ? a.done[0] + a.done[2] : a.done[1];
+  return panel(label + ' · avanzamento', donut([['Eseguite',done],['Da completare',planned-done]]))
+   + panel('Piano delle attività', table(['Categoria','Pianificate','Eseguite'],[[label,fmt(planned),fmt(done)]],[1,2]))
+   + panel('Ambiti operativi','<p class="chart-caption">Pulizia, disinfezione, disinfestazione, derattizzazione e deblattizzazione.</p>');
+ }
+ case 'urgent':
+  if (tab === 1) return panel('Tempi medi per fase',horizontalBars([['Presa in carico',a.response[2]],['Esecuzione',op.urgentDuration]],'min',1));
+  return panel('Stato degli interventi',donut([['Chiusi',a.closed[2]],['Aperti',a.extra[2]-a.closed[2]]]))
+   + panel('Riepilogo interventi',table(['Richiesti','Chiusi','Aperti'],[[fmt(a.extra[2]),fmt(a.closed[2]),fmt(a.extra[2]-a.closed[2])]],[0,1,2]));
+ case 'presence':
+  if (tab === 1) return panel('Copertura dei presidi',donut([['Coperti',a.covered[2]],['Da coprire',a.shifts[2]-a.covered[2]]]));
+  return panel('Ore di presidio estemporaneo',horizontalBars([['Richieste',op.presenceHoursPlanned],['Erogate',op.presenceHours]],'h'))
+   + panel('Richieste di presidio',table(['Presidi richiesti','Presidi coperti'],[[fmt(a.shifts[2]),fmt(a.covered[2])]],[0,1]));
+ case 'ancillary': {
+  if (tab === 1) return panel('Sorveglianza con fiduciario',table(['Ambito supervisionato','Prestazioni'],op.supervision.map(([name,count])=>[name,fmt(count)]),[1]))
+   + insight('La supervisione è conteggiata tra le prestazioni accessorie. Le operazioni supervisionate restano nel rispettivo ambito.');
+  return panel('Prestazioni eseguite per tipologia',horizontalBars(op.ancillary))
+   + panel('Dettaglio delle prestazioni',table(['Tipologia','Eseguite'],op.ancillary.map(([name,count])=>[name,fmt(count)]),[1]));
+ }
  case 'extra':
- if(tab===0)return panel('Richieste per tipologia',chart(['Extra','Urgenze','Pronto int.'],a.extra))+panel('Stato degli interventi',table(['Tipo','Richiesti','Chiusi','Aperti'],['Extra autorizzabili','Urgenze','Pronto intervento'].map((n,i)=>[n,fmt(a.extra[i]),fmt(a.closed[i]),fmt(a.extra[i]-a.closed[i])]),[1,2,3]))+insight('Chiusura operativa e conferma del committente devono essere tracciate separatamente nel sistema definitivo.');
- if(tab===1)return panel('Tempo medio di presa in carico',chart(['Extra','Urgenze','Pronto int.'],a.response,null,' min'))+panel('Tempi medi dimostrativi',table(['Tipologia','Media (min)','Soglia contrattuale'],['Extra','Urgenze','Pronto intervento'].map((n,i)=>[n,fmt(a.response[i],1),'Da validare per Lotto 2']),[1]))+insight('Il riferimento Frascati indica 30 minuti per il pronto intervento. Questa soglia non è trattata come SLA confermato del Lotto 2 e non viene usata per dichiarare conformità.');
- return panel('Ciclo di autorizzazione delle prestazioni', '<div class="flow"><span>Richiesta</span><span>Autorizzazione</span><span>Presa in carico</span><span>Esecuzione</span><span>Chiusura</span><span>Conferma</span></div>')+panel('Dati da associare alla richiesta','<ul class="checklist"><li>Stabile, ambiente, tipologia e motivazione.</li><li>Referente richiedente e autorizzazione della Struttura di Gestione.</li><li>Data e ora di presa in carico, inizio e chiusura.</li><li>Consuntivo, evidenze e conferma del committente.</li></ul>')+insight('Non sono presenti autorizzazioni reali o documenti firmati nel prototipo.');
+  if (tab === 1) return panel('Utilizzo del plafond dimostrativo',donut([['Consuntivato',op.spent],['Disponibile',op.budget-op.spent]],'€'))
+   + panel('Riepilogo economico',table(['Plafond','Consuntivato','Disponibile'],[[fmt(op.budget)+' €',fmt(op.spent)+' €',fmt(op.budget-op.spent)+' €']],[0,1,2]));
+  return panel('Avanzamento delle richieste',horizontalBars([['Da approvare',op.extraRequested-op.extraApproved],['Approvate da chiudere',op.extraApproved-op.extraClosed],['Chiuse',op.extraClosed]]))
+   + panel('Flusso della richiesta','<div class="flow"><span>Richiesta</span><span>Approvazione</span><span>Esecuzione</span><span>Consuntivo</span></div>');
  case 'staff':
- if(tab===0)return panel('Turni programmati e coperti',chart(['Mattina','Pomeriggio','Presidio'],a.covered,a.shifts))+panel('Dettaglio della copertura',table(['Fascia · esempio','Programmati','Coperti','Copertura'],['Mattina','Pomeriggio','Presidio'].map((n,i)=>[n,fmt(a.shifts[i]),fmt(a.covered[i]),pc(a.covered[i],a.shifts[i])]),[1,2,3]))+insight('Gli orari effettivi e l’articolazione del presidio saranno configurati per stabile. Le fasce mostrate non definiscono obblighi contrattuali.');
+ if(tab===0)return panel('Turni programmati e coperti',chart(['Mattina','Pomeriggio','Presidio'],a.covered,a.shifts))+panel('Dettaglio della copertura',table(['Fascia · esempio','Programmati','Coperti','Copertura'],['Mattina','Pomeriggio','Presidio'].map((n,i)=>[n,fmt(a.shifts[i]),fmt(a.covered[i]),pc(a.covered[i],a.shifts[i])]),[1,2,3]));
  if(tab===1)return panel('Ore e sostituzioni',table(['Filiale','Addetti','Ore erogate','Sostituzioni'],rs.map(r=>[r.name,fmt(r.people),fmt(r.hours),fmt(r.substitutions)]),[1,2,3]))+panel('Presenze e continuità',chart(rs.map(r=>r.name),rs.map(r=>r.hours),rs.map(r=>r.hoursPlan),' h'))+insight('La versione di riferimento cita INAZ Iterm. Questa anteprima non è collegata a INAZ o ad altri sistemi di rilevazione presenze.');
  return panel('Reperibilità e responsabilità locali',table(['Filiale','Responsabile locale','Recapito di servizio','Stato'],rs.map(r=>[r.name,'Da assegnare','Da configurare','Non configurato'])))+insight('Nominativi, recapiti e finestre di reperibilità devono essere forniti e autorizzati. Non sono stati inventati riferimenti personali.');
  case 'quality':
  if(tab<2){const ris=tab===0;return panel(ris?'Check-list di risultato (RIS)':'Check-list di processo (PRO)',table(['Ambito','Parametro di verifica','Evidenza'],(ris?[
  ['Pavimenti','Assenza di sporco diffuso e macchie'],['Arredi e superfici','Assenza di polvere e impronte'],['Superfici di contatto','Pulizia di maniglie e pulsanti'],['Vetri e infissi','Assenza di impronte e aloni'],['Servizi igienici','Pulizia e asciugatura di sanitari e lavabi'],['Dotazioni igieniche','Presenza di carta, sapone e asciugamani']]:[
  ['Piano di lavoro','Rispetto di sequenze e frequenze'],['Prodotti','Corretta diluizione e schede tecniche'],['Attrezzature','Manutenzione e idoneità all’uso'],['Sicurezza','DPI, procedure e formazione'],['Sanificazione','Tracciamento delle operazioni e dei prodotti']]).map(r=>[...r,'Nessun allegato nel prototipo'])))+panel('Controlli per filiale',table(['Filiale','Controlli','Rilievi','Conformi'],rs.map(r=>[r.name,fmt(r.checks),fmt(r.nc),pc(r.checks-r.nc,r.checks)]),[1,2,3]))+insight('Il registro definitivo deve collegare ogni esito all’ambiente controllato, alla data, all’auditor e all’evidenza fotografica o documentale. Gli allegati non sono simulati.');}
- return panel('Avanzamento delle azioni correttive',chart(rs.map(r=>r.name),rs.map(r=>r.nc-r.resolved)))+panel('Rilievi e risoluzioni',table(['Filiale','Rilevati','Chiusi','Aperti','Chiusura media'],rs.map(r=>[r.name,fmt(r.nc),fmt(r.resolved),fmt(r.nc-r.resolved),fmt(r.days,1)+' gg']),[1,2,3,4]))+'<div class="flow"><span>Verifica</span><span>Rilievo NCQ/NCP</span><span>Presa in carico</span><span>Trattamento</span><span>Chiusura</span><span>Storico</span></div>'+insight('NCQ e NCP restano classificazioni del registro da configurare sul piano di controllo approvato.');
+ return panel('Avanzamento delle azioni correttive',donut([['Chiuse',a.resolved],['Aperte',a.open]]))+panel('Rilievi e risoluzioni',table(['Filiale','Rilevati','Chiusi','Aperti','Chiusura media'],rs.map(r=>[r.name,fmt(r.nc),fmt(r.resolved),fmt(r.nc-r.resolved),fmt(r.days,1)+' gg']),[1,2,3,4]))+'<div class="flow"><span>Verifica</span><span>Rilievo NCQ/NCP</span><span>Presa in carico</span><span>Trattamento</span><span>Chiusura</span><span>Storico</span></div>'+insight('NCQ e NCP restano classificazioni del registro da configurare sul piano di controllo approvato.');
  case 'report':
  if(tab===0)return panel('Quadro degli indicatori',table(['Indicatore','Consuntivo','Base di calcolo'],[
- ['Completamento attività',pc(a.d,a.p),`${fmt(a.d)} / ${fmt(a.p)} attività`],['Copertura turni',pc(a.c,a.s),`${fmt(a.c)} / ${fmt(a.s)} turni`],['Controlli conformi',pc(a.checks-a.nc,a.checks),`${fmt(a.checks-a.nc)} / ${fmt(a.checks)} controlli`],['Interventi chiusi',pc(a.completed,a.requested),`${fmt(a.completed)} / ${fmt(a.requested)} richieste`],['Prodotti verificati CAM',pc(a.cam,a.products),`${fmt(a.cam)} / ${fmt(a.products)} prodotti`],['Dotazioni verificate',pc(a.verified,a.devices),`${fmt(a.verified)} / ${fmt(a.devices)} dotazioni`]], [1]))+insight('Target, pesi, SLA e criteri di accettabilità del Lotto 2 non sono stati forniti. Il cruscotto espone consuntivi e denominatori senza attribuire giudizi di conformità contrattuale.');
- if(tab===1)return panel('Completamento delle prestazioni per filiale',chart(rs.map(r=>r.name),rs.map(r=>pct(sum(r.done),sum(r.plan))),'','%'))+panel('Riepilogo della filiale',table(['Filiale','Attività eseguite','Completamento','Ore','Azioni aperte'],rs.map(r=>[r.name,fmt(sum(r.done)),pc(sum(r.done),sum(r.plan)),fmt(r.hours),fmt(r.nc-r.resolved)]),[1,2,3,4]));
+ ['Completamento attività',pc(a.d,a.p),`${fmt(a.d)} / ${fmt(a.p)} attività`],['Copertura turni',pc(a.c,a.s),`${fmt(a.c)} / ${fmt(a.s)} turni`],['Controlli conformi',pc(a.checks-a.nc,a.checks),`${fmt(a.checks-a.nc)} / ${fmt(a.checks)} controlli`],['Pronto intervento: chiusi',pc(a.closed[2],a.extra[2]),`${fmt(a.closed[2])} / ${fmt(a.extra[2])} richieste`],['Ore di presidio erogate',fmt(op.presenceHours)+' h',fmt(op.presenceHoursPlanned)+' h richieste'],['Prestazioni accessorie',fmt(sum(op.ancillary.map(([,count])=>count))), '7 tipologie'],['Plafond aggiuntive utilizzato',pc(op.spent,op.budget),fmt(op.spent)+' € su '+fmt(op.budget)+' €'],['Prodotti verificati CAM',pc(a.cam,a.products),`${fmt(a.cam)} / ${fmt(a.products)} prodotti`],['Dotazioni verificate',pc(a.verified,a.devices),`${fmt(a.verified)} / ${fmt(a.devices)} dotazioni`]], [1]));
+ if(tab===1)return panel('Completamento delle prestazioni per filiale',horizontalBars([['Completamento attività',pct(a.d,a.p)],['Copertura turni',pct(a.c,a.s)],['Controlli conformi',pct(a.checks-a.nc,a.checks)]],'%',1,100))+panel('Riepilogo della filiale',table(['Filiale','Attività eseguite','Completamento','Ore','Azioni aperte'],rs.map(r=>[r.name,fmt(sum(r.done)),pc(sum(r.done),sum(r.plan)),fmt(r.hours),fmt(r.nc-r.resolved)]),[1,2,3,4]));
  return panel('Report consultabili', '<p class="modal-intro">Esporta il consuntivo dimostrativo relativo ai filtri correnti oppure apri la versione stampabile del dettaglio.</p><button class="button" data-print>Stampa / Salva PDF <span aria-hidden="true">↗</span></button>')+panel('Ambiti inclusi',table(['Report','Contenuto','Destinatari'],[['Consuntivo del servizio','Attività, ore e copertura','DEC / Struttura di Gestione'],['Qualità e azioni correttive','Verifiche RIS/PRO e NCQ/NCP','DEC / Struttura di Gestione'],['Monitoraggio ambientale','CAM, consumi, emissioni e rifiuti','DEC / Struttura di Gestione']]))+insight('L’esportazione CSV genera un file locale dai dati visualizzati. Non esistono invii automatici, archivi remoti o report firmati in questa anteprima.');
  case 'sustain':
  if(tab===0)return panel('Verifiche documentali sui prodotti',chart(rs.map(r=>r.name),rs.map(r=>r.cam),rs.map(r=>r.products)))+panel('Prodotti e documentazione',table(['Filiale','Prodotti','Verificati CAM','Da verificare'],rs.map(r=>[r.name,fmt(r.products),fmt(r.cam),fmt(r.products-r.cam)]),[1,2,3]))+insight('“Verificato CAM” è un campo dimostrativo. Certificazioni, Ecolabel UE, FSC ed evidenze devono essere comprovati dai documenti dei prodotti effettivamente impiegati.');
  if(tab===1)return panel('Consumi distinti per unità',table(['Categoria','Consumo','Unità','Documento'],[['Detergenti',fmt(a.detergent),'L','Schede tecniche da acquisire'],['Disinfettanti',fmt(a.disinfectant),'L','Schede tecniche da acquisire'],['Carta igienica',fmt(a.paper),'rotoli','Forniture da registrare'],['Tessili lavabili',fmt(a.textile),'kg','Cicli e quantità da registrare']], [1]))+insight('Litri, chilogrammi e rotoli non vengono sommati o rappresentati sullo stesso asse. Imballaggi e macchinari restano categorie da integrare con il registro effettivo.');
- return panel('Ripartizione delle emissioni dimostrative',chart(['Prodotti','Trasporti'],a.emissions,'',' kg CO₂e'))+panel('Stima per filiale',table(['Filiale','Prodotti (kg CO₂e)','Trasporti (kg CO₂e)','Totale (kg CO₂e)'],rs.map(r=>[r.name,...r.emissions.map(v=>fmt(v)),fmt(sum(r.emissions))]),[1,2,3]))+insight('I valori di CO₂e sono un dataset sintetico per dimostrare l’interfaccia, non una valutazione LCA. Per l’uso operativo servono perimetro, fattori emissivi, fonti e metodologia approvati.');
+ return panel('Ripartizione delle emissioni dimostrative',donut([['Prodotti',a.emissions[0]],['Trasporti',a.emissions[1]]],'kg CO₂e'))+panel('Stima per filiale',table(['Filiale','Prodotti (kg CO₂e)','Trasporti (kg CO₂e)','Totale (kg CO₂e)'],rs.map(r=>[r.name,...r.emissions.map(v=>fmt(v)),fmt(sum(r.emissions))]),[1,2,3]))+insight('I valori di CO₂e sono un dataset sintetico per dimostrare l’interfaccia, non una valutazione LCA. Per l’uso operativo servono perimetro, fattori emissivi, fonti e metodologia approvati.');
  case 'waste':
  if(tab===0)return panel('Quantità raccolte per frazione',chart(['Carta','Imball.','Organico','Residuo','Altri'],a.waste,'',' kg'))+panel('Registro delle frazioni · esempio',table(['Frazione','Quantità (kg)','Tracciamento'],['Carta','Plastica, vetro e metalli','Organico','Indifferenziato','Toner, pile e assorbenti'].map((n,i)=>[n,fmt(a.waste[i]),'Conferimenti da documentare']),[1]))+insight('Il raggruppamento “Altri” è solo grafico. Toner, pile e assorbenti richiedono registrazioni distinte nel sistema operativo e non si assumono intercambiabili.');
  if(tab===1)return panel('Stato delle dotazioni per filiale',table(['Filiale','Verificate','Totali','Rifornimenti'],rs.map(r=>[r.name,fmt(r.verified),fmt(r.devices),fmt(r.restock)]),[1,2,3]))+panel('Materiali e controlli previsti',table(['Dotazione','Controllo','Inventario'],[['Carta igienica','Scorta e reintegro','Da acquisire'],['Sapone / igienizzante','Scorta e integrità dispenser','Da acquisire'],['Asciugamani carta','Scorta e reintegro','Da acquisire'],['Dispenser','Guasti, sostituzioni e ripristino','Da acquisire']]))+insight('Le quantità disponibili a magazzino e le prossime date di rifornimento non sono state fornite e non vengono inventate.');
@@ -255,6 +323,6 @@ accessForm.addEventListener('submit', event => {
  accessStatus.hidden = false;
 });
 $('#detail').addEventListener('click',e=>{if(e.target===$('#detail')){const r=$('#detail').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('#detail').close()}});
-$('#detail').addEventListener('keydown',e=>{if(e.target.matches('[role=tab]')&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();state.tab=e.key==='Home'?0:e.key==='End'?2:(state.tab+(e.key==='ArrowRight'?1:2))%3;renderModal();$('#tab-'+state.tab).focus()}});
+$('#detail').addEventListener('keydown',e=>{if(e.target.matches('[role=tab]')&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();const count=AREA.find(area=>area.id===state.area).tabs.length;state.tab=e.key==='Home'?0:e.key==='End'?count-1:(state.tab+(e.key==='ArrowRight'?1:count-1))%count;renderModal();$('#tab-'+state.tab).focus()}});
 for(const [period,rs]of Object.entries(DATA))for(const r of rs){console.assert(sum(r.done)<=sum(r.plan),'Completamenti incoerenti',period,r.name);console.assert(r.resolved<=r.nc&&r.nc<=r.checks,'Controlli incoerenti',period,r.name);console.assert(sum(r.covered)<=sum(r.shifts),'Copertura incoerente',period,r.name);console.assert(sum(r.closed)<=sum(r.extra),'Interventi incoerenti',period,r.name);console.assert(r.cam<=r.products&&r.verified<=r.devices,'Verifiche incoerenti',period,r.name)}
 render();
