@@ -123,6 +123,30 @@ function chart(labels,actual,planned=null,unit='',compact=false){
  labels.forEach((l,i)=>{const slot=plotW/labels.length,cx=left+slot*(i+.5),bw=Math.min(40,slot*(planned?.24:.38));if(planned){let h=planned[i]/cap*plotH;parts.push(`<rect class="neutral-bar" x="${cx-bw-2}" y="${top+plotH-h}" width="${bw}" height="${h}"><title>${esc(l)}: pianificate ${fmt(planned[i])}${unit}</title></rect>`)}const h=actual[i]/cap*plotH;parts.push(`<rect class="bar" x="${planned?cx+2:cx-bw/2}" y="${top+plotH-h}" width="${bw}" height="${h}"><title>${esc(l)}: ${planned?'eseguite ':''}${fmt(actual[i])}${unit}</title></rect><text x="${cx}" y="${H-9}" text-anchor="middle">${esc(l)}</text>`)});
  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(labels.map((l,i)=>l+': '+fmt(actual[i])+unit+(planned?' su '+fmt(planned[i])+unit+' pianificate':'')).join('; '))}">${parts.join('')}</svg>${planned?'<div class="legend"><span><i class="neutral"></i>Pianificate</span><span><i></i>Eseguite</span></div>':''}`;
 }
+
+const ICON_PATHS = {
+ canone: '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-12 5 2 2 4-4"/>',
+ urgent: '<path d="m13 2-8 12h6l-1 8 9-12h-6z"/>',
+ presence: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ ancillary: '<path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3zM4 7.5l8 4.5 8-4.5M12 12v9"/>',
+ extra: '<path d="M8 5h12M8 12h12M8 19h12M4 3v4M2 5h4M4 12h.01M4 19h.01"/>',
+ staff: '<circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-16a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v3"/>',
+ quality: '<path d="M12 22s7-3.5 7-10V5l-7-3-7 3v7c0 6.5 7 10 7 10z"/><path d="m9 12 2 2 4-4"/>',
+ sustain: '<path d="M20 4c-9 0-14 4-14 10a4 4 0 0 0 4 4c6 0 10-5 10-14zM4 21c3-4 7-8 11-11"/>',
+ waste: '<path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5"/>',
+ report: '<path d="M4 20V4m0 16h16M8 16v-4m5 4V8m5 8v-4"/>',
+ table: '<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 10h16M4 14.5h16m-10-9v13"/>',
+ chart: '<path d="M4 20V4m0 16h16M8 16v-4m5 4V8m5 8v-6"/>',
+ circle: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+ calendar: '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16"/>',
+ branch: '<path d="M4 21h16M6 21V9l6-5 6 5v12m-9-7h.01m6 0h.01M11 21v-3h2v3"/>',
+ arrow: '<path d="M6 18 18 6M8 6h10v10"/>',
+ info: '<circle cx="12" cy="12" r="8"/><path d="M12 11v5m0-8h.01"/>'
+};
+function icon(name) {
+ return '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'+ICON_PATHS[name]+'</svg>';
+}
+
 const CARD_META={
  canone:{image:0,tag:'Attività e pianificazione',description:'Consulta le pulizie e le sanificazioni quotidiane e periodiche, con piano di lavoro e avanzamento.'},
  extra:{image:1,tag:'Richieste e approvazioni',description:'Segui le operazioni aggiuntive dalla richiesta al consuntivo e consulta il plafond.'},
@@ -141,10 +165,10 @@ function render(){
   ['#control-cards', ['staff','quality','sustain','waste']],
   ['#report-cards', ['report']]
  ];
- for (const [container, order] of groups) $(container).innerHTML=order.map(id=>{const ar=AREA.find(a=>a.id===id),m=CARD_META[id];return `<article class="card landing-card ${id==='report'?'report-card':''}" data-category="${id}"><div class="card-photo photo-${m.image}" role="img" aria-label="${esc(ar.title)}: immagine illustrativa del servizio"></div><div class="landing-card-body"><p class="card-topic">${m.tag}</p><h3>${ar.title}</h3><p class="card-description">${m.description}</p><button class="card-access" data-open="${id}" aria-label="Apri dashboard: ${ar.title}">Apri dashboard <span aria-hidden="true">↗</span></button></div></article>`}).join('');
+ for (const [container, order] of groups) $(container).innerHTML=order.map(id=>{const ar=AREA.find(a=>a.id===id),m=CARD_META[id];return `<article class="card landing-card ${id==='report'?'report-card':''}" data-category="${id}"><div class="card-photo photo-${m.image}" role="img" aria-label="${esc(ar.title)}: immagine illustrativa del servizio"></div><div class="landing-card-body"><p class="card-topic">${icon(id)}<span>${m.tag}</span></p><h3>${ar.title}</h3><p class="card-description">${m.description}</p><button class="card-access" data-open="${id}" aria-label="Apri dashboard: ${ar.title}">Apri dashboard ${icon("arrow")}</button></div></article>`}).join('');
 }
 function modalFilters() {
- return `<div class="modal-filters"><div class="modal-branch"><span>Filiale operativa</span><strong>${esc(currentBranch().label)}</strong></div><label>Periodo<select data-modal-period>${Object.entries(PERIODS).map(([key, label]) => `<option value="${key}" ${state.period === key ? 'selected' : ''}>${label}</option>`).join('')}</select></label><span class="modal-demo">Dati dimostrativi</span></div>`;
+ return `<div class="modal-filters"><div class="modal-branch">${icon("branch")}<div><span>Filiale operativa</span><strong>${esc(currentBranch().label)}</strong></div></div><label><span class="modal-period-label">${icon("calendar")} Periodo</span><select data-modal-period>${Object.entries(PERIODS).map(([key, label]) => `<option value="${key}" ${state.period === key ? 'selected' : ''}>${label}</option>`).join('')}</select></label></div>`;
 }
 function modalStats(a,id){const op=operations(a); const by={
  urgent:[['Interventi richiesti',fmt(a.extra[2])],['Interventi chiusi',fmt(a.closed[2])],['Esecuzione media',fmt(op.urgentDuration,1)+' min']],
@@ -156,7 +180,7 @@ function modalStats(a,id){const op=operations(a); const by={
  quality:[['Check-list eseguite',fmt(a.checks)],['Azioni aperte',fmt(a.open)],['Chiusura media',fmt(a.days,1)+' gg']],
  report:[['Completamento attività',pc(a.d,a.p)],['Copertura turni',pc(a.c,a.s)],['Controlli conformi',pc(a.checks-a.nc,a.checks)]],
  sustain:[['Prodotti verificati CAM',pc(a.cam,a.products)],['Detergenti',fmt(a.detergent)+' L'],['Emissioni · stima demo',fmt(sum(a.emissions))+' kg CO₂e']],
- waste:[['Rifornimenti',fmt(a.restock)],['Segnalazioni aperte',fmt(a.tickets)],['Dotazioni verificate',pc(a.verified,a.devices)]]};return by[id].map(([l,v])=>`<div class="modal-stat"><span>${l}</span><strong>${v}</strong></div>`).join('')}
+ waste:[['Rifornimenti',fmt(a.restock)],['Segnalazioni aperte',fmt(a.tickets)],['Dotazioni verificate',pc(a.verified,a.devices)]]};return by[id].map(([label,value],index)=>`<div class="modal-stat"><div class="stat-label">${icon([id,'chart','circle'][index])}<span>${label}</span></div><strong>${value}</strong></div>`).join('')}
 function operations(a) {
  const supervision = [['Ordinarie',Math.round(a.d/21)],['Pronto intervento',Math.floor(a.closed[2]/3)],['Aggiuntive',Math.floor(a.closed[0]/2)]];
  const extraRequested = a.extra[0] + a.extra[1];
@@ -192,8 +216,18 @@ function donut(items, unit = '') {
   ).join('')+'</ul></figcaption></figure>';
 }
 
-function panel(title,body,note=''){return `<section class="detail-section"><h3>${title}</h3>${body}${note?`<p class="chart-caption">${note}</p>`:''}</section>`}
-function insight(text){return `<div class="insight"><strong>Lettura del dato.</strong> ${text}</div>`}
+function panel(title, body, note = '') {
+ const chartType = body.includes('class="donut-chart"') ? 'ring'
+  : body.includes('class="horizontal-chart"') || body.includes('class="chart"') ? 'chart' : '';
+ const isTable = body.startsWith('<div class="table-scroll">');
+ const columns = (body.match(/<th\s/g) || []).length;
+ const tableClass = isTable && columns <= 3 ? ' data-compact' : '';
+ const panelClass = chartType ? ' visual-panel visual-' + chartType : tableClass;
+ return `<section class="detail-section${panelClass}"><h3>${icon(chartType ? 'chart' : isTable ? 'table' : 'info')}<span>${title}</span></h3>${body}${note ? `<p class="chart-caption">${note}</p>` : ''}</section>`;
+}
+function insight(text) {
+ return `<div class="insight">${icon('info')}<div><strong>Lettura del dato</strong><p>${text}</p></div></div>`;
+}
 function detailContent(id,tab,a){const rs=rows(); const op=operations(a);
  switch(id){
  case 'canone': {
@@ -249,8 +283,10 @@ function detailContent(id,tab,a){const rs=rows(); const op=operations(a);
  }
 }
 function openArea(id){state.area=id;state.tab=0;renderModal();openDialog($('#detail'))}
-function renderModal(){const ar=AREA.find(x=>x.id===state.area),a=total(),empty=!rows().length;$('#modal-title').textContent=ar.full;$('#modal-scope').textContent=`Lotto 2 · ${state.region} · ${PERIODS[state.period]}`;$('#export').hidden=empty;
- $('#modal-body').innerHTML=`<p class="modal-intro">${ar.intro}</p>${modalFilters()}${empty?'<div class="empty"><strong>Nessun dato nel periodo selezionato</strong>Seleziona ottobre o novembre 2026 per esplorare il dataset dimostrativo.</div>':`<div class="modal-stats">${modalStats(a,ar.id)}</div><div class="modal-tabs" role="tablist" aria-label="Dettaglio ${ar.title}">${ar.tabs.map((t,i)=>`<button id="tab-${i}" role="tab" aria-selected="${i===state.tab}" tabindex="${i===state.tab?'0':'-1'}" aria-controls="tab-content" data-tab="${i}">${t}</button>`).join('')}</div><div id="tab-content" role="tabpanel" aria-labelledby="tab-${state.tab}" tabindex="0">${detailContent(ar.id,state.tab,a)}</div>`}`;
+function renderModal(){const ar=AREA.find(x=>x.id===state.area),a=total(),empty=!rows().length;$('#modal-title').textContent=ar.full;const group = ar.id === 'report' ? 'Reporting' : ['staff','quality','sustain','waste'].includes(ar.id) ? 'Controllo' : 'Attività';
+ $('#modal-area-icon').innerHTML=icon(ar.id);
+ $('#modal-scope').textContent=group+' · Lotto 2 · '+state.region;$('#export').hidden=empty;
+ $('#modal-body').innerHTML=`<div class="modal-overview">${modalFilters()}<p class="modal-intro">${ar.intro}</p></div>${empty?'<div class="empty"><strong>Nessun dato nel periodo selezionato</strong>Seleziona ottobre o novembre 2026 per esplorare il dataset dimostrativo.</div>':`<div class="modal-stats">${modalStats(a,ar.id)}</div><div class="modal-tabs" role="tablist" aria-label="Dettaglio ${ar.title}">${ar.tabs.map((t,i)=>`<button id="tab-${i}" role="tab" aria-selected="${i===state.tab}" tabindex="${i===state.tab?'0':'-1'}" aria-controls="tab-content" data-tab="${i}">${t}</button>`).join('')}</div><div id="tab-content" class="modal-panel-grid" role="tabpanel" aria-labelledby="tab-${state.tab}" tabindex="0">${detailContent(ar.id,state.tab,a)}</div>`}`;
 }
 function exportCsv(){const rs=rows();const headers=['Periodo','Regione','Filiale','Pianificate','Eseguite','Ore pianificate','Ore erogate','Turni programmati','Turni coperti','Controlli','Rilievi','Azioni chiuse','Azioni aperte','Richieste extra','Interventi chiusi','Prodotti','Prodotti verificati CAM','Detergenti L','Disinfettanti L','Carta rotoli','Tessili kg','CO2e kg demo','Rifiuti kg','Rifornimenti','Dotazioni verificate','Dotazioni totali','Segnalazioni aperte'];const lines=[['DATI DIMOSTRATIVI - NON DATI OPERATIVI BANCA D’ITALIA'],headers,...rs.map(r=>[PERIODS[state.period],r.region,r.name,sum(r.plan),sum(r.done),r.hoursPlan,r.hours,sum(r.shifts),sum(r.covered),r.checks,r.nc,r.resolved,r.nc-r.resolved,sum(r.extra),sum(r.closed),r.products,r.cam,r.detergent,r.disinfectant,r.paper,r.textile,sum(r.emissions),sum(r.waste),r.restock,r.verified,r.devices,r.tickets])];const csv='\uFEFF'+lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`BI-LogiControl_Lotto2_DEMO_${state.period}_${state.branch}.csv`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Esportazione CSV dei dati dimostrativi completata.')}
 let toastTimer;function notify(text){$('#toast').textContent=text;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,3500)}

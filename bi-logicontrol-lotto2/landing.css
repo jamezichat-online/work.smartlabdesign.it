@@ -213,3 +213,100 @@ dialog h2[tabindex="-1"]:focus { outline: none; }
   .activity-cards > .landing-card { background: white; }
   .activity-cards .landing-card h3,.activity-cards .card-description,.activity-cards .card-topic { color: black; }
 }
+
+/* Card hierarchy and photographic crops */
+.landing-intro h2 { font-size: clamp(28px, 3vw, 36px); }
+.group-heading h2 { font-size: clamp(25px, 2.6vw, 32px); font-weight: 650; }
+.group-heading p, .landing-intro p { font-size: 16px; }
+.landing-card .card-topic { display: flex; align-items: center; gap: 7px; font-size: 14px; line-height: 1.35; }
+.landing-card h3 { font-size: clamp(23px, 2vw, 28px); line-height: 1.16; }
+.landing-card .card-description { font-size: 16px; line-height: 1.55; }
+.landing-card .card-access { font-size: 15px; gap: 8px; }
+.landing-card .card-access .ui-icon { width: 21px; height: 21px; }
+.control-cards .card-photo {
+  height: auto;
+  aspect-ratio: 8 / 5;
+  background-size: 300% auto;
+}
+.control-cards .photo-2 { background-position: 100% 12%; }
+.control-cards .photo-3 { background-position: 0 89%; }
+.control-cards .photo-4 { background-position: 50% 89%; }
+.control-cards .photo-5 { background-position: 100% 89%; }
+.control-cards .landing-card-body { padding: 19px; }
+.control-cards .landing-card h3 { font-size: clamp(22px, 1.8vw, 26px); }
+.control-cards .card-description { font-size: 15px; }
+
+/* Detail dialog: header, compact context, then analytical panels. */
+.ui-icon { width: 19px; height: 19px; flex: none; }
+#detail { width: min(1080px, calc(100% - 40px)); border-radius: 14px; background: #fcfafc; }
+#detail .dialog-head { padding: 19px 26px; gap: 12px; }
+.modal-heading { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.modal-area-icon { display: grid; place-items: center; width: 46px; height: 46px; flex: none; border-radius: 10px; background: #f1e8f6; color: #592c76; }
+.modal-area-icon .ui-icon { width: 24px; height: 24px; }
+#detail #modal-scope { font-size: 13px; margin: 0 0 4px; }
+#detail #modal-title { font: 600 clamp(26px, 3.4vw, 37px)/1.14 Georgia, serif; letter-spacing: -.025em; }
+#detail .close { width: 40px; height: 40px; align-self: center; }
+#detail #modal-body { padding: 18px 26px 22px; }
+.modal-overview { margin-bottom: 15px; }
+.modal-overview .modal-intro { margin: 9px 0 0; font-size: 15px; line-height: 1.5; }
+#detail .modal-filters { align-items: center; margin: 0; gap: 10px 18px; padding: 12px 14px; }
+.modal-branch { display: flex; align-items: center; gap: 10px; }
+.modal-branch .ui-icon, .modal-period-label .ui-icon { color: #694089; }
+#detail .modal-branch span { display: block; font-size: 13px; margin-bottom: 2px; }
+#detail .modal-branch strong { font-size: 16px; }
+#detail .modal-filters label { flex-direction: row; align-items: center; gap: 8px; width: auto; }
+.modal-period-label { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; }
+#detail .modal-filters select { height: 40px; min-height: 40px; font-size: 14px; }
+#detail .modal-stats { gap: 10px; margin: 0 0 15px; padding: 0; border: 0; }
+#detail .modal-stat { min-width: 0; padding: 12px 14px; border: 1px solid #e8dfed; border-radius: 9px; background: white; }
+.stat-label { display: flex; align-items: center; gap: 7px; color: #694089; }
+#detail .modal-stat span { font-size: 14px; line-height: 1.3; }
+#detail .modal-stat strong { font-size: clamp(24px, 3vw, 34px); line-height: 1.12; color: var(--deep); margin-top: 7px; }
+#detail .modal-tabs { gap: 5px; margin-bottom: 15px; padding: 4px; border: 0; border-radius: 8px; background: #eee8f1; }
+#detail .modal-tabs button { min-height: 42px; padding: 8px 15px; border: 0; border-radius: 6px; color: #483752; background: transparent; font-size: 15px; }
+#detail .modal-tabs button[aria-selected=true] { background: #542574; color: white; }
+.modal-panel-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr); gap: 12px; }
+.modal-panel-grid > * { grid-column: 1/-1; min-width: 0; }
+.modal-panel-grid .visual-ring:has(+ .data-compact), .modal-panel-grid .visual-ring + .data-compact { grid-column: auto; }
+#detail .detail-section { padding: 15px 16px; margin: 0; background: white; border: 1px solid #e8dfed; border-radius: 9px; }
+#detail .visual-panel { background: #faf7fc; }
+#detail .detail-section h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; color: var(--deep); font-size: 19px; line-height: 1.25; }
+#detail .detail-section h3 .ui-icon { color: #694089; }
+#detail .donut-chart { gap: 16px 21px; padding: 1px 0; }
+#detail .donut-ring { width: 154px; height: 154px; }
+#detail .donut-ring > span { width: 120px; height: 120px; font-size: 29px; }
+#detail .donut-chart li, #detail .horizontal-chart li { font-size: 16px; }
+#detail .horizontal-track { height: 11px; }
+#detail .chart { max-height: 280px; }
+#detail .chart text { font-size: 15px; }
+#detail .legend, #detail .chart-caption { font-size: 14px; }
+#detail table { width: 100%; font-size: 15px; }
+#detail th { font-size: 14px; font-weight: 600; }
+#detail td, #detail th { padding-top: 10px; padding-bottom: 10px; }
+#detail .data-compact :is(td, th) { min-width: 0; white-space: normal; }
+#detail .insight { display: flex; align-items: flex-start; gap: 10px; margin: 0; padding: 12px 14px; font-size: 15px; line-height: 1.5; }
+#detail .insight .ui-icon { margin-top: 2px; color: #694089; }
+#detail .dialog-foot { padding: 11px 26px; }
+#detail .dialog-foot > span, #detail .dialog-foot .button { font-size: 14px; }
+@media (max-width: 700px) {
+  #detail { width: calc(100% - 16px); }
+  #detail .dialog-head, #detail #modal-body, #detail .dialog-foot { padding-left: 14px; padding-right: 14px; }
+  #detail .dialog-head { padding-top: 12px; padding-bottom: 12px; }
+  #detail #modal-title { font-size: 25px; }
+  .modal-area-icon { width: 35px; height: 35px; }
+  .modal-area-icon .ui-icon { width: 20px; height: 20px; }
+  #detail .modal-branch { flex-basis: 100%; }
+  #detail .modal-filters label { flex: 1 1 auto; flex-wrap: wrap; }
+  #detail .modal-filters select { width: auto; flex: 1 1 145px; }
+  #detail .modal-stats { gap: 5px; }
+  #detail .modal-stat { padding: 8px; }
+  #detail .modal-stat span { font-size: 13px; }
+  #detail .modal-stat strong { font-size: 21px; }
+  #detail .stat-label .ui-icon { display: none; }
+  .modal-panel-grid { display: block; }
+  .modal-panel-grid > * + * { margin-top: 10px !important; }
+  #detail .detail-section { padding: 12px; }
+  #detail .detail-section h3 { font-size: 17px; }
+  #detail .chart text { font-size: 21px; }
+  #detail .dialog-foot { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+}
