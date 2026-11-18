@@ -11,3 +11,29 @@
 @media(max-width:700px){.header-inner{padding:17px 20px}.brand>span{font-size:22px}.brand svg{width:29px}.header-nav{gap:16px}.header-nav a:first-child,.header-nav button{display:none}.header-nav a{font-size:12px}.hero{height:auto;min-height:0;display:flex;flex-direction:column;background:#352141}.hero-image{position:relative;width:100%;height:auto;aspect-ratio:1.75;object-fit:cover;object-position:70% 48%;order:2;z-index:0}.hero-shade{display:none}.hero-inner{padding:31px 24px 32px;display:block;height:auto;order:1;margin:0}.hero-copy{width:100%;padding:0}.hero-scope{font-size:12px;margin-bottom:14px}.hero h1{font-size:46px;letter-spacing:-1.6px;margin-bottom:19px}.hero-lead{font-size:17px;line-height:1.5;margin-bottom:12px}.hero-description{font-size:13px;line-height:1.7;max-width:360px}.hero-cta{margin-top:22px;padding:13px 17px;font-size:13px;gap:32px}.hero-caption{display:none}.workspace.landing{padding-top:31px}.landing-intro{margin-bottom:22px;display:block}.landing-intro h2{font-size:27px;letter-spacing:-.7px;max-width:310px;line-height:1.2;margin-bottom:12px}.landing-intro p{font-size:14px;line-height:1.7}.landing-cards{grid-template-columns:1fr;gap:22px}.landing-card{grid-column:auto;transform:none}.landing-card:hover{transform:none}.card-photo{aspect-ratio:1.8}.landing-card-body{padding:24px}.landing-card h3{font-size:24px;line-height:1.25;margin-bottom:12px}.card-topic{font-size:12px}.card-description{font-size:14px;line-height:1.75;margin-bottom:18px}.card-access{min-height:45px;padding-top:16px;font-size:13px}.report-card{grid-column:auto;display:flex}.report-card .card-photo{aspect-ratio:1.8;min-height:0;height:auto;background-position:72% 50%}.report-card .landing-card-body{padding:25px}.report-card h3{font-size:26px}.report-card .card-access{max-width:none}.scope-strip{display:block;padding:25px;margin-top:28px}.scope-strip h2{font-size:22px;max-width:240px}.scope-strip p{font-size:13px;line-height:1.7}.scope-regions{margin-top:22px;gap:14px;font-size:13px}.scope-regions span+span{padding-left:14px}.landing-demo{font-size:11px;padding-bottom:20px}.landing footer{padding-top:24px;padding-bottom:12px}.modal-filters{padding:14px;gap:13px}.modal-filters label{width:100%}.modal-filters select{min-width:0;width:100%;font-size:13px;min-height:42px}.modal-demo{margin:0;padding:0}.dialog-head h2{font-size:21px}.desktop-break{display:none}}
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}.landing-card,.hero-cta{transition:none}.landing-card:hover,.hero-cta:hover{transform:none}}
 @media print{.hero,.header-nav,.scope-strip,.landing-demo,.card-access,.modal-filters{display:none}.landing-cards{display:block}.landing-card{break-inside:avoid;outline:0;margin:10px 0}.card-photo{display:none}.report-card{background:white}.report-card h3,.report-card .card-description{color:black}}
+
+/* The transparent original has wide margins. The frame fits its visible artwork. */
+.brand:has(.brand-logo) {
+  position: relative;
+  display: block;
+  flex: 0 1 290px;
+  width: 290px;
+  min-width: 0;
+  aspect-ratio: 5.6;
+  overflow: hidden;
+}
+.brand-logo {
+  position: absolute;
+  width: 124%;
+  max-width: none;
+  height: auto;
+  left: -12%;
+  top: 50%;
+  transform: translateY(-47.5%);
+}
+@media (max-width: 700px) {
+  .brand:has(.brand-logo) {
+    flex-basis: 230px;
+    width: 230px;
+  }
+}
