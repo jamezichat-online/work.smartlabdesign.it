@@ -80,10 +80,6 @@ function currentBranch() {
  return BRANCHES[state.region].find(branch => branch.id === state.branch);
 }
 
-function updateBranchScope() {
- $('#active-branch').textContent = 'Stai consultando ' + currentBranch().label + ' · ' + state.region + '. Seleziona un’area per aprire il dettaglio.';
-}
-
 const regionSelect = $('#region-select');
 const branchSelect = $('#branch-select');
 for (const region of Object.keys(BRANCHES)) regionSelect.add(new Option(region, region));
@@ -92,7 +88,6 @@ regionSelect.value = state.region;
 function populateBranches() {
  branchSelect.replaceChildren(...BRANCHES[state.region].map(branch => new Option(branch.name, branch.id)));
  branchSelect.value = state.branch;
- updateBranchScope();
 }
 populateBranches();
 
@@ -103,7 +98,6 @@ regionSelect.addEventListener('change', () => {
 });
 branchSelect.addEventListener('change', () => {
  state.branch = branchSelect.value;
- updateBranchScope();
 });
 function total(rs=rows()){
  const o={};['hoursPlan','hours','people','substitutions','checks','nc','resolved','products','cam','detergent','disinfectant','paper','textile','restock','verified','devices','tickets'].forEach(k=>o[k]=sum(rs.map(r=>r[k])));
