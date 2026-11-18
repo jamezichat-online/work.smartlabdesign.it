@@ -6,19 +6,102 @@ const BASE=[
  {name:'Sardegna',plan:[204,54,42],done:[203,52,41],extra:[11,5,2],closed:[11,4,2],response:[12,10,8],shifts:[80,36,24],covered:[80,36,24],hoursPlan:1120,hours:1120,people:14,substitutions:2,checks:46,nc:3,resolved:3,days:2.6,products:18,cam:18,detergent:98,disinfectant:36,paper:210,textile:28,emissions:[66,38],waste:[108,42,28,9,5],restock:19,verified:59,devices:60,tickets:1},
  {name:'Sicilia',plan:[324,84,60],done:[320,80,57],extra:[17,7,5],closed:[16,6,4],response:[15,12,10],shifts:[120,60,40],covered:[119,59,40],hoursPlan:1760,hours:1744,people:22,substitutions:5,checks:68,nc:7,resolved:4,days:4.1,products:24,cam:23,detergent:154,disinfectant:58,paper:330,textile:44,emissions:[104,64],waste:[168,66,44,15,7],restock:28,verified:92,devices:95,tickets:3}
 ];
-const DATA={nov:BASE,oct:BASE.map(r=>({...r,plan:r.plan.map(v=>v-6),done:r.done.map(v=>v-7),hoursPlan:r.hoursPlan-48,hours:r.hours-56,checks:r.checks-4,nc:r.nc+1,resolved:r.resolved,restock:r.restock-2,detergent:r.detergent+4,emissions:r.emissions.map(v=>v+3)})),dec:[]};
+const BRANCHES = {
+ Sicilia: [
+  { id: 'palermo', name: 'Palermo', label: 'Palermo (filiale capo circoscrizione)' },
+  { id: 'agrigento', name: 'Agrigento', label: 'Agrigento' },
+  { id: 'catania', name: 'Catania', label: 'Catania' }
+ ],
+ Calabria: [
+  { id: 'catanzaro', name: 'Catanzaro', label: 'Catanzaro' },
+  { id: 'reggio-calabria', name: 'Reggio Calabria', label: 'Reggio Calabria' }
+ ],
+ Sardegna: [
+  { id: 'cagliari', name: 'Cagliari', label: 'Cagliari' },
+  { id: 'sassari', name: 'Sassari', label: 'Sassari' }
+ ]
+};
+
+function branchRecord(base, branch, period) {
+ let seed = 2166136261;
+ for (const char of branch.id + ':' + period) seed = Math.imul(seed ^ char.charCodeAt(0), 16777619);
+ const random = () => {
+  seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+  return seed / 4294967296;
+ };
+ const scale = 0.44 + random() * 0.35;
+ const vary = value => Math.max(1, Math.round(value * scale * (0.84 + random() * 0.32)));
+ const completed = value => Math.max(0, value - Math.round(value * random() * 0.09));
+ const plan = base.plan.map(vary);
+ const extra = base.extra.map(vary);
+ const shifts = base.shifts.map(vary);
+ const hoursPlan = vary(base.hoursPlan);
+ const checks = vary(base.checks);
+ const nc = Math.min(checks, vary(base.nc));
+ const products = vary(base.products);
+ const devices = vary(base.devices);
+ return {
+  name: branch.name, id: branch.id, region: base.name, plan, done: plan.map(completed),
+  extra, closed: extra.map(value => Math.max(0, value - Math.round(random() * 2))),
+  response: base.response.map(value => +(value * (0.75 + random() * 0.5)).toFixed(1)),
+  shifts, covered: shifts.map(completed), hoursPlan, hours: completed(hoursPlan),
+  people: vary(base.people), substitutions: vary(base.substitutions), checks, nc,
+  resolved: Math.round(nc * (0.4 + random() * 0.6)), days: +(2 + random() * 3).toFixed(1),
+  products, cam: completed(products), detergent: vary(base.detergent),
+  disinfectant: vary(base.disinfectant), paper: vary(base.paper), textile: vary(base.textile),
+  emissions: base.emissions.map(vary), waste: base.waste.map(vary), restock: vary(base.restock),
+  verified: completed(devices), devices, tickets: vary(base.tickets)
+ };
+}
+
+const DATA = Object.fromEntries(Object.keys(PERIODS).map(period => [
+ period, period === 'dec' ? [] : BASE.flatMap(base =>
+  BRANCHES[base.name].map(branch => branchRecord(base, branch, period)))
+]));
 const AREA=[
  {id:'canone',title:'Prestazioni a canone',desc:'Ordinarie, periodiche, ripassi e prestazioni accessorie comprese nel canone.',full:'Prestazioni a canone',tabs:['Attività','Ore e presidio','Frequenze'],intro:'Pianificazione ed esecuzione delle attività ordinarie, periodiche e dei ripassi. Il confronto evidenzia le prestazioni ancora da completare nel periodo selezionato.'},
  {id:'extra',title:'Interventi aggiuntivi',desc:'Richieste extra, urgenze e pronto intervento: dalla presa in carico alla chiusura.',full:'Interventi aggiuntivi e pronto intervento',tabs:['Interventi','Tempi di risposta','Autorizzazioni'],intro:'Richieste aggiuntive, urgenze e pronto intervento, con confronto tra interventi richiesti e chiusi. Le finestre contrattuali del Lotto 2 devono essere validate sul capitolato.'},
- {id:'staff',title:'Personale e presenze',desc:'Copertura turni, sostituzioni, ore erogate e reperibilità dei referenti.',full:'Personale, presenze e copertura turni',tabs:['Copertura turni','Ore e presenze','Reperibilità'],intro:'Lettura aggregata di turni programmati, copertura effettiva e sostituzioni. I dati del prototipo sono regionali e non contengono nominativi o presenze individuali.'},
+ {id:'staff',title:'Personale e presenze',desc:'Copertura turni, sostituzioni, ore erogate e reperibilità dei referenti.',full:'Personale, presenze e copertura turni',tabs:['Copertura turni','Ore e presenze','Reperibilità'],intro:'Lettura aggregata di turni programmati, copertura effettiva e sostituzioni. I dati del prototipo sono aggregati per filiale e non contengono nominativi o presenze individuali.'},
  {id:'quality',title:'Qualità e verifiche',desc:'Check-list RIS/PRO, non conformità e avanzamento delle azioni correttive.',full:'Qualità, verifiche ispettive e non conformità',tabs:['Verifiche RIS','Verifiche PRO','Azioni correttive'],intro:'Controlli di risultato e di processo, rilievi NCQ/NCP, stato delle azioni correttive ed evidenze. Gli esiti seguenti sono esempi per la revisione del cruscotto.'},
- {id:'report',title:'Reporting direzionale',desc:'Indicatori, confronto territoriale e report per DEC e Struttura di Gestione.',full:'Reporting direzionale, KPI e andamento del servizio',tabs:['Indicatori','Confronto regioni','Report'],intro:'Sintesi degli indicatori operativi per DEC e Struttura di Gestione. Tutti i valori sono ricavati dallo stesso dataset delle schede di dettaglio.'},
+ {id:'report',title:'Reporting direzionale',desc:'Indicatori, confronto territoriale e report per DEC e Struttura di Gestione.',full:'Reporting direzionale, KPI e andamento del servizio',tabs:['Indicatori','Dati della filiale','Report'],intro:'Sintesi degli indicatori operativi per DEC e Struttura di Gestione. Tutti i valori sono ricavati dallo stesso dataset delle schede di dettaglio.'},
  {id:'sustain',title:'Sostenibilità e CAM',desc:'Prodotti, consumi e impronta ambientale del servizio.',full:'Sostenibilità, CAM e consumi',tabs:['Prodotti e CAM','Consumi','Impronta ambientale'],intro:'Monitoraggio dei prodotti, delle evidenze ambientali e dei consumi. I riferimenti CAM 2021 della versione Frascati sono mantenuti come ambito informativo: requisiti e documenti applicabili al Lotto 2 sono da validare.'},
  {id:'waste',title:'Rifiuti e dotazioni',desc:'Raccolta differenziata, materiali di consumo, dispenser e rifornimenti.',full:'Rifiuti, materiali di consumo e dotazioni igieniche',tabs:['Rifiuti','Materiali e dotazioni','Segnalazioni'],intro:'Tracciamento dei flussi di raccolta, dei rifornimenti e delle anomalie alle dotazioni igieniche. Le quantità e le segnalazioni mostrate sono esclusivamente dimostrative.'}
 ];
-let state={region:'all',period:'nov',area:null,tab:0};
+const state = { region: 'Sicilia', branch: 'palermo', period: 'nov', area: null, tab: 0 };
 const $=s=>document.querySelector(s), sum=a=>a.reduce((s,v)=>s+v,0),fmt=(v,d=0)=>new Intl.NumberFormat('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v),pct=(a,b)=>b?100*a/b:null,pc=(a,b)=>b?fmt(pct(a,b),1)+'%':'—',esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function rows(){return DATA[state.period].filter(r=>state.region==='all'||r.name===state.region)}
+function rows() {
+ return DATA[state.period].filter(record => record.id === state.branch);
+}
+
+function currentBranch() {
+ return BRANCHES[state.region].find(branch => branch.id === state.branch);
+}
+
+function updateBranchScope() {
+ $('#active-branch').textContent = 'Stai consultando ' + currentBranch().label + ' · ' + state.region + '. Seleziona un’area per aprire il dettaglio.';
+}
+
+const regionSelect = $('#region-select');
+const branchSelect = $('#branch-select');
+for (const region of Object.keys(BRANCHES)) regionSelect.add(new Option(region, region));
+regionSelect.value = state.region;
+
+function populateBranches() {
+ branchSelect.replaceChildren(...BRANCHES[state.region].map(branch => new Option(branch.label, branch.id)));
+ branchSelect.value = state.branch;
+ updateBranchScope();
+}
+populateBranches();
+
+regionSelect.addEventListener('change', () => {
+ state.region = regionSelect.value;
+ state.branch = BRANCHES[state.region][0].id;
+ populateBranches();
+});
+branchSelect.addEventListener('change', () => {
+ state.branch = branchSelect.value;
+ updateBranchScope();
+});
 function total(rs=rows()){
  const o={};['hoursPlan','hours','people','substitutions','checks','nc','resolved','products','cam','detergent','disinfectant','paper','textile','restock','verified','devices','tickets'].forEach(k=>o[k]=sum(rs.map(r=>r[k])));
  ['plan','done','extra','closed','shifts','covered','emissions','waste'].forEach(k=>o[k]=Array.from({length:k==='waste'?5: k==='emissions'?2:3},(_,i)=>sum(rs.map(r=>r[k][i]))));
@@ -44,13 +127,15 @@ const CARD_META={
  quality:{image:3,tag:'Controlli e miglioramento',description:'Verifiche RIS/PRO, non conformità ed evidenze. Monitora rilievi, azioni correttive e tempi di ripristino.'},
  sustain:{image:4,tag:'Ambiente e risorse',description:'Prodotti, requisiti ambientali, consumi e impronta carbonica. Consulta gli indicatori di sostenibilità del servizio.'},
  waste:{image:5,tag:'Materiali e dotazioni',description:'Raccolta differenziata, rifornimenti e dotazioni igieniche. Tieni sotto controllo disponibilità, anomalie e sostituzioni.'},
- report:{image:6,tag:'Sintesi e decisioni',description:'Una lettura trasversale dell’andamento del servizio: indicatori, confronti territoriali e report per il DEC e la Struttura di Gestione.'}
+ report:{image:6,tag:'Sintesi e decisioni',description:'Una lettura trasversale dell’andamento del servizio: indicatori, riepiloghi per filiale e report per il DEC e la Struttura di Gestione.'}
 };
 function render(){
  const order=['canone','extra','staff','quality','sustain','waste','report'];
  $('#cards').innerHTML=order.map(id=>{const ar=AREA.find(a=>a.id===id),m=CARD_META[id];return `<article class="card landing-card ${id==='report'?'report-card':''}" data-category="${id}"><div class="card-photo photo-${m.image}" role="img" aria-label="${esc(ar.title)}: immagine illustrativa del servizio"></div><div class="landing-card-body"><p class="card-topic">${m.tag}</p><h3>${ar.title}</h3><p class="card-description">${m.description}</p><button class="card-access" data-open="${id}" aria-label="Apri dashboard: ${ar.title}">Apri dashboard <span aria-hidden="true">↗</span></button></div></article>`}).join('');
 }
-function modalFilters(){return `<div class="modal-filters"><label>Territorio<select data-modal-region><option value="all" ${state.region==='all'?'selected':''}>Tutto il Lotto 2</option>${['Calabria','Sardegna','Sicilia'].map(r=>`<option ${state.region===r?'selected':''}>${r}</option>`).join('')}</select></label><label>Periodo<select data-modal-period>${Object.entries(PERIODS).map(([k,v])=>`<option value="${k}" ${state.period===k?'selected':''}>${v}</option>`).join('')}</select></label><span class="modal-demo">Dati dimostrativi</span></div>`}
+function modalFilters() {
+ return `<div class="modal-filters"><div class="modal-branch"><span>Filiale operativa</span><strong>${esc(currentBranch().label)}</strong></div><label>Periodo<select data-modal-period>${Object.entries(PERIODS).map(([key, label]) => `<option value="${key}" ${state.period === key ? 'selected' : ''}>${label}</option>`).join('')}</select></label><span class="modal-demo">Dati dimostrativi</span></div>`;
+}
 function modalStats(a,id){const by={
  canone:[['Attività pianificate',fmt(a.p)],['Completamento',pc(a.d,a.p)],['Da completare',fmt(a.p-a.d)]],
  extra:[['Richieste ricevute',fmt(a.requested)],['Interventi chiusi',fmt(a.completed)],['Ancora aperti',fmt(a.requested-a.completed)]],
@@ -65,7 +150,7 @@ function detailContent(id,tab,a){let rs=rows();
  switch(id){
  case 'canone':
  if(tab===0)return panel('Attività pianificate ed eseguite',chart(['Ordinarie','Periodiche','Ripassi'],a.done,a.plan))+panel('Completamento per attività',table(['Tipo attività','Pianificate','Eseguite','Completamento'],['Ordinarie','Periodiche','Ripassi'].map((n,i)=>[n,fmt(a.plan[i]),fmt(a.done[i]),pc(a.done[i],a.plan[i])]),[1,2,3]))+insight(`${fmt(a.p-a.d)} attività pianificate risultano ancora da completare nel periodo. Il dato non equivale automaticamente a uno scostamento contrattuale: occorre verificarne la scadenza.`);
- if(tab===1)return panel('Ore pianificate e consuntivate per regione',chart(rs.map(r=>r.name),rs.map(r=>r.hours),rs.map(r=>r.hoursPlan),' h'))+panel('Presidio e continuità',table(['Regione','Pianificate (h)','Erogate (h)','Differenza (h)'],rs.map(r=>[r.name,fmt(r.hoursPlan),fmt(r.hours),fmt(r.hours-r.hoursPlan)]),[1,2,3]))+insight('Fasce orarie del presidio, frequenze e prestazioni accessorie saranno definite dal capitolato e dal piano operativo del Lotto 2. Nessuna copertura 24/7 o 8×5 è assunta in questa anteprima.');
+ if(tab===1)return panel('Ore pianificate e consuntivate per filiale',chart(rs.map(r=>r.name),rs.map(r=>r.hours),rs.map(r=>r.hoursPlan),' h'))+panel('Presidio e continuità',table(['Filiale','Pianificate (h)','Erogate (h)','Differenza (h)'],rs.map(r=>[r.name,fmt(r.hoursPlan),fmt(r.hours),fmt(r.hours-r.hoursPlan)]),[1,2,3]))+insight('Fasce orarie del presidio, frequenze e prestazioni accessorie saranno definite dal capitolato e dal piano operativo del Lotto 2. Nessuna copertura 24/7 o 8×5 è assunta in questa anteprima.');
  return panel('Frequenze e residui da verificare',table(['Attività','Residuo','Verifica'],['Ordinarie','Periodiche','Ripassi'].map((n,i)=>[n,fmt(a.plan[i]-a.done[i]),'Confronto con piano di lavoro']),[1]))+panel('Prestazioni accessorie', '<p class="modal-intro">Il perimetro conserva le prestazioni accessorie comprese nel canone. Tipologie, frequenze e ambienti devono essere associati al piano approvato del Lotto 2.</p>')+insight('Le frequenze di Frascati non vengono trasferite automaticamente alla nuova commessa.');
  case 'extra':
  if(tab===0)return panel('Richieste per tipologia',chart(['Extra','Urgenze','Pronto int.'],a.extra))+panel('Stato degli interventi',table(['Tipo','Richiesti','Chiusi','Aperti'],['Extra autorizzabili','Urgenze','Pronto intervento'].map((n,i)=>[n,fmt(a.extra[i]),fmt(a.closed[i]),fmt(a.extra[i]-a.closed[i])]),[1,2,3]))+insight('Chiusura operativa e conferma del committente devono essere tracciate separatamente nel sistema definitivo.');
@@ -73,37 +158,65 @@ function detailContent(id,tab,a){let rs=rows();
  return panel('Ciclo di autorizzazione delle prestazioni', '<div class="flow"><span>Richiesta</span><span>Autorizzazione</span><span>Presa in carico</span><span>Esecuzione</span><span>Chiusura</span><span>Conferma</span></div>')+panel('Dati da associare alla richiesta','<ul class="checklist"><li>Stabile, ambiente, tipologia e motivazione.</li><li>Referente richiedente e autorizzazione della Struttura di Gestione.</li><li>Data e ora di presa in carico, inizio e chiusura.</li><li>Consuntivo, evidenze e conferma del committente.</li></ul>')+insight('Non sono presenti autorizzazioni reali o documenti firmati nel prototipo.');
  case 'staff':
  if(tab===0)return panel('Turni programmati e coperti',chart(['Mattina','Pomeriggio','Presidio'],a.covered,a.shifts))+panel('Dettaglio della copertura',table(['Fascia · esempio','Programmati','Coperti','Copertura'],['Mattina','Pomeriggio','Presidio'].map((n,i)=>[n,fmt(a.shifts[i]),fmt(a.covered[i]),pc(a.covered[i],a.shifts[i])]),[1,2,3]))+insight('Gli orari effettivi e l’articolazione del presidio saranno configurati per stabile. Le fasce mostrate non definiscono obblighi contrattuali.');
- if(tab===1)return panel('Ore e sostituzioni',table(['Regione','Addetti','Ore erogate','Sostituzioni'],rs.map(r=>[r.name,fmt(r.people),fmt(r.hours),fmt(r.substitutions)]),[1,2,3]))+panel('Presenze e continuità',chart(rs.map(r=>r.name),rs.map(r=>r.hours),rs.map(r=>r.hoursPlan),' h'))+insight('La versione di riferimento cita INAZ Iterm. Questa anteprima non è collegata a INAZ o ad altri sistemi di rilevazione presenze.');
- return panel('Reperibilità e responsabilità locali',table(['Regione','Responsabile locale','Recapito di servizio','Stato'],rs.map(r=>[r.name,'Da assegnare','Da configurare','Non configurato'])))+insight('Nominativi, recapiti e finestre di reperibilità devono essere forniti e autorizzati. Non sono stati inventati riferimenti personali.');
+ if(tab===1)return panel('Ore e sostituzioni',table(['Filiale','Addetti','Ore erogate','Sostituzioni'],rs.map(r=>[r.name,fmt(r.people),fmt(r.hours),fmt(r.substitutions)]),[1,2,3]))+panel('Presenze e continuità',chart(rs.map(r=>r.name),rs.map(r=>r.hours),rs.map(r=>r.hoursPlan),' h'))+insight('La versione di riferimento cita INAZ Iterm. Questa anteprima non è collegata a INAZ o ad altri sistemi di rilevazione presenze.');
+ return panel('Reperibilità e responsabilità locali',table(['Filiale','Responsabile locale','Recapito di servizio','Stato'],rs.map(r=>[r.name,'Da assegnare','Da configurare','Non configurato'])))+insight('Nominativi, recapiti e finestre di reperibilità devono essere forniti e autorizzati. Non sono stati inventati riferimenti personali.');
  case 'quality':
  if(tab<2){const ris=tab===0;return panel(ris?'Check-list di risultato (RIS)':'Check-list di processo (PRO)',table(['Ambito','Parametro di verifica','Evidenza'],(ris?[
  ['Pavimenti','Assenza di sporco diffuso e macchie'],['Arredi e superfici','Assenza di polvere e impronte'],['Superfici di contatto','Pulizia di maniglie e pulsanti'],['Vetri e infissi','Assenza di impronte e aloni'],['Servizi igienici','Pulizia e asciugatura di sanitari e lavabi'],['Dotazioni igieniche','Presenza di carta, sapone e asciugamani']]:[
- ['Piano di lavoro','Rispetto di sequenze e frequenze'],['Prodotti','Corretta diluizione e schede tecniche'],['Attrezzature','Manutenzione e idoneità all’uso'],['Sicurezza','DPI, procedure e formazione'],['Sanificazione','Tracciamento delle operazioni e dei prodotti']]).map(r=>[...r,'Nessun allegato nel prototipo'])))+panel('Controlli per regione',table(['Regione','Controlli','Rilievi','Conformi'],rs.map(r=>[r.name,fmt(r.checks),fmt(r.nc),pc(r.checks-r.nc,r.checks)]),[1,2,3]))+insight('Il registro definitivo deve collegare ogni esito all’ambiente controllato, alla data, all’auditor e all’evidenza fotografica o documentale. Gli allegati non sono simulati.');}
- return panel('Avanzamento delle azioni correttive',chart(rs.map(r=>r.name),rs.map(r=>r.nc-r.resolved)))+panel('Rilievi e risoluzioni',table(['Regione','Rilevati','Chiusi','Aperti','Chiusura media'],rs.map(r=>[r.name,fmt(r.nc),fmt(r.resolved),fmt(r.nc-r.resolved),fmt(r.days,1)+' gg']),[1,2,3,4]))+'<div class="flow"><span>Verifica</span><span>Rilievo NCQ/NCP</span><span>Presa in carico</span><span>Trattamento</span><span>Chiusura</span><span>Storico</span></div>'+insight('NCQ e NCP restano classificazioni del registro da configurare sul piano di controllo approvato.');
+ ['Piano di lavoro','Rispetto di sequenze e frequenze'],['Prodotti','Corretta diluizione e schede tecniche'],['Attrezzature','Manutenzione e idoneità all’uso'],['Sicurezza','DPI, procedure e formazione'],['Sanificazione','Tracciamento delle operazioni e dei prodotti']]).map(r=>[...r,'Nessun allegato nel prototipo'])))+panel('Controlli per filiale',table(['Filiale','Controlli','Rilievi','Conformi'],rs.map(r=>[r.name,fmt(r.checks),fmt(r.nc),pc(r.checks-r.nc,r.checks)]),[1,2,3]))+insight('Il registro definitivo deve collegare ogni esito all’ambiente controllato, alla data, all’auditor e all’evidenza fotografica o documentale. Gli allegati non sono simulati.');}
+ return panel('Avanzamento delle azioni correttive',chart(rs.map(r=>r.name),rs.map(r=>r.nc-r.resolved)))+panel('Rilievi e risoluzioni',table(['Filiale','Rilevati','Chiusi','Aperti','Chiusura media'],rs.map(r=>[r.name,fmt(r.nc),fmt(r.resolved),fmt(r.nc-r.resolved),fmt(r.days,1)+' gg']),[1,2,3,4]))+'<div class="flow"><span>Verifica</span><span>Rilievo NCQ/NCP</span><span>Presa in carico</span><span>Trattamento</span><span>Chiusura</span><span>Storico</span></div>'+insight('NCQ e NCP restano classificazioni del registro da configurare sul piano di controllo approvato.');
  case 'report':
  if(tab===0)return panel('Quadro degli indicatori',table(['Indicatore','Consuntivo','Base di calcolo'],[
  ['Completamento attività',pc(a.d,a.p),`${fmt(a.d)} / ${fmt(a.p)} attività`],['Copertura turni',pc(a.c,a.s),`${fmt(a.c)} / ${fmt(a.s)} turni`],['Controlli conformi',pc(a.checks-a.nc,a.checks),`${fmt(a.checks-a.nc)} / ${fmt(a.checks)} controlli`],['Interventi chiusi',pc(a.completed,a.requested),`${fmt(a.completed)} / ${fmt(a.requested)} richieste`],['Prodotti verificati CAM',pc(a.cam,a.products),`${fmt(a.cam)} / ${fmt(a.products)} prodotti`],['Dotazioni verificate',pc(a.verified,a.devices),`${fmt(a.verified)} / ${fmt(a.devices)} dotazioni`]], [1]))+insight('Target, pesi, SLA e criteri di accettabilità del Lotto 2 non sono stati forniti. Il cruscotto espone consuntivi e denominatori senza attribuire giudizi di conformità contrattuale.');
- if(tab===1)return panel('Completamento delle prestazioni per regione',chart(rs.map(r=>r.name),rs.map(r=>pct(sum(r.done),sum(r.plan))),'','%'))+panel('Confronto territoriale',table(['Regione','Attività eseguite','Completamento','Ore','Azioni aperte'],rs.map(r=>[r.name,fmt(sum(r.done)),pc(sum(r.done),sum(r.plan)),fmt(r.hours),fmt(r.nc-r.resolved)]),[1,2,3,4]));
+ if(tab===1)return panel('Completamento delle prestazioni per filiale',chart(rs.map(r=>r.name),rs.map(r=>pct(sum(r.done),sum(r.plan))),'','%'))+panel('Riepilogo della filiale',table(['Filiale','Attività eseguite','Completamento','Ore','Azioni aperte'],rs.map(r=>[r.name,fmt(sum(r.done)),pc(sum(r.done),sum(r.plan)),fmt(r.hours),fmt(r.nc-r.resolved)]),[1,2,3,4]));
  return panel('Report consultabili', '<p class="modal-intro">Esporta il consuntivo dimostrativo relativo ai filtri correnti oppure apri la versione stampabile del dettaglio.</p><button class="button" data-print>Stampa / Salva PDF <span aria-hidden="true">↗</span></button>')+panel('Ambiti inclusi',table(['Report','Contenuto','Destinatari'],[['Consuntivo del servizio','Attività, ore e copertura','DEC / Struttura di Gestione'],['Qualità e azioni correttive','Verifiche RIS/PRO e NCQ/NCP','DEC / Struttura di Gestione'],['Monitoraggio ambientale','CAM, consumi, emissioni e rifiuti','DEC / Struttura di Gestione']]))+insight('L’esportazione CSV genera un file locale dai dati visualizzati. Non esistono invii automatici, archivi remoti o report firmati in questa anteprima.');
  case 'sustain':
- if(tab===0)return panel('Verifiche documentali sui prodotti',chart(rs.map(r=>r.name),rs.map(r=>r.cam),rs.map(r=>r.products)))+panel('Prodotti e documentazione',table(['Regione','Prodotti','Verificati CAM','Da verificare'],rs.map(r=>[r.name,fmt(r.products),fmt(r.cam),fmt(r.products-r.cam)]),[1,2,3]))+insight('“Verificato CAM” è un campo dimostrativo. Certificazioni, Ecolabel UE, FSC ed evidenze devono essere comprovati dai documenti dei prodotti effettivamente impiegati.');
+ if(tab===0)return panel('Verifiche documentali sui prodotti',chart(rs.map(r=>r.name),rs.map(r=>r.cam),rs.map(r=>r.products)))+panel('Prodotti e documentazione',table(['Filiale','Prodotti','Verificati CAM','Da verificare'],rs.map(r=>[r.name,fmt(r.products),fmt(r.cam),fmt(r.products-r.cam)]),[1,2,3]))+insight('“Verificato CAM” è un campo dimostrativo. Certificazioni, Ecolabel UE, FSC ed evidenze devono essere comprovati dai documenti dei prodotti effettivamente impiegati.');
  if(tab===1)return panel('Consumi distinti per unità',table(['Categoria','Consumo','Unità','Documento'],[['Detergenti',fmt(a.detergent),'L','Schede tecniche da acquisire'],['Disinfettanti',fmt(a.disinfectant),'L','Schede tecniche da acquisire'],['Carta igienica',fmt(a.paper),'rotoli','Forniture da registrare'],['Tessili lavabili',fmt(a.textile),'kg','Cicli e quantità da registrare']], [1]))+insight('Litri, chilogrammi e rotoli non vengono sommati o rappresentati sullo stesso asse. Imballaggi e macchinari restano categorie da integrare con il registro effettivo.');
- return panel('Ripartizione delle emissioni dimostrative',chart(['Prodotti','Trasporti'],a.emissions,'',' kg CO₂e'))+panel('Stima per regione',table(['Regione','Prodotti (kg CO₂e)','Trasporti (kg CO₂e)','Totale (kg CO₂e)'],rs.map(r=>[r.name,...r.emissions.map(v=>fmt(v)),fmt(sum(r.emissions))]),[1,2,3]))+insight('I valori di CO₂e sono un dataset sintetico per dimostrare l’interfaccia, non una valutazione LCA. Per l’uso operativo servono perimetro, fattori emissivi, fonti e metodologia approvati.');
+ return panel('Ripartizione delle emissioni dimostrative',chart(['Prodotti','Trasporti'],a.emissions,'',' kg CO₂e'))+panel('Stima per filiale',table(['Filiale','Prodotti (kg CO₂e)','Trasporti (kg CO₂e)','Totale (kg CO₂e)'],rs.map(r=>[r.name,...r.emissions.map(v=>fmt(v)),fmt(sum(r.emissions))]),[1,2,3]))+insight('I valori di CO₂e sono un dataset sintetico per dimostrare l’interfaccia, non una valutazione LCA. Per l’uso operativo servono perimetro, fattori emissivi, fonti e metodologia approvati.');
  case 'waste':
  if(tab===0)return panel('Quantità raccolte per frazione',chart(['Carta','Imball.','Organico','Residuo','Altri'],a.waste,'',' kg'))+panel('Registro delle frazioni · esempio',table(['Frazione','Quantità (kg)','Tracciamento'],['Carta','Plastica, vetro e metalli','Organico','Indifferenziato','Toner, pile e assorbenti'].map((n,i)=>[n,fmt(a.waste[i]),'Conferimenti da documentare']),[1]))+insight('Il raggruppamento “Altri” è solo grafico. Toner, pile e assorbenti richiedono registrazioni distinte nel sistema operativo e non si assumono intercambiabili.');
- if(tab===1)return panel('Stato delle dotazioni per regione',table(['Regione','Verificate','Totali','Rifornimenti'],rs.map(r=>[r.name,fmt(r.verified),fmt(r.devices),fmt(r.restock)]),[1,2,3]))+panel('Materiali e controlli previsti',table(['Dotazione','Controllo','Inventario'],[['Carta igienica','Scorta e reintegro','Da acquisire'],['Sapone / igienizzante','Scorta e integrità dispenser','Da acquisire'],['Asciugamani carta','Scorta e reintegro','Da acquisire'],['Dispenser','Guasti, sostituzioni e ripristino','Da acquisire']]))+insight('Le quantità disponibili a magazzino e le prossime date di rifornimento non sono state fornite e non vengono inventate.');
- return panel('Segnalazioni aperte per territorio',chart(rs.map(r=>r.name),rs.map(r=>r.tickets)))+panel('Coda delle anomalie · dati aggregati',table(['Regione','Segnalazioni aperte','Dettaglio operativo'],rs.map(r=>[r.name,fmt(r.tickets),'Ticket individuali da collegare']),[1]))+insight('Il registro definitivo conterrà tipologia del guasto, stabile, ambiente, priorità, presa in carico, intervento e chiusura. Non sono presenti ticket reali nella demo.');
+ if(tab===1)return panel('Stato delle dotazioni per filiale',table(['Filiale','Verificate','Totali','Rifornimenti'],rs.map(r=>[r.name,fmt(r.verified),fmt(r.devices),fmt(r.restock)]),[1,2,3]))+panel('Materiali e controlli previsti',table(['Dotazione','Controllo','Inventario'],[['Carta igienica','Scorta e reintegro','Da acquisire'],['Sapone / igienizzante','Scorta e integrità dispenser','Da acquisire'],['Asciugamani carta','Scorta e reintegro','Da acquisire'],['Dispenser','Guasti, sostituzioni e ripristino','Da acquisire']]))+insight('Le quantità disponibili a magazzino e le prossime date di rifornimento non sono state fornite e non vengono inventate.');
+ return panel('Segnalazioni aperte per territorio',chart(rs.map(r=>r.name),rs.map(r=>r.tickets)))+panel('Coda delle anomalie · dati aggregati',table(['Filiale','Segnalazioni aperte','Dettaglio operativo'],rs.map(r=>[r.name,fmt(r.tickets),'Ticket individuali da collegare']),[1]))+insight('Il registro definitivo conterrà tipologia del guasto, stabile, ambiente, priorità, presa in carico, intervento e chiusura. Non sono presenti ticket reali nella demo.');
  }
 }
 function openArea(id){state.area=id;state.tab=0;renderModal();$('#detail').showModal()}
-function renderModal(){const ar=AREA.find(x=>x.id===state.area),a=total(),empty=!rows().length;$('#modal-title').textContent=ar.full;$('#modal-scope').textContent=`Lotto 2 · ${state.region==='all'?'Calabria, Sardegna, Sicilia':state.region} · ${PERIODS[state.period]}`;$('#export').hidden=empty;
+function renderModal(){const ar=AREA.find(x=>x.id===state.area),a=total(),empty=!rows().length;$('#modal-title').textContent=ar.full;$('#modal-scope').textContent=`Lotto 2 · ${state.region} · ${PERIODS[state.period]}`;$('#export').hidden=empty;
  $('#modal-body').innerHTML=`<p class="modal-intro">${ar.intro}</p>${modalFilters()}${empty?'<div class="empty"><strong>Nessun dato nel periodo selezionato</strong>Seleziona ottobre o novembre 2026 per esplorare il dataset dimostrativo.</div>':`<div class="modal-stats">${modalStats(a,ar.id)}</div><div class="modal-tabs" role="tablist" aria-label="Dettaglio ${ar.title}">${ar.tabs.map((t,i)=>`<button id="tab-${i}" role="tab" aria-selected="${i===state.tab}" tabindex="${i===state.tab?'0':'-1'}" aria-controls="tab-content" data-tab="${i}">${t}</button>`).join('')}</div><div id="tab-content" role="tabpanel" aria-labelledby="tab-${state.tab}" tabindex="0">${detailContent(ar.id,state.tab,a)}</div>`}`;
 }
-function information(type){state.area=null;$('#modal-scope').textContent='BI-LogiControl · Prototipo di revisione';$('#modal-title').textContent=type==='method'?'Fonti e criteri di lettura':'Ambito del servizio';$('#export').hidden=true;$('#modal-body').innerHTML=type==='method'?`<p class="modal-intro">Il riferimento funzionale è la versione BI-LogiControl Frascati, della quale sono state riprese le sette aree e la consultazione tramite modali.</p><ul class="checklist"><li>Tutti i numeri sono sintetici e identificati come dimostrativi.</li><li>I consuntivi sono calcolati dai record regionali e condivisi tra schede e dettagli.</li><li>Ottobre e novembre coprono lo stesso intervallo, dal giorno 1 al giorno 17.</li><li>Dicembre dimostra lo stato senza dati; “—” indica l’assenza di un denominatore.</li><li>Target e soglie del Lotto 2 sono da validare; non è dichiarata conformità contrattuale.</li><li>Le immagini sono generate e ispirate alla copertina del progetto fornita: non sono fotografie documentali degli stabili del cliente.</li><li>Non sono attivi login, chatbot, collegamenti a INAZ, archivi o invii automatici.</li></ul><p class="chart-caption">Riferimento: <a href="https://smartlabdesign.it/bi-logicontrol-frascati" target="_blank" rel="noopener">BI-LogiControl Frascati</a>.</p>`:`<p class="modal-intro">Servizi di pulizia, sanificazione ambientale e prestazioni accessorie da svolgere presso gli stabili della Banca d’Italia siti nelle regioni Calabria, Sardegna, Sicilia (Lotto 2).</p><h3>Sette aree di monitoraggio</h3><ul class="checklist">${AREA.map(ar=>`<li>${ar.full}</li>`).join('')}</ul>${insight('Questa anteprima è destinata alla verifica di contenuti, navigazione e visual design. Elenco degli stabili, capitolato, piano operativo, soglie e dati reali devono essere forniti prima dell’uso operativo.')}`;$('#detail').showModal()}
-function exportCsv(){const rs=rows();const headers=['Periodo','Regione','Pianificate','Eseguite','Ore pianificate','Ore erogate','Turni programmati','Turni coperti','Controlli','Rilievi','Azioni chiuse','Azioni aperte','Richieste extra','Interventi chiusi','Prodotti','Prodotti verificati CAM','Detergenti L','Disinfettanti L','Carta rotoli','Tessili kg','CO2e kg demo','Rifiuti kg','Rifornimenti','Dotazioni verificate','Dotazioni totali','Segnalazioni aperte'];const lines=[['DATI DIMOSTRATIVI - NON DATI OPERATIVI BANCA D’ITALIA'],headers,...rs.map(r=>[PERIODS[state.period],r.name,sum(r.plan),sum(r.done),r.hoursPlan,r.hours,sum(r.shifts),sum(r.covered),r.checks,r.nc,r.resolved,r.nc-r.resolved,sum(r.extra),sum(r.closed),r.products,r.cam,r.detergent,r.disinfectant,r.paper,r.textile,sum(r.emissions),sum(r.waste),r.restock,r.verified,r.devices,r.tickets])];const csv='\uFEFF'+lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`BI-LogiControl_Lotto2_DEMO_${state.period}_${state.region}.csv`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Esportazione CSV dei dati dimostrativi completata.')}
+function exportCsv(){const rs=rows();const headers=['Periodo','Regione','Filiale','Pianificate','Eseguite','Ore pianificate','Ore erogate','Turni programmati','Turni coperti','Controlli','Rilievi','Azioni chiuse','Azioni aperte','Richieste extra','Interventi chiusi','Prodotti','Prodotti verificati CAM','Detergenti L','Disinfettanti L','Carta rotoli','Tessili kg','CO2e kg demo','Rifiuti kg','Rifornimenti','Dotazioni verificate','Dotazioni totali','Segnalazioni aperte'];const lines=[['DATI DIMOSTRATIVI - NON DATI OPERATIVI BANCA D’ITALIA'],headers,...rs.map(r=>[PERIODS[state.period],r.region,r.name,sum(r.plan),sum(r.done),r.hoursPlan,r.hours,sum(r.shifts),sum(r.covered),r.checks,r.nc,r.resolved,r.nc-r.resolved,sum(r.extra),sum(r.closed),r.products,r.cam,r.detergent,r.disinfectant,r.paper,r.textile,sum(r.emissions),sum(r.waste),r.restock,r.verified,r.devices,r.tickets])];const csv='\uFEFF'+lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`BI-LogiControl_Lotto2_DEMO_${state.period}_${state.branch}.csv`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Esportazione CSV dei dati dimostrativi completata.')}
 let toastTimer;function notify(text){$('#toast').textContent=text;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,3500)}
-document.addEventListener('click',e=>{const open=e.target.closest('[data-open]'),region=e.target.closest('[data-region]'),territory=e.target.closest('[data-territory]'),tab=e.target.closest('[data-tab]'),info=e.target.closest('[data-info]');if(open)openArea(open.dataset.open);if(region){state.region=region.dataset.region;render()}if(territory){state.region=territory.dataset.territory;render();openArea('canone')}if(tab){state.tab=Number(tab.dataset.tab);renderModal();$('#tab-'+state.tab).focus()}if(info)information(info.dataset.info);if(e.target.closest('[data-print]'))window.print()});
-document.addEventListener('change',e=>{if(e.target.matches('[data-modal-region]')){state.region=e.target.value;renderModal();$('[data-modal-region]').focus()}if(e.target.matches('[data-modal-period]')){state.period=e.target.value;renderModal();$('[data-modal-period]').focus()}});$('.close').addEventListener('click',()=>$('#detail').close());$('#export').addEventListener('click',exportCsv);
+document.addEventListener('click', event => {
+ const open = event.target.closest('[data-open]');
+ const tab = event.target.closest('[data-tab]');
+ if (open) openArea(open.dataset.open);
+ if (tab) {
+  state.tab = Number(tab.dataset.tab);
+  renderModal();
+  $('#tab-' + state.tab).focus();
+ }
+ if (event.target.closest('[data-print]')) window.print();
+});
+$('#detail').addEventListener('change', event => {
+ if (!event.target.matches('[data-modal-period]')) return;
+ state.period = event.target.value;
+ renderModal();
+ $('[data-modal-period]').focus();
+});
+$('#detail .close').addEventListener('click', () => $('#detail').close());
+$('#export').addEventListener('click', exportCsv);
+
+const accessDialog = $('#access-dialog');
+$('#open-access').addEventListener('click', () => accessDialog.showModal());
+$('#close-access').addEventListener('click', () => accessDialog.close());
+$('#access-form').addEventListener('submit', event => {
+ event.preventDefault();
+ const profile = $('#access-profile');
+ const status = $('#access-status');
+ status.textContent = 'Profilo selezionato: ' + profile.value + '.';
+ status.hidden = false;
+});
+$('#access-profile').addEventListener('change', () => { $('#access-status').hidden = true; });
 $('#detail').addEventListener('click',e=>{if(e.target===$('#detail')){const r=$('#detail').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('#detail').close()}});
 $('#detail').addEventListener('keydown',e=>{if(e.target.matches('[role=tab]')&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();state.tab=e.key==='Home'?0:e.key==='End'?2:(state.tab+(e.key==='ArrowRight'?1:2))%3;renderModal();$('#tab-'+state.tab).focus()}});
 for(const [period,rs]of Object.entries(DATA))for(const r of rs){console.assert(sum(r.done)<=sum(r.plan),'Completamenti incoerenti',period,r.name);console.assert(r.resolved<=r.nc&&r.nc<=r.checks,'Controlli incoerenti',period,r.name);console.assert(sum(r.covered)<=sum(r.shifts),'Copertura incoerente',period,r.name);console.assert(sum(r.closed)<=sum(r.extra),'Interventi incoerenti',period,r.name);console.assert(r.cam<=r.products&&r.verified<=r.devices,'Verifiche incoerenti',period,r.name)}
