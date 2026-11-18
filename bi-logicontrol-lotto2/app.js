@@ -87,7 +87,7 @@ for (const region of Object.keys(BRANCHES)) regionSelect.add(new Option(region, 
 regionSelect.value = state.region;
 
 function populateBranches() {
- branchSelect.replaceChildren(...BRANCHES[state.region].map(branch => new Option(branch.label, branch.id)));
+ branchSelect.replaceChildren(...BRANCHES[state.region].map(branch => new Option(branch.name, branch.id)));
  branchSelect.value = state.branch;
  updateBranchScope();
 }
@@ -180,7 +180,7 @@ function detailContent(id,tab,a){let rs=rows();
  return panel('Segnalazioni aperte per territorio',chart(rs.map(r=>r.name),rs.map(r=>r.tickets)))+panel('Coda delle anomalie · dati aggregati',table(['Filiale','Segnalazioni aperte','Dettaglio operativo'],rs.map(r=>[r.name,fmt(r.tickets),'Ticket individuali da collegare']),[1]))+insight('Il registro definitivo conterrà tipologia del guasto, stabile, ambiente, priorità, presa in carico, intervento e chiusura. Non sono presenti ticket reali nella demo.');
  }
 }
-function openArea(id){state.area=id;state.tab=0;renderModal();$('#detail').showModal()}
+function openArea(id){state.area=id;state.tab=0;renderModal();openDialog($('#detail'))}
 function renderModal(){const ar=AREA.find(x=>x.id===state.area),a=total(),empty=!rows().length;$('#modal-title').textContent=ar.full;$('#modal-scope').textContent=`Lotto 2 · ${state.region} · ${PERIODS[state.period]}`;$('#export').hidden=empty;
  $('#modal-body').innerHTML=`<p class="modal-intro">${ar.intro}</p>${modalFilters()}${empty?'<div class="empty"><strong>Nessun dato nel periodo selezionato</strong>Seleziona ottobre o novembre 2026 per esplorare il dataset dimostrativo.</div>':`<div class="modal-stats">${modalStats(a,ar.id)}</div><div class="modal-tabs" role="tablist" aria-label="Dettaglio ${ar.title}">${ar.tabs.map((t,i)=>`<button id="tab-${i}" role="tab" aria-selected="${i===state.tab}" tabindex="${i===state.tab?'0':'-1'}" aria-controls="tab-content" data-tab="${i}">${t}</button>`).join('')}</div><div id="tab-content" role="tabpanel" aria-labelledby="tab-${state.tab}" tabindex="0">${detailContent(ar.id,state.tab,a)}</div>`}`;
 }
@@ -206,17 +206,54 @@ $('#detail').addEventListener('change', event => {
 $('#detail .close').addEventListener('click', () => $('#detail').close());
 $('#export').addEventListener('click', exportCsv);
 
+const detailDialog = $('#detail');
 const accessDialog = $('#access-dialog');
-$('#open-access').addEventListener('click', () => accessDialog.showModal());
-$('#close-access').addEventListener('click', () => accessDialog.close());
-$('#access-form').addEventListener('submit', event => {
- event.preventDefault();
- const profile = $('#access-profile');
- const status = $('#access-status');
- status.textContent = 'Profilo selezionato: ' + profile.value + '.';
- status.hidden = false;
+const dialogPositions = new WeakMap();
+
+function openDialog(dialog) {
+ if (dialog.open) return;
+ const position = { x: window.scrollX, y: window.scrollY };
+ dialogPositions.set(dialog, position);
+ document.body.style.setProperty('--modal-scroll-top', '-' + position.y + 'px');
+ document.documentElement.classList.add('modal-scroll-lock');
+ try {
+  dialog.showModal();
+ } catch (error) {
+  restorePageScroll(dialog);
+  throw error;
+ }
+ dialog.querySelector('[autofocus]').focus({ preventScroll: true });
+}
+
+function restorePageScroll(dialog) {
+ const position = dialogPositions.get(dialog);
+ if (!position || dialog.open) return;
+ dialogPositions.delete(dialog);
+ document.documentElement.classList.remove('modal-scroll-lock');
+ document.body.style.removeProperty('--modal-scroll-top');
+ window.scrollTo({ left: position.x, top: position.y, behavior: 'instant' });
+}
+
+for (const dialog of [detailDialog, accessDialog]) {
+ dialog.addEventListener('close', () => restorePageScroll(dialog));
+}
+
+const accessForm = $('#access-form');
+const accessStatus = $('#access-status');
+$('#open-access').addEventListener('click', () => {
+ accessForm.reset();
+ accessStatus.hidden = true;
+ openDialog(accessDialog);
 });
-$('#access-profile').addEventListener('change', () => { $('#access-status').hidden = true; });
+$('#close-access').addEventListener('click', () => accessDialog.close());
+accessDialog.addEventListener('close', () => accessForm.reset());
+accessForm.addEventListener('input', () => { accessStatus.hidden = true; });
+accessForm.addEventListener('submit', event => {
+ event.preventDefault();
+ accessForm.reset();
+ accessStatus.textContent = 'Accesso non disponibile.';
+ accessStatus.hidden = false;
+});
 $('#detail').addEventListener('click',e=>{if(e.target===$('#detail')){const r=$('#detail').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('#detail').close()}});
 $('#detail').addEventListener('keydown',e=>{if(e.target.matches('[role=tab]')&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();state.tab=e.key==='Home'?0:e.key==='End'?2:(state.tab+(e.key==='ArrowRight'?1:2))%3;renderModal();$('#tab-'+state.tab).focus()}});
 for(const [period,rs]of Object.entries(DATA))for(const r of rs){console.assert(sum(r.done)<=sum(r.plan),'Completamenti incoerenti',period,r.name);console.assert(r.resolved<=r.nc&&r.nc<=r.checks,'Controlli incoerenti',period,r.name);console.assert(sum(r.covered)<=sum(r.shifts),'Copertura incoerente',period,r.name);console.assert(sum(r.closed)<=sum(r.extra),'Interventi incoerenti',period,r.name);console.assert(r.cam<=r.products&&r.verified<=r.devices,'Verifiche incoerenti',period,r.name)}

@@ -95,3 +95,63 @@
 @media (max-width: 420px) {
   .hero-filters { grid-template-columns: 1fr; gap: 10px; }
 }
+
+/* Hero controls reuse the white CTA treatment while keeping native select menus. */
+.hero-filters {
+  grid-template-columns: 126px minmax(0, 200px);
+  gap: 12px;
+}
+.hero-filters select {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  box-sizing: border-box;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 36px 0 15px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%233f2056' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  color: #3f2056;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hero-filters select:hover { background-color: #efe5f5; }
+.hero-filters select:focus-visible { outline-color: #cba7df; }
+
+html.modal-scroll-lock {
+  overflow: hidden;
+  scroll-behavior: auto;
+  overscroll-behavior: none;
+  scrollbar-gutter: stable;
+}
+html.modal-scroll-lock body {
+  position: fixed;
+  top: var(--modal-scroll-top);
+  inset-inline: 0;
+  width: 100%;
+}
+#detail, #access-dialog {
+  overscroll-behavior: contain;
+  overflow-y: auto;
+}
+dialog h2[tabindex="-1"]:focus { outline: none; }
+
+#access-form input {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #c6b9ce;
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+#access-form input:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+#access-note { color: var(--muted); font-size: 12px; }
+
+@media (max-width: 420px) {
+  .hero-filters { grid-template-columns: minmax(0, 106px) minmax(0, 178px); gap: 10px; }
+  .hero-filters select { padding-left: 11px; padding-right: 30px; background-position: right 8px center; }
+}

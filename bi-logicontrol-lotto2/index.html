@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="description" content="BI-LogiControl — monitoraggio dei servizi di pulizia, sanificazione e prestazioni accessorie. Banca d’Italia, Lotto 2.">
 <meta name="theme-color" content="#38234f"><title>BI-LogiControl · Banca d’Italia · Lotto 2</title>
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="landing.css?v=filiali"><script src="app.js?v=filiali" defer></script>
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="landing.css?v=modali"><script src="app.js?v=modali" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Vai ai contenuti</a>
@@ -25,14 +25,17 @@
 <section class="scope-strip" aria-labelledby="scope-title"><div><h2 id="scope-title">Un unico lotto. Tre territori.</h2><p>Monitoraggio integrato a supporto del DEC e della Struttura di Gestione.</p></div><div class="scope-regions"><span>Calabria</span><span>Sardegna</span><span>Sicilia</span></div></section>
 <footer><div><strong>BI-LogiControl</strong><span>Banca d’Italia · Lotto 2</span></div></footer><p class="landing-demo">Anteprima progettuale · Dati dimostrativi nelle dashboard · Immagini illustrative generate, non fotografie degli stabili del committente.</p>
 </main>
-<dialog id="detail" aria-labelledby="modal-title"><div class="dialog-head"><div><p id="modal-scope" class="muted"></p><h2 id="modal-title"></h2></div><button class="close" aria-label="Chiudi dettaglio">×</button></div><div id="modal-body"></div><div class="dialog-foot"><span>Dati dimostrativi · nessuna connessione ai sistemi operativi</span><button class="button" id="export">Esporta dati CSV <span aria-hidden="true">↓</span></button></div></dialog>
+<dialog id="detail" aria-labelledby="modal-title"><div class="dialog-head"><div><p id="modal-scope" class="muted"></p><h2 id="modal-title" tabindex="-1" autofocus></h2></div><button class="close" aria-label="Chiudi dettaglio">×</button></div><div id="modal-body"></div><div class="dialog-foot"><span>Dati dimostrativi · nessuna connessione ai sistemi operativi</span><button class="button" id="export">Esporta dati CSV <span aria-hidden="true">↓</span></button></div></dialog>
 <dialog id="access-dialog" aria-labelledby="access-title">
-<div class="dialog-head"><h2 id="access-title">Accesso riservato</h2><button type="button" class="close" id="close-access" aria-label="Chiudi accesso riservato">×</button></div>
-<form id="access-form">
-<label for="access-profile">Profilo di consultazione</label>
-<select id="access-profile" required><option value="">Seleziona un profilo</option><option>DEC</option><option>Struttura di Gestione</option></select>
+<div class="dialog-head"><h2 id="access-title" tabindex="-1" autofocus>Accesso riservato</h2><button type="button" class="close" id="close-access" aria-label="Chiudi accesso riservato">×</button></div>
+<form id="access-form" method="dialog" autocomplete="off">
+<label for="access-user">Nome utente</label>
+<input id="access-user" type="text" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="access-note">
+<label for="access-password">Password</label>
+<input id="access-password" type="password" required autocomplete="new-password" aria-describedby="access-note">
+<p id="access-note">Usa credenziali di prova.</p>
 <p id="access-status" role="status" hidden></p>
-<button class="reserved-button" type="submit">Continua</button>
+<button class="reserved-button" type="submit">Accedi</button>
 </form>
 </dialog>
 <div class="toast" id="toast" role="status" hidden></div>
