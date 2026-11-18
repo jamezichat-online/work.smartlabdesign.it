@@ -245,8 +245,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     .tile { background: #f9fafb; border-radius: 8px; padding: 12px 5px; }
     .tile .small { color: var(--blue); font-weight: 500; }
     .progress { margin-top: 16px; gap: 12px; }
-    .track { flex: 1; height: 20px; border-radius: 20px; background: #e5e7eb; overflow: hidden; }
-    .fill { width: 68%; height: 100%; border-radius: inherit; background: var(--blue); transform-origin: left; }
+    .track {
+      flex: 1 1 0%;
+      min-width: 0;
+      height: 20px;
+      border: 0;
+      border-radius: 20px;
+      overflow: hidden;
+      appearance: none;
+      -webkit-appearance: none;
+      background: #e5e7eb;
+      color: var(--blue);
+    }
+    .track::-webkit-progress-bar { background: #e5e7eb; border-radius: 20px; }
+    .track::-webkit-progress-value { background: var(--blue); border-radius: 20px; }
+    .track::-moz-progress-bar { background: var(--blue); border-radius: 20px; }
     .progress .number { font-size: 18px; }
     .machine-data { margin-top: 24px; text-align: center; }
     .machine-data .number { font-size: 30px; line-height: 36px; }
@@ -331,13 +344,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     .fade { animation: fade-in .5s ease both; }
     .sites.open .slide { animation: slide-in .3s ease both; }
     .chart .bar { animation: grow 1s ease both; }
-    .fill { animation: grow-x 1.36s 1.1s ease both; }
     .ring .arc { animation: ring 1.5s 1s ease both; }
     @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     @keyframes slide-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
     @keyframes flash { from { background: #3b82f61a; } to { background: transparent; } }
     @keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-    @keyframes grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
     @keyframes ring { from { stroke-dasharray: 0 100; } to { stroke-dasharray: var(--value) 100; } }
     @media (max-width: 360px) {
       .back { left: 8px; font-size: 14px; }
@@ -422,8 +433,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <h3>Macchinari efficienti</h3>
           <p class="caption">Risparmio energetico</p>
           <div class="row progress">
-            <div class="track" aria-hidden="true"><div class="fill"></div></div>
-            <span class="number" data-count="68" data-delay="1100" data-step="1" data-tick="20" data-suffix="%">68%</span>
+            <progress class="track" aria-label="Risparmio energetico" value="68" max="100">68%</progress>
+            <span class="number" aria-hidden="true">68%</span>
           </div>
           <div class="row machine-data">
             <div><div class="number" data-count="42" data-delay="1100" data-step="1" data-tick="50">42</div><div class="tiny">Macchinari<br>efficienti</div></div>
