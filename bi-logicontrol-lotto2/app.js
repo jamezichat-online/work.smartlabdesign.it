@@ -71,7 +71,7 @@ const AREA=[
  {id:'waste',title:'Rifiuti e dotazioni',desc:'Raccolta differenziata, materiali di consumo, dispenser e rifornimenti.',full:'Rifiuti, materiali di consumo e dotazioni igieniche',tabs:['Rifiuti','Materiali e dotazioni','Segnalazioni'],intro:'Tracciamento dei flussi di raccolta, dei rifornimenti e delle anomalie alle dotazioni igieniche. Le quantità e le segnalazioni mostrate sono esclusivamente dimostrative.'}
 ];
 const state = { region: 'Sicilia', branch: 'palermo', period: 'nov', area: null, tab: 0 };
-const $=s=>document.querySelector(s), sum=a=>a.reduce((s,v)=>s+v,0),fmt=(v,d=0)=>new Intl.NumberFormat('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v),pct=(a,b)=>b?100*a/b:null,pc=(a,b)=>b?fmt(pct(a,b),1)+'%':'—',esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s), sum=a=>a.reduce((s,v)=>s+v,0),fmt=(v,d=0)=>new Intl.NumberFormat('it-IT',{useGrouping:'always',minimumFractionDigits:d,maximumFractionDigits:d}).format(v),pct=(a,b)=>b?100*a/b:null,pc=(a,b)=>b?fmt(pct(a,b),1)+'%':'—',esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function rows() {
  return DATA[state.period].filter(record => record.id === state.branch);
 }
